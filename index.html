@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🗺️ RPG Economy Flowchart</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: #111520;
+    --surface2: #161b2e;
+    --border: #1e2744;
+    --accent: #f0c040;
+    --accent2: #4fc3f7;
+    --accent3: #a78bfa;
+    --accent4: #34d399;
+    --red: #f87171;
+    --orange: #fb923c;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --glow: rgba(240,192,64,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(30,39,68,0.4) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30,39,68,0.4) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 60px 0 40px;
+    position: relative;
+  }
+
+  .header-glow {
+    position: absolute;
+    top: 20px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(240,192,64,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  header h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 40px rgba(240,192,64,0.4);
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  header p {
+    color: var(--muted);
+    margin-top: 10px;
+    font-size: 0.95rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .badge-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.78rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+  }
+
+  .badge.del { border-color: rgba(248,113,113,0.4); color: var(--red); background: rgba(248,113,113,0.07); }
+
+  /* NAV TABS */
+  .nav {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 30px 0 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 8px;
+  }
+
+  .nav-btn {
+    padding: 9px 18px;
+    border-radius: 9px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover { color: var(--text); background: var(--surface2); }
+  .nav-btn.active {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 0 20px rgba(240,192,64,0.3);
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* GRID LAYOUTS */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    border-color: rgba(240,192,64,0.25);
+    transform: translateY(-2px);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--card-color, var(--accent)), transparent);
+    opacity: 0.6;
+  }
+
+  .card.blue { --card-color: var(--accent2); }
+  .card.purple { --card-color: var(--accent3); }
+  .card.green { --card-color: var(--accent4); }
+  .card.red { --card-color: var(--red); }
+  .card.orange { --card-color: var(--orange); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cooldown-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* FLOW STEPS */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .flow-step {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    border-left: 3px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    line-height: 1.5;
+  }
+
+  .flow-step.req { border-left-color: var(--accent2); }
+  .flow-step.fail { border-left-color: var(--red); background: rgba(248,113,113,0.05); }
+  .flow-step.success { border-left-color: var(--accent4); background: rgba(52,211,153,0.05); }
+  .flow-step.cost { border-left-color: var(--orange); background: rgba(251,146,60,0.05); }
+
+  .step-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    opacity: 0.6;
+  }
+
+  .flow-step.req .step-label { color: var(--accent2); }
+  .flow-step.fail .step-label { color: var(--red); }
+  .flow-step.success .step-label { color: var(--accent4); }
+  .flow-step.cost .step-label { color: var(--orange); }
+
+  .flow-arrow {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: -2px 0;
+  }
+
+  .prob-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .prob-chip {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+
+  .prob-chip.fail { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  .prob-chip.success { background: rgba(52,211,153,0.15); color: var(--accent4); border: 1px solid rgba(52,211,153,0.3); }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.82rem;
+    gap: 8px;
+  }
+
+  .stat-row:last-child { border-bottom: none; }
+
+  .stat-key { color: var(--muted); font-family: 'Space Mono', monospace; }
+  .stat-val { color: var(--text); font-family: 'Space Mono', monospace; font-weight: 700; text-align: right; }
+  .stat-val.gold { color: var(--accent); }
+  .stat-val.blue { color: var(--accent2); }
+  .stat-val.green { color: var(--accent4); }
+  .stat-val.red { color: var(--red); }
+  .stat-val.purple { color: var(--accent3); }
+  .stat-val.orange { color: var(--orange); }
+
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  /* PRICE TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .trend-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+    min-width: 80px;
+  }
+
+  .trend-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+
+  /* INCOME CHART */
+  .income-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .income-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 60px;
+  }
+
+  .income-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    transition: width 1s ease;
+  }
+
+  .income-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    min-width: 90px;
+    text-align: right;
+  }
+
+  /* SUMMARY CARDS */
+  .summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .summary-card .big-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .summary-card .label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .summary-card .icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  /* DELETED ITEMS */
+  .deleted-badge {
+    display: inline-block;
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.3);
+    color: var(--red);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 0.72rem;
+    font-family: 'Space Mono', monospace;
+    text-decoration: line-through;
+    text-decoration-color: rgba(248,113,113,0.5);
+  }
+
+  .new-badge {
+    display: inline-block;
+    background: rgba(52,211,153,0.1);
+    border: 1px solid rgba(52,211,153,0.3);
+    color: var(--accent4);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .nav { gap: 4px; }
+    .nav-btn { padding: 8px 12px; font-size: 0.8rem; }
+    header h1 { font-size: 1.5rem; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section.active { animation: fadeIn 0.3s ease; }
+
+  .card { animation: fadeIn 0.4s ease backwards; }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.2s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.3s; }
+
+  .sticky-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,13,20,0.9);
+    backdrop-filter: blur(12px);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    margin: 0 -24px 30px;
+    padding: 8px 24px;
+  }
+
+  .rare-chip {
+    display: inline-block;
+    background: rgba(167,139,250,0.12);
+    border: 1px solid rgba(167,139,250,0.3);
+    color: var(--accent3);
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-glow"></div>
+    <h1>🗺️ RPG Economy Dashboard</h1>
+    <p>// Sistem Lengkap Ekonomi — Flowchart & Analisis</p>
+    <div class="badge-row">
+      <span class="badge">⚖️ Rebalanced</span>
+      <span class="badge">💹 Dynamic Pricing</span>
+      <span class="badge del">❌ Ramuan DIHAPUS</span>
+      <span class="badge del">❌ Parfum DIHAPUS</span>
+      <span class="badge del">❌ Kondom DIHAPUS</span>
+    </div>
+  </header>
+
+  <div class="sticky-nav">
+    <div class="nav">
+      <button class="nav-btn active" onclick="showTab('ringkasan')">📊 Ringkasan</button>
+      <button class="nav-btn" onclick="showTab('income')">💰 Pendapatan</button>
+      <button class="nav-btn" onclick="showTab('farming')">⛏️ Farming</button>
+      <button class="nav-btn" onclick="showTab('combat')">⚔️ Combat</button>
+      <button class="nav-btn" onclick="showTab('sosial')">🚗 Jasa & Sosial</button>
+      <button class="nav-btn" onclick="showTab('dewasa')">😈 Dewasa</button>
+      <button class="nav-btn" onclick="showTab('pasar')">🏪 Pasar & Harga</button>
+    </div>
+  </div>
+
+  <!-- ==================== RINGKASAN ==================== -->
+  <div id="ringkasan" class="section active">
+    <div class="section-title">📊 Ringkasan Sistem</div>
+
+    <div class="grid-4" style="margin-bottom:24px;">
+      <div class="summary-card">
+        <div class="icon">⚔️</div>
+        <div class="big-num">13</div>
+        <div class="label">Total Fitur Aktif</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon">💸</div>
+        <div class="big-num">~240K</div>
+        <div class="label">Income/jam tertinggi (Ojek)</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon">📉</div>
+        <div class="big-num">65–165%</div>
+        <div class="label">Range Fluktuasi Hewan</div>
+      </div>
+      <div class="summary-card">
+        <div class="icon">❌</div>
+        <div class="big-num">3</div>
+        <div class="label">Item Dihapus Permanen</div>
+      </div>
+    </div>
+
+    <div class="section-title">⚖️ Prinsip Rebalancing</div>
+    <div class="grid-3" style="margin-bottom:24px;">
+      <div class="card blue">
+        <div class="card-header"><div class="card-title">⚠️ Risiko = Reward</div></div>
+        <div style="font-size:0.85rem; color:var(--muted); line-height:1.6;">Fitur dengan risiko health/durability → reward lebih besar. Semakin berbahaya, semakin menguntungkan.</div>
+      </div>
+      <div class="card purple">
+        <div class="card-header"><div class="card-title">⏳ Cooldown = Reward</div></div>
+        <div style="font-size:0.85rem; color:var(--muted); line-height:1.6;">Monthly/Yearly memberikan reward jauh lebih besar. Waktu tunggu lebih panjang = hadiah lebih besar.</div>
+      </div>
+      <div class="card green">
+        <div class="card-header"><div class="card-title">🎲 Tidak Monoton</div></div>
+        <div style="font-size:0.85rem; color:var(--muted); line-height:1.6;">Semua angka random dalam range. Tidak ada nilai fixed — ekonomi selalu dinamis dan tidak bisa diprediksi.</div>
+      </div>
+      <div class="card orange">
+        <div class="card-header"><div class="card-title">⚔️ Tier Gear Bermakna</div></div>
+        <div style="font-size:0.85rem; color:var(--muted); line-height:1.6;">Gear tier tinggi memberikan multiplier yang signifikan. Investasi equipment sangat sepadan.</div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📈 Dynamic Economy</div></div>
+        <div style="font-size:0.85rem; color:var(--muted); line-height:1.6;">Harga di shop & pasar berfluktuasi tiap sesi. Pantau tren 📈📉➡️ sebelum menjual item.</div>
+      </div>
+      <div class="card red">
+        <div class="card-header"><div class="card-title">❌ Item Dihapus</div></div>
+        <div style="font-size:0.85rem; color:var(--muted); line-height:1.6;">
+          <div class="deleted-badge">Ramuan</div>
+          <div class="deleted-badge" style="margin-top:4px">Parfum (.ngewe)</div>
+          <div class="deleted-badge" style="margin-top:4px">Kondom (.ngelonte)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">📈 Analisis Income Per Jam</div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Fitur</th>
+            <th>Cooldown</th>
+            <th>Est. Money/jam</th>
+            <th>Visual</th>
+            <th>Stamina/jam</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🛵 Ojek</td>
+            <td>5 mnt</td>
+            <td class="stat-val gold">~240.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:100%"></div></div></td>
+            <td class="stat-val red">~200</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Stamina terkuras</td>
+          </tr>
+          <tr>
+            <td>🗺️ Adventure</td>
+            <td>60 mnt</td>
+            <td class="stat-val gold">~120.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:50%"></div></div></td>
+            <td class="stat-val orange">~60</td>
+            <td style="color:var(--muted); font-size:0.75rem;">+ banyak item</td>
+          </tr>
+          <tr>
+            <td>⚔️ Hunter</td>
+            <td>30 mnt</td>
+            <td class="stat-val gold">~100.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:42%"></div></div></td>
+            <td class="stat-val orange">~60</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Butuh gear</td>
+          </tr>
+          <tr>
+            <td>🗡️ Membunuh</td>
+            <td>60 mnt</td>
+            <td class="stat-val gold">~100.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:42%"></div></div></td>
+            <td class="stat-val red">~130</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Risiko tinggi</td>
+          </tr>
+          <tr>
+            <td>🤫 Maling</td>
+            <td>30 mnt</td>
+            <td class="stat-val gold">~100.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:42%"></div></div></td>
+            <td class="stat-val orange">~95</td>
+            <td style="color:var(--muted); font-size:0.75rem;">30% denda</td>
+          </tr>
+          <tr>
+            <td>🏹 Berburu</td>
+            <td>60 mnt</td>
+            <td class="stat-val gold">~80.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:33%"></div></div></td>
+            <td class="stat-val orange">~50</td>
+            <td style="color:var(--muted); font-size:0.75rem;">+ hewan</td>
+          </tr>
+          <tr>
+            <td>🦹 Merampok</td>
+            <td>60 mnt</td>
+            <td class="stat-val gold">~70.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:29%"></div></div></td>
+            <td class="stat-val orange">~95</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Dari target</td>
+          </tr>
+          <tr>
+            <td>💼 Berdagang</td>
+            <td>30 mnt</td>
+            <td class="stat-val gold">~60.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:25%"></div></div></td>
+            <td class="stat-val orange">~65</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Butuh target</td>
+          </tr>
+          <tr>
+            <td>⛏️ Nambang</td>
+            <td>30 mnt</td>
+            <td class="stat-val gold">~10.500</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:4.4%"></div></div></td>
+            <td class="stat-val orange">~80</td>
+            <td style="color:var(--muted); font-size:0.75rem;">+ material</td>
+          </tr>
+          <tr>
+            <td>🗑️ Mulung</td>
+            <td>30 mnt</td>
+            <td class="stat-val gold">~6.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:2.5%"></div></div></td>
+            <td class="stat-val green">~38</td>
+            <td style="color:var(--muted); font-size:0.75rem;">+ rare drop</td>
+          </tr>
+          <tr>
+            <td>🪓 Nebang</td>
+            <td>60 mnt</td>
+            <td class="stat-val gold">~5.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:2.1%"></div></div></td>
+            <td class="stat-val green">~15</td>
+            <td style="color:var(--muted); font-size:0.75rem;">+ wood</td>
+          </tr>
+          <tr>
+            <td>🕐 Hourly</td>
+            <td>60 mnt</td>
+            <td class="stat-val gold">~4.000</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:1.7%"></div></div></td>
+            <td class="stat-val green">0</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Gratis stamina</td>
+          </tr>
+          <tr>
+            <td>🎣 Mancing</td>
+            <td>30 mnt</td>
+            <td class="stat-val gold">item saja</td>
+            <td><div class="income-bar"><div class="income-fill" style="width:0%"></div></div></td>
+            <td class="stat-val green">~40</td>
+            <td style="color:var(--muted); font-size:0.75rem;">Butuh rod</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== INCOME ==================== -->
+  <div id="income" class="section">
+    <div class="section-title">💰 Pendapatan Berkala</div>
+    <div class="grid-2">
+
+      <!-- HOURLY -->
+      <div class="card blue">
+        <div class="card-header">
+          <div class="card-title">🕐 Hourly</div>
+          <span class="cooldown-badge">⏱ 1 jam</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req"><div class="step-label">Syarat</div>Cek cooldown 1 jam</div>
+          <div class="flow-arrow">↓ Berhasil</div>
+          <div class="flow-step success">
+            <div class="step-label">Hasil</div>
+            <div class="stat-row"><span class="stat-key">EXP Free</span><span class="stat-val blue">3.000 – 9.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP Prem</span><span class="stat-val purple">8.000 – 18.000</span></div>
+            <div class="stat-row"><span class="stat-key">Money Free</span><span class="stat-val gold">800 – 7.000</span></div>
+            <div class="stat-row"><span class="stat-key">Money Prem</span><span class="stat-val gold">4.000 – 15.000</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="rare-chip">✅ No stamina cost</span>
+          <span class="rare-chip">✅ No health cost</span>
+        </div>
+      </div>
+
+      <!-- DAILY -->
+      <div class="card green">
+        <div class="card-header">
+          <div class="card-title">📅 Daily</div>
+          <span class="cooldown-badge">⏱ 24 jam</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req"><div class="step-label">Syarat</div>Cek cooldown 24 jam</div>
+          <div class="flow-arrow">↓ Berhasil</div>
+          <div class="flow-step success">
+            <div class="step-label">Hasil</div>
+            <div class="stat-row"><span class="stat-key">Limit Free</span><span class="stat-val blue">30 – 80</span></div>
+            <div class="stat-row"><span class="stat-key">Limit Prem</span><span class="stat-val purple">80 – 150</span></div>
+            <div class="stat-row"><span class="stat-key">Money Free</span><span class="stat-val gold">3.000 – 18.000</span></div>
+            <div class="stat-row"><span class="stat-key">Money Prem</span><span class="stat-val gold">8.000 – 35.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Bonus Item (chance)</div>
+            <div class="stat-row"><span class="stat-key">10%</span><span class="stat-val">+1-2 Potion</span></div>
+            <div class="stat-row"><span class="stat-key">10%</span><span class="stat-val">+5-30 Trash</span></div>
+            <div class="stat-row"><span class="stat-key">7%</span><span class="stat-val">+3-13 Iron</span></div>
+            <div class="stat-row"><span class="stat-key">5%</span><span class="stat-val">+1 Common Crate</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="rare-chip">🎁 Streak 7 hari → +1 Uncommon Crate</span>
+        </div>
+      </div>
+
+      <!-- WEEKLY -->
+      <div class="card purple">
+        <div class="card-header">
+          <div class="card-title">📆 Weekly</div>
+          <span class="cooldown-badge">⏱ 7 hari</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step success">
+            <div class="step-label">Hasil</div>
+            <div class="stat-row"><span class="stat-key">EXP Free</span><span class="stat-val blue">8.000 – 25.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP Prem</span><span class="stat-val purple">20.000 – 60.000</span></div>
+            <div class="stat-row"><span class="stat-key">Limit Free</span><span class="stat-val">20 – 60</span></div>
+            <div class="stat-row"><span class="stat-key">Limit Prem</span><span class="stat-val">50 – 120</span></div>
+            <div class="stat-row"><span class="stat-key">Money Free</span><span class="stat-val gold">15.000 – 80.000</span></div>
+            <div class="stat-row"><span class="stat-key">Money Prem</span><span class="stat-val gold">40.000 – 180.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Bonus Random</div>
+            <div class="stat-row"><span class="stat-key">20%</span><span class="stat-val">+1 Uncommon Crate</span></div>
+            <div class="stat-row"><span class="stat-key">15%</span><span class="stat-val">+10-30 Iron</span></div>
+            <div class="stat-row"><span class="stat-key">10%</span><span class="stat-val">+1-4 Potion</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MONTHLY -->
+      <div class="card orange">
+        <div class="card-header">
+          <div class="card-title">🗓️ Monthly</div>
+          <span class="cooldown-badge">⏱ 30 hari</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step success">
+            <div class="step-label">Hasil</div>
+            <div class="stat-row"><span class="stat-key">EXP Free</span><span class="stat-val blue">15.000 – 60.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP Prem</span><span class="stat-val purple">40.000 – 150.000</span></div>
+            <div class="stat-row"><span class="stat-key">Limit Free</span><span class="stat-val">80 – 200</span></div>
+            <div class="stat-row"><span class="stat-key">Limit Prem</span><span class="stat-val">180 – 400</span></div>
+            <div class="stat-row"><span class="stat-key">Money Free</span><span class="stat-val gold">30.000 – 150.000</span></div>
+            <div class="stat-row"><span class="stat-key">Money Prem</span><span class="stat-val gold">100.000 – 500.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Bonus Item (SELALU dapat 1)</div>
+            <div class="stat-row"><span class="stat-key">15%</span><span class="stat-val purple">+1 Mythic Crate 🟣</span></div>
+            <div class="stat-row"><span class="stat-key">20%</span><span class="stat-val">+2 Uncommon Crate</span></div>
+            <div class="stat-row"><span class="stat-key">20%</span><span class="stat-val blue">+1-3 Diamond 💎</span></div>
+            <div class="stat-row"><span class="stat-key">17%</span><span class="stat-val">+20-60 Iron</span></div>
+            <div class="stat-row"><span class="stat-key">28%</span><span class="stat-val green">+2-6 Potion</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- YEARLY -->
+      <div class="card" style="--card-color:#fbbf24; grid-column: 1 / -1;">
+        <div class="card-header">
+          <div class="card-title">🎊 Yearly <span class="new-badge">TERBESAR</span></div>
+          <span class="cooldown-badge">⏱ 1 tahun</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:12px;">
+          <div class="flow-step success">
+            <div class="step-label">EXP</div>
+            <div class="stat-row"><span class="stat-key">Free</span><span class="stat-val blue">50.000 – 200.000</span></div>
+            <div class="stat-row"><span class="stat-key">Prem</span><span class="stat-val purple">150.000 – 500.000</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Limit</div>
+            <div class="stat-row"><span class="stat-key">Free</span><span class="stat-val">150 – 400</span></div>
+            <div class="stat-row"><span class="stat-key">Prem</span><span class="stat-val">400 – 900</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Money</div>
+            <div class="stat-row"><span class="stat-key">Free</span><span class="stat-val gold">80.000 – 600.000</span></div>
+            <div class="stat-row"><span class="stat-key">Prem</span><span class="stat-val gold">250.000 – 1.500.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Bonus Item (SELALU dapat 1)</div>
+            <div class="stat-row"><span class="stat-key">12%</span><span class="stat-val gold">+1 Legendary Crate 🟡</span></div>
+            <div class="stat-row"><span class="stat-key">18%</span><span class="stat-val purple">+2 Mythic Crate 🟣</span></div>
+            <div class="stat-row"><span class="stat-key">20%</span><span class="stat-val blue">+3-7 Diamond 💎</span></div>
+            <div class="stat-row"><span class="stat-key">18%</span><span class="stat-val gold">+1-3 Gold 🥇</span></div>
+            <div class="stat-row"><span class="stat-key">32%</span><span class="stat-val">+40-120 Iron</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== FARMING ==================== -->
+  <div id="farming" class="section">
+    <div class="section-title">⛏️ Fitur Farming</div>
+    <div class="grid-2">
+
+      <!-- NEBANG -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🪓 Nebang</div>
+          <span class="cooldown-badge">⏱ 60 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 8–14 (random threshold) + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 20% Gagal</span>
+            <span class="prob-chip success">✅ 80% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-6 hingga -13</span></div>
+          </div>
+          <div class="flow-arrow">atau</div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil — Drop</div>
+            <div class="stat-row"><span class="stat-key">Wood</span><span class="stat-val green">+100 – 1.600</span></div>
+            <div class="stat-row"><span class="stat-key">String</span><span class="stat-val green">+5 – 85</span></div>
+            <div class="stat-row"><span class="stat-key">Rock</span><span class="stat-val">+5 – 25 (30%)</span></div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+1.000 – 9.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+1.000 – 6.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-8 hingga -23</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAMBANG -->
+      <div class="card blue">
+        <div class="card-header">
+          <div class="card-title">⛏️ Nambang</div>
+          <span class="cooldown-badge">⏱ 30 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 25–40 (random threshold) + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 15% Gagal</span>
+            <span class="prob-chip success">✅ 85% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-25 hingga -40</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil — Drop</div>
+            <div class="stat-row"><span class="stat-key">Rock</span><span class="stat-val green">+10 – 210</span></div>
+            <div class="stat-row"><span class="stat-key">Coal</span><span class="stat-val green">+1 – 21</span></div>
+            <div class="stat-row"><span class="stat-key">Iron <span class="new-badge">NEW</span></span><span class="stat-val green">+5 – 35</span></div>
+            <div class="stat-row"><span class="stat-key">Gold (35%)</span><span class="stat-val gold">+1 – 4</span></div>
+            <div class="stat-row"><span class="stat-key">Diamond (20%)</span><span class="stat-val blue">+1 – 3 💎</span></div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+3.000 – 18.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+2.000 – 10.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-30 hingga -50</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANCING -->
+      <div class="card green">
+        <div class="card-header">
+          <div class="card-title">🎣 Mancing</div>
+          <span class="cooldown-badge">⏱ 30 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Fishing Rod (tier 1-4) + Stamina ≥ 12–28 + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 10% Gagal</span>
+            <span class="prob-chip success">✅ 90% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-10 hingga -25</span></div>
+            <div class="stat-row"><span class="stat-key">Rod Durability</span><span class="stat-val red">-8 hingga -35</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil (× rodMultiplier)</div>
+            <div class="stat-row"><span class="stat-key">Ikan</span><span class="stat-val green">0 – 15 ekor</span></div>
+            <div class="stat-row"><span class="stat-key">Paus (langka)</span><span class="stat-val green">0 – 8 ekor</span></div>
+            <div class="stat-row"><span class="stat-key">Bawal</span><span class="stat-val green">0 – 12 ekor</span></div>
+            <div class="stat-row"><span class="stat-key">Lele (banyak)</span><span class="stat-val green">1 – 18 ekor</span></div>
+            <div class="stat-row"><span class="stat-key">Nila</span><span class="stat-val green">0 – 14 ekor</span></div>
+            <div class="stat-row"><span class="stat-key">Kepiting (langka)</span><span class="stat-val green">0 – 6 ekor</span></div>
+            <div class="stat-row"><span class="stat-key">Udang</span><span class="stat-val green">0 – 10 ekor</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-12 hingga -28</span></div>
+            <div class="stat-row"><span class="stat-key">Rod Dur</span><span class="stat-val red">-15 hingga -90</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MULUNG -->
+      <div class="card orange">
+        <div class="card-header">
+          <div class="card-title">🗑️ Mulung</div>
+          <span class="cooldown-badge">⏱ 30 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 12–28 (random threshold) + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 10% Gagal</span>
+            <span class="prob-chip success">✅ 90% Berhasil</span>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil — Drop</div>
+            <div class="stat-row"><span class="stat-key">Botol</span><span class="stat-val green">+50 – 850</span></div>
+            <div class="stat-row"><span class="stat-key">Kaleng</span><span class="stat-val green">+30 – 630</span></div>
+            <div class="stat-row"><span class="stat-key">Kardus</span><span class="stat-val green">+40 – 740</span></div>
+            <div class="stat-row"><span class="stat-key">Trash (40%)</span><span class="stat-val">+5 – 35</span></div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+500 – 5.500</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+500 – 3.500</span></div>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Rare Drop ⭐</div>
+            <div class="stat-row"><span class="stat-key">0.5%</span><span class="stat-val blue">+1-3 Diamond 💎</span></div>
+            <div class="stat-row"><span class="stat-key">1.5%</span><span class="stat-val gold">+1-5 Gold 🥇</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-12 hingga -27</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BERKEBON -->
+      <div class="card" style="--card-color:var(--accent4); grid-column: 1 / -1;">
+        <div class="card-header">
+          <div class="card-title">🌱 Berkebon</div>
+          <span class="cooldown-badge">⏱ 30 mnt</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap:12px;">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Pickaxe ada + 500× setiap bibit + cooldown
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Hasil Buah</div>
+            <div class="stat-row"><span class="stat-key">Pisang</span><span class="stat-val green">+50 – 850</span></div>
+            <div class="stat-row"><span class="stat-key">Anggur</span><span class="stat-val green">+30 – 630</span></div>
+            <div class="stat-row"><span class="stat-key">Mangga</span><span class="stat-val green">+40 – 740</span></div>
+            <div class="stat-row"><span class="stat-key">Jeruk (terbanyak)</span><span class="stat-val green">+60 – 960</span></div>
+            <div class="stat-row"><span class="stat-key">Apel</span><span class="stat-val green">+35 – 685</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Bonus <span class="new-badge">NEW</span></div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+2.000 – 14.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+1.500 – 9.500</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Bibit (semua)</span><span class="stat-val red">-500 setiap jenis</span></div>
+            <div class="stat-row"><span class="stat-key">Pickaxe Dur</span><span class="stat-val red">-20 hingga -80</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== COMBAT ==================== -->
+  <div id="combat" class="section">
+    <div class="section-title">⚔️ Fitur Combat & Action</div>
+    <div class="grid-2">
+
+      <!-- BERBURU -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🏹 Berburu</div>
+          <span class="cooldown-badge">⏱ 60 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Sword ≠ 0 + Armor ≠ 0 + Stamina ≥ 25 + Health ≥ 30 + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 15% Gagal</span>
+            <span class="prob-chip success">✅ 85% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Health</span><span class="stat-val red">-15 hingga -65</span></div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-15 hingga -30</span></div>
+            <div class="stat-row"><span class="stat-key">Armor Dur</span><span class="stat-val red">-8 hingga -30</span></div>
+            <div class="stat-row"><span class="stat-key">Sword Dur</span><span class="stat-val red">-8 hingga -30</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil (× gearBonus)</div>
+            <div class="stat-row"><span class="stat-key">Hewan</span><span class="stat-val green">12 jenis × 0-10 × gear</span></div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+(10.000–70.000) × gear</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+(3.000–18.000) × gear</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Health</span><span class="stat-val red">-5 hingga -50</span></div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-15 hingga -35</span></div>
+            <div class="stat-row"><span class="stat-key">Armor/Sword Dur</span><span class="stat-val red">-10~60 / -10~55</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="rare-chip">gearBonus = swordMulti × armorBonus</span>
+        </div>
+      </div>
+
+      <!-- HUNTER -->
+      <div class="card red">
+        <div class="card-header">
+          <div class="card-title">⚔️ Hunter</div>
+          <span class="cooldown-badge">⏱ 30 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Sword ≠ 0 + Armor ≠ 0 + Stamina ≥ 30 + Health ≥ 30 + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 15% Gagal</span>
+            <span class="prob-chip success">✅ 85% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Health</span><span class="stat-val red">-25 hingga -85</span></div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-18 hingga -38</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil (Monster area 1–13)</div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+(5.000–500.000) × area × gear</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+(2.000–20.000) × area × gear</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya (tinggi!)</div>
+            <div class="stat-row"><span class="stat-key">Health</span><span class="stat-val red">-5 hingga -80</span></div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-18 hingga -42</span></div>
+            <div class="stat-row"><span class="stat-key">Armor Dur</span><span class="stat-val red">-20 hingga -65</span></div>
+            <div class="stat-row"><span class="stat-key">Sword Dur</span><span class="stat-val red">-15 hingga -70</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="rare-chip">areaMulti = area/13</span>
+          <span class="rare-chip">gear = sword×0.2 + armor×0.15</span>
+        </div>
+      </div>
+
+      <!-- ADVENTURE -->
+      <div class="card purple" style="grid-column: 1 / -1;">
+        <div class="card-header">
+          <div class="card-title">🗺️ Adventure</div>
+          <span class="cooldown-badge">⏱ 60 mnt</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:12px;">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Armor ≠ 0 + Health ≥ 80 + Stamina ≥ 35 + cooldown
+          </div>
+          <div>
+            <div class="prob-row">
+              <span class="prob-chip fail">❌ 20% Gagal</span>
+              <span class="prob-chip success">✅ 80% Berhasil</span>
+            </div>
+            <div class="flow-step fail">
+              <div class="step-label">Gagal</div>
+              <div class="stat-row"><span class="stat-key">Health</span><span class="stat-val red">-15 hingga -70</span></div>
+              <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-18 hingga -40</span></div>
+              <div class="stat-row"><span class="stat-key">Armor Dur</span><span class="stat-val red">-15 hingga -50</span></div>
+            </div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil — Uang & EXP</div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+(5.000–30.000)×gear</span></div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+(20.000–220.000)×gear</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil — Item Drop</div>
+            <div class="stat-row"><span class="stat-key">Diamond</span><span class="stat-val blue">0–5 ×gear 💎</span></div>
+            <div class="stat-row"><span class="stat-key">Gold</span><span class="stat-val gold">0–5 ×gear 🥇</span></div>
+            <div class="stat-row"><span class="stat-key">Iron <span class="new-badge">NEW</span></span><span class="stat-val">+5–35 ×gear</span></div>
+            <div class="stat-row"><span class="stat-key">Common Crate</span><span class="stat-val">0–4</span></div>
+            <div class="stat-row"><span class="stat-key">Uncommon Crate</span><span class="stat-val">0–2</span></div>
+            <div class="stat-row"><span class="stat-key">Mythic Crate</span><span class="stat-val purple">0–3</span></div>
+            <div class="stat-row"><span class="stat-key">Legendary Crate</span><span class="stat-val gold">0–2 🟡</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== SOSIAL ==================== -->
+  <div id="sosial" class="section">
+    <div class="section-title">🚗 Fitur Jasa & Sosial</div>
+    <div class="grid-2">
+
+      <!-- OJEK -->
+      <div class="card blue">
+        <div class="card-header">
+          <div class="card-title">🛵 Ojek</div>
+          <span class="cooldown-badge">⏱ 5 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 20–40 + Health ≥ 10 + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 20% Gagal</span>
+            <span class="prob-chip success">✅ 80% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-20 hingga -40</span></div>
+            <div class="stat-row"><span class="stat-key">Health</span><span class="stat-val red">-5 hingga -20</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil</div>
+            <div class="stat-row"><span class="stat-key">Bayaran Dasar</span><span class="stat-val gold">12.000 – 45.000</span></div>
+            <div class="stat-row"><span class="stat-key">Bonus Jarak</span><span class="stat-val gold">jarak_km × 400–900</span></div>
+            <div class="stat-row"><span class="stat-key">Tip (25%)</span><span class="stat-val gold">+2.000 – 15.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">3.000 – 18.000</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="rare-chip">💰 Terbaik utk income/jam</span>
+          <span class="rare-chip">⚠️ Stamina drain tinggi</span>
+        </div>
+      </div>
+
+      <!-- BERDAGANG -->
+      <div class="card green">
+        <div class="card-header">
+          <div class="card-title">💼 Berdagang</div>
+          <span class="cooldown-badge">⏱ 30 mnt · @mention</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Target valid + cooldown sender & target + Kardus cukup (3–25) + Stamina ≥ 15–50 + Modal 5.000–13.000
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 30% Gagal</span>
+            <span class="prob-chip success">✅ 70% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal</div>
+            <div class="stat-row"><span class="stat-key">Modal hangus</span><span class="stat-val red">-5.000 – -13.000</span></div>
+            <div class="stat-row"><span class="stat-key">Kardus habis</span><span class="stat-val red">habis</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil (per orang)</div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+20.000 – 100.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+500 – 5.500</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MALING -->
+      <div class="card orange">
+        <div class="card-header">
+          <div class="card-title">🤫 Maling</div>
+          <span class="cooldown-badge">⏱ 30 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 35–60 (random threshold) + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 30% Gagal</span>
+            <span class="prob-chip success">✅ 70% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal — Denda!</div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val red">-3.000 hingga -43.000</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil</div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+8.000 – 88.000</span></div>
+            <div class="stat-row"><span class="stat-key">Kardus</span><span class="stat-val green">+200 – 1.700</span></div>
+            <div class="stat-row"><span class="stat-key">Botol</span><span class="stat-val green">+50 – 750</span></div>
+            <div class="stat-row"><span class="stat-key">Kaleng</span><span class="stat-val green">+20 – 520</span></div>
+            <div class="stat-row"><span class="stat-key">5% Diamond</span><span class="stat-val blue">+1-3 💎</span></div>
+            <div class="stat-row"><span class="stat-key">7% Gold</span><span class="stat-val gold">+1-3 🥇</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MERAMPOK -->
+      <div class="card red">
+        <div class="card-header">
+          <div class="card-title">🦹 Merampok</div>
+          <span class="cooldown-badge">⏱ 60 mnt · @mention</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Target uang ≥ 10.000 + Stamina ≥ 25–70 + cooldown
+          </div>
+          <div class="prob-row" style="margin-top:8px;">
+            <span class="prob-chip fail">❌ 35% Gagal</span>
+            <span class="prob-chip success">✅ 65% Berhasil</span>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal — Balik Modal ke Target</div>
+            <div class="stat-row"><span class="stat-key">Sender kehilangan</span><span class="stat-val red">-5.000 – -75.000</span></div>
+            <div class="stat-row"><span class="stat-key">Target MENDAPAT</span><span class="stat-val green">kompensasi denda</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil</div>
+            <div class="stat-row"><span class="stat-key">Money dari target</span><span class="stat-val gold">+5.000 – 150.000</span></div>
+            <div class="stat-row"><span class="stat-key">Botol (15%)</span><span class="stat-val green">+20–120 dari target</span></div>
+            <div class="stat-row"><span class="stat-key">Kardus (10%)</span><span class="stat-val green">+10–60 dari target</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMBUNUH -->
+      <div class="card" style="--card-color:var(--red); grid-column: 1 / -1; background: rgba(248,113,113,0.04);">
+        <div class="card-header">
+          <div class="card-title">🗡️ Membunuh <span class="new-badge">EXP NEW</span></div>
+          <span class="cooldown-badge">⏱ 60 mnt · @mention</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap:12px;">
+          <div class="flow-step req">
+            <div class="step-label">Syarat (KETAT)</div>
+            Target health > 10 + Target uang ≥ 100 + Stamina ≥ 55–80 + cooldown
+            <div style="color:var(--red); margin-top:6px; font-size:0.8rem;">⚠️ Stamina threshold tertinggi!</div>
+          </div>
+          <div class="flow-step fail">
+            <div class="step-label">Gagal (35%)</div>
+            <div class="stat-row"><span class="stat-key">Health sender</span><span class="stat-val red">-15 hingga -65</span></div>
+            <div class="stat-row"><span class="stat-key">Money ke target</span><span class="stat-val red">-10.000 – -70.000</span></div>
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil (65%)</div>
+            <div class="stat-row"><span class="stat-key">Money dari target</span><span class="stat-val gold">+10.000 – 200.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP <span class="new-badge">NEW</span></span><span class="stat-val blue">+2.000 – 12.000</span></div>
+            <div class="stat-row"><span class="stat-key">Target health</span><span class="stat-val red">-20 hingga -80</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-55 hingga -80</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== DEWASA ==================== -->
+  <div id="dewasa" class="section">
+    <div class="section-title">😈 Fitur Dewasa (Direbalance)</div>
+    <div class="grid-2">
+
+      <div class="card purple">
+        <div class="card-header">
+          <div class="card-title">🔞 .ngewe <span style="font-size:0.7rem; color:var(--accent3);">PREMIUM</span></div>
+          <span class="cooldown-badge">⏱ 10 mnt</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 30–50 (random) + cooldown 10 menit
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil</div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+30.000 – 150.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+5.000 – 40.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Bonus Random</div>
+            <div class="stat-row"><span class="stat-key">5%</span><span class="stat-val green">+1-3 Potion</span></div>
+            <div class="stat-row"><span class="stat-key">7%</span><span class="stat-val blue">+1 Diamond 💎</span></div>
+            <div class="stat-row"><span class="stat-key">18%</span><span class="stat-val">+5-15 Trash</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-30 hingga -60</span></div>
+            <div class="stat-row"><span class="stat-key">Health <span class="new-badge">NEW</span></span><span class="stat-val red">-5 hingga -20</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="deleted-badge">Parfum tidak lagi didapat</span>
+        </div>
+      </div>
+
+      <div class="card" style="--card-color:var(--accent3);">
+        <div class="card-header">
+          <div class="card-title">🔞 .ngelonte</div>
+          <span class="cooldown-badge">⏱ 12 jam</span>
+        </div>
+        <div class="flow">
+          <div class="flow-step req">
+            <div class="step-label">Syarat</div>
+            Stamina ≥ 40–65 (random) + cooldown 12 jam
+          </div>
+          <div class="flow-step success">
+            <div class="step-label">Berhasil (sesuai cooldown panjang)</div>
+            <div class="stat-row"><span class="stat-key">Money</span><span class="stat-val gold">+150.000 – 500.000</span></div>
+            <div class="stat-row"><span class="stat-key">EXP</span><span class="stat-val blue">+15.000 – 60.000</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Bonus Random</div>
+            <div class="stat-row"><span class="stat-key">4%</span><span class="stat-val gold">+1 Gold 🥇</span></div>
+            <div class="stat-row"><span class="stat-key">6%</span><span class="stat-val green">+2-5 Potion</span></div>
+            <div class="stat-row"><span class="stat-key">15%</span><span class="stat-val">+5-15 Iron</span></div>
+            <div class="stat-row"><span class="stat-key">20%</span><span class="stat-val">+10-30 Trash</span></div>
+          </div>
+          <div class="flow-step cost">
+            <div class="step-label">Biaya</div>
+            <div class="stat-row"><span class="stat-key">Stamina</span><span class="stat-val red">-40 hingga -80</span></div>
+            <div class="stat-row"><span class="stat-key">Health <span class="new-badge">NEW</span></span><span class="stat-val red">-10 hingga -35</span></div>
+          </div>
+        </div>
+        <div class="tag-row">
+          <span class="deleted-badge">Kondom tidak lagi didapat</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== PASAR ==================== -->
+  <div id="pasar" class="section">
+    <div class="section-title">🏪 Sistem Pasar & Harga Dinamis</div>
+
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-title" style="margin-bottom:14px;">💹 Formula Harga Dinamis</div>
+      <div style="background:var(--surface2); border-radius:10px; padding:16px; font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--accent4); border:1px solid var(--border);">
+        hargaAktual = Math.floor(basePrice × (flukMin + Math.random() × (flukMax - flukMin)))
+      </div>
+      <div style="margin-top:14px; font-size:0.85rem; color:var(--muted); line-height:1.7;">
+        Harga di <strong style="color:var(--text)">.shop</strong> dan <strong style="color:var(--text)">.pasar</strong> <strong style="color:var(--accent)">TIDAK lagi fixed/tetap</strong>. 
+        Setiap kali perintah dijalankan, harga dihitung ulang dengan formula di atas.
+      </div>
+    </div>
+
+    <div class="section-title" style="font-size:1rem;">📊 Indikator Tren Harga</div>
+    <div class="grid-4" style="margin-bottom:24px;">
+      <div class="card" style="--card-color:#ef4444; text-align:center;">
+        <div style="font-size:1.8rem;">🔥📈</div>
+        <div style="font-weight:700; color:var(--red); margin:6px 0;">Sangat Naik</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Harga naik ≥ 18% dari base</div>
+      </div>
+      <div class="card" style="--card-color:#f97316; text-align:center;">
+        <div style="font-size:1.8rem;">📈</div>
+        <div style="font-weight:700; color:var(--orange); margin:6px 0;">Naik</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Harga naik 5–17% dari base</div>
+      </div>
+      <div class="card" style="--card-color:var(--muted); text-align:center;">
+        <div style="font-size:1.8rem;">➡️</div>
+        <div style="font-weight:700; margin:6px 0;">Stabil</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Harga ±5% dari base</div>
+      </div>
+      <div class="card" style="--card-color:var(--accent2); text-align:center;">
+        <div style="font-size:1.8rem;">📉</div>
+        <div style="font-weight:700; color:var(--accent2); margin:6px 0;">Turun</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Harga turun 5–15% dari base</div>
+      </div>
+      <div class="card" style="--card-color:var(--accent4); text-align:center;">
+        <div style="font-size:1.8rem;">💸📉</div>
+        <div style="font-weight:700; color:var(--accent4); margin:6px 0;">Sangat Turun</div>
+        <div style="font-size:0.8rem; color:var(--muted);">Harga turun ≥ 20% dari base</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="font-size:1rem;">📦 Range Fluktuasi per Kategori</div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Kategori</th>
+            <th>Min</th>
+            <th>Max</th>
+            <th>Volatilitas</th>
+            <th>Visualisasi Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>💎 Gold / Diamond</td>
+            <td class="stat-val green">88%</td>
+            <td class="stat-val orange">120%</td>
+            <td><span class="rare-chip" style="background:rgba(52,211,153,0.1); border-color:rgba(52,211,153,0.3); color:var(--accent4);">Sangat Stabil</span></td>
+            <td>
+              <div class="trend-bar">
+                <div class="trend-fill" style="width:32%; background:linear-gradient(90deg, #34d399, #f0c040);"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>🪨 Iron / Rock</td>
+            <td class="stat-val green">82%</td>
+            <td class="stat-val orange">130%</td>
+            <td><span class="rare-chip">Agak Variatif</span></td>
+            <td>
+              <div class="trend-bar">
+                <div class="trend-fill" style="width:48%; background:linear-gradient(90deg, #34d399, #fb923c);"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>🪵 Wood / String</td>
+            <td class="stat-val orange">75%</td>
+            <td class="stat-val orange">142%</td>
+            <td><span class="rare-chip" style="background:rgba(251,146,60,0.1); border-color:rgba(251,146,60,0.3); color:var(--orange);">Cukup Variatif</span></td>
+            <td>
+              <div class="trend-bar">
+                <div class="trend-fill" style="width:67%; background:linear-gradient(90deg, #fb923c, #f87171);"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>🗑️ Botol / Kaleng / Kardus</td>
+            <td class="stat-val red">70%</td>
+            <td class="stat-val red">155%</td>
+            <td><span class="rare-chip" style="background:rgba(248,113,113,0.1); border-color:rgba(248,113,113,0.3); color:var(--red);">Sangat Variatif</span></td>
+            <td>
+              <div class="trend-bar">
+                <div class="trend-fill" style="width:85%; background:linear-gradient(90deg, #f87171, #a78bfa);"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>🌱 Bibit / Buah</td>
+            <td class="stat-val red">72%</td>
+            <td class="stat-val red">165%</td>
+            <td><span class="rare-chip" style="background:rgba(167,139,250,0.1); border-color:rgba(167,139,250,0.3); color:var(--accent3);">Paling Volatil</span></td>
+            <td>
+              <div class="trend-bar">
+                <div class="trend-fill" style="width:93%; background:linear-gradient(90deg, #f87171, #a78bfa);"></div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>🐄 Hewan (Pasar)</td>
+            <td class="stat-val red">65%</td>
+            <td class="stat-val red">165%</td>
+            <td><span class="rare-chip" style="background:rgba(167,139,250,0.1); border-color:rgba(167,139,250,0.3); color:var(--accent3);">Paling Volatil</span></td>
+            <td>
+              <div class="trend-bar">
+                <div class="trend-fill" style="width:100%; background:linear-gradient(90deg, #f87171, #a78bfa);"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-title" style="font-size:1rem; margin-top:24px;">🐄 Cara Jual di Pasar (Hewan)</div>
+    <div class="card">
+      <div class="flow">
+        <div class="flow-step req"><div class="step-label">Perintah</div>.jual &lt;hewan&gt; &lt;jumlah&gt;</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step success">
+          <div class="step-label">Harga Dihitung Ulang</div>
+          <div class="stat-row"><span class="stat-key">Base Ikan</span><span class="stat-val gold">7.000</span></div>
+          <div class="stat-row"><span class="stat-key">Base Hewan Darat</span><span class="stat-val gold">9.000</span></div>
+          <div class="stat-row"><span class="stat-key">Fluktuasi</span><span class="stat-val orange">65% – 165% dari base</span></div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step success"><div class="step-label">Output</div>Tampil: harga satuan + total + indikator tren 📈/📉/➡️</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
