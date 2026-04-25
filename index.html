@@ -3,1672 +3,1571 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🗺️ RPG Bot — Flowchart & Panduan Lengkap</title>
+<title>🗺️ RPG Bot — Panduan Lengkap & Flowchart</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap');
 
   :root {
     --bg: #0a0c10;
-    --bg2: #10131a;
-    --bg3: #181c26;
-    --border: #2a3048;
+    --bg2: #0e1118;
+    --bg3: #131720;
+    --surface: #181d2a;
+    --surface2: #1e2435;
+    --border: #2a3045;
+    --border-glow: #3d5080;
     --gold: #d4a843;
-    --gold2: #f0c96a;
-    --emerald: #2ecc71;
-    --emerald2: #57ef8d;
-    --ruby: #e74c3c;
-    --sapphire: #3498db;
-    --sapphire2: #5dade2;
-    --purple: #9b59b6;
-    --purple2: #c39bd3;
-    --orange: #e67e22;
-    --teal: #1abc9c;
-    --white: #e8eaf0;
-    --muted: #6b7280;
-    --card-glow: rgba(212,168,67,0.07);
+    --gold2: #f0c060;
+    --gold-dim: #8a6a1a;
+    --silver: #8ba0c0;
+    --silver2: #b0c4de;
+    --green: #4a9c6a;
+    --green2: #6dbf8a;
+    --red: #c04a4a;
+    --red2: #e06060;
+    --blue: #3a6aae;
+    --blue2: #5090d0;
+    --purple: #7a4ab0;
+    --purple2: #a070d0;
+    --orange: #c07030;
+    --orange2: #e09050;
+    --teal: #2a8888;
+    --teal2: #40b0b0;
+    --pink: #b05080;
+    --pink2: #d070a0;
+    --text: #c8d4e8;
+    --text-dim: #7a8aaa;
+    --text-bright: #e8f0ff;
+    --shadow-gold: rgba(212,168,67,0.3);
+    --shadow-blue: rgba(80,144,208,0.3);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background: var(--bg);
-    color: var(--white);
+    color: var(--text);
     font-family: 'Crimson Pro', Georgia, serif;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.6;
     min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(58,106,174,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(122,74,176,0.05) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(42,48,69,0.15) 80px, rgba(42,48,69,0.15) 81px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(42,48,69,0.15) 80px, rgba(42,48,69,0.15) 81px);
   }
 
   /* ── HEADER ── */
-  .hero {
-    background: linear-gradient(135deg, #0a0c10 0%, #12172a 50%, #0a0c10 100%);
+  .header {
+    background: linear-gradient(135deg, #0a0e18 0%, #131d2e 50%, #0a0e18 100%);
     border-bottom: 1px solid var(--border);
-    padding: 48px 24px 36px;
+    padding: 32px 24px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,168,67,0.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .hero-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(28px, 5vw, 52px);
-    font-weight: 900;
-    background: linear-gradient(135deg, var(--gold), var(--gold2), var(--gold));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 2px;
-    text-shadow: none;
-    margin-bottom: 10px;
-  }
-  .hero-sub {
-    color: var(--muted);
-    font-size: 16px;
-    font-style: italic;
-    letter-spacing: 1px;
-  }
-  .hero-tags {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 20px;
-  }
-  .htag {
-    background: rgba(212,168,67,0.1);
-    border: 1px solid rgba(212,168,67,0.3);
-    color: var(--gold2);
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 1px;
-  }
-
-  /* ── NAV TABS ── */
-  .nav {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 0 16px;
-    display: flex;
-    gap: 4px;
-    overflow-x: auto;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.8);
   }
-  .nav::-webkit-scrollbar { height: 3px; }
-  .nav::-webkit-scrollbar-track { background: var(--bg2); }
-  .nav::-webkit-scrollbar-thumb { background: var(--border); }
-  .nav-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    padding: 14px 16px;
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(212,168,67,0.05) 50%, transparent);
+  }
+  .header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(20px, 4vw, 36px);
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-shadow: 0 0 30px var(--shadow-gold), 0 0 60px rgba(212,168,67,0.2);
+    position: relative;
+  }
+  .header p {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 6px;
+    letter-spacing: 1px;
+    font-style: italic;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 16px 24px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    justify-content: center;
+  }
+  .tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: 6px;
     cursor: pointer;
     font-family: 'Cinzel', serif;
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 1px;
-    white-space: nowrap;
-    border-bottom: 2px solid transparent;
     transition: all 0.2s;
+    white-space: nowrap;
   }
-  .nav-btn:hover { color: var(--gold2); }
-  .nav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn:hover { border-color: var(--gold-dim); color: var(--gold); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(212,168,67,0.05));
+    border-color: var(--gold);
+    color: var(--gold2);
+    box-shadow: 0 0 12px var(--shadow-gold);
+  }
 
-  /* ── MAIN CONTAINER ── */
-  .container { max-width: 1400px; margin: 0 auto; padding: 32px 16px 64px; }
-
-  /* ── SECTION ── */
-  .section { display: none; }
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 24px; max-width: 1400px; margin: 0 auto; }
   .section.active { display: block; }
+
+  /* ── SECTION TITLE ── */
   .section-title {
     font-family: 'Cinzel', serif;
     font-size: 22px;
-    font-weight: 700;
     color: var(--gold);
-    border-left: 3px solid var(--gold);
-    padding-left: 16px;
-    margin-bottom: 28px;
-    letter-spacing: 1px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    text-shadow: 0 0 20px var(--shadow-gold);
+    letter-spacing: 2px;
   }
 
-  /* ── FLOWCHART CANVAS ── */
-  .flowchart-wrap {
-    overflow-x: auto;
-    padding-bottom: 16px;
-  }
-  svg.flow {
-    min-width: 1100px;
-    width: 100%;
-    font-family: 'Crimson Pro', serif;
-  }
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
 
-  /* ── CARDS ── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
-    margin-bottom: 32px;
-  }
+  /* ── CARD ── */
   .card {
-    background: var(--bg2);
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 22px;
+    border-radius: 10px;
+    padding: 18px;
     position: relative;
+    transition: all 0.2s;
     overflow: hidden;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-  .card:hover {
-    border-color: var(--gold);
-    transform: translateY(-2px);
   }
   .card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; right: 0; height: 2px;
-    background: var(--card-accent, var(--gold));
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 10px 10px 0 0;
   }
-  .card-icon { font-size: 28px; margin-bottom: 10px; display: block; }
-  .card-title {
+  .card:hover { border-color: var(--border-glow); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .card.gold::before { background: linear-gradient(90deg, var(--gold), var(--gold2)); }
+  .card.green::before { background: linear-gradient(90deg, var(--green), var(--green2)); }
+  .card.blue::before { background: linear-gradient(90deg, var(--blue), var(--blue2)); }
+  .card.purple::before { background: linear-gradient(90deg, var(--purple), var(--purple2)); }
+  .card.red::before { background: linear-gradient(90deg, var(--red), var(--red2)); }
+  .card.orange::before { background: linear-gradient(90deg, var(--orange), var(--orange2)); }
+  .card.teal::before { background: linear-gradient(90deg, var(--teal), var(--teal2)); }
+  .card.pink::before { background: linear-gradient(90deg, var(--pink), var(--pink2)); }
+  .card.silver::before { background: linear-gradient(90deg, var(--silver), var(--silver2)); }
+
+  .card h3 {
     font-family: 'Cinzel', serif;
     font-size: 14px;
-    font-weight: 700;
-    color: var(--gold2);
-    margin-bottom: 8px;
-    letter-spacing: 0.5px;
-  }
-  .card-cmd {
-    display: inline-block;
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--border);
-    color: var(--teal);
-    font-family: monospace;
-    font-size: 12px;
-    padding: 2px 10px;
-    border-radius: 4px;
+    letter-spacing: 1.5px;
     margin-bottom: 10px;
-  }
-  .card-body { color: #b0b8cc; font-size: 14px; line-height: 1.55; }
-  .card-body p { margin-bottom: 6px; }
-  .card-body strong { color: var(--white); }
-
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .tag {
-    font-size: 11px;
-    padding: 2px 10px;
-    border-radius: 20px;
-    font-family: monospace;
-  }
-  .tag.req { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.4); color: var(--ruby); }
-  .tag.gives { background: rgba(46,204,113,0.12); border: 1px solid rgba(46,204,113,0.4); color: var(--emerald2); }
-  .tag.cd { background: rgba(52,152,219,0.12); border: 1px solid rgba(52,152,219,0.4); color: var(--sapphire2); }
-  .tag.links { background: rgba(155,89,182,0.12); border: 1px solid rgba(155,89,182,0.4); color: var(--purple2); }
-
-  /* ── ECONOMY TABLE ── */
-  .eco-section { margin-bottom: 40px; }
-  .eco-title {
-    font-family: 'Cinzel', serif;
-    font-size: 16px;
-    color: var(--gold2);
-    margin-bottom: 16px;
     display: flex;
     align-items: center;
+    gap: 8px;
+  }
+  .card h3.gold { color: var(--gold); }
+  .card h3.green { color: var(--green2); }
+  .card h3.blue { color: var(--blue2); }
+  .card h3.purple { color: var(--purple2); }
+  .card h3.red { color: var(--red2); }
+  .card h3.orange { color: var(--orange2); }
+  .card h3.teal { color: var(--teal2); }
+  .card h3.pink { color: var(--pink2); }
+  .card h3.silver { color: var(--silver2); }
+
+  /* ── COMMAND BADGE ── */
+  .cmd {
+    display: inline-block;
+    background: rgba(212,168,67,0.12);
+    border: 1px solid rgba(212,168,67,0.3);
+    color: var(--gold2);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .cmd.blue { background: rgba(80,144,208,0.12); border-color: rgba(80,144,208,0.3); color: var(--blue2); }
+  .cmd.green { background: rgba(74,156,106,0.12); border-color: rgba(74,156,106,0.3); color: var(--green2); }
+  .cmd.red { background: rgba(192,74,74,0.12); border-color: rgba(192,74,74,0.3); color: var(--red2); }
+  .cmd.purple { background: rgba(122,74,176,0.12); border-color: rgba(122,74,176,0.3); color: var(--purple2); }
+  .cmd.teal { background: rgba(42,136,136,0.12); border-color: rgba(42,136,136,0.3); color: var(--teal2); }
+  .cmd.orange { background: rgba(192,112,48,0.12); border-color: rgba(192,112,48,0.3); color: var(--orange2); }
+  .cmd.pink { background: rgba(176,80,128,0.12); border-color: rgba(176,80,128,0.3); color: var(--pink2); }
+
+  /* ── INFO ROWS ── */
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(42,48,69,0.5); font-size: 14px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--text-dim); }
+  .info-value { color: var(--text-bright); font-weight: 600; text-align: right; }
+  .info-value.gold { color: var(--gold2); }
+  .info-value.green { color: var(--green2); }
+  .info-value.red { color: var(--red2); }
+  .info-value.blue { color: var(--blue2); }
+  .info-value.orange { color: var(--orange2); }
+  .info-value.teal { color: var(--teal2); }
+  .info-value.purple { color: var(--purple2); }
+  .info-value.pink { color: var(--pink2); }
+
+  /* ── ALERT BOXES ── */
+  .alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 14px;
+    display: flex;
     gap: 10px;
+    align-items: flex-start;
   }
-  .eco-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
+  .alert.warn { background: rgba(192,112,48,0.12); border: 1px solid rgba(192,112,48,0.3); color: var(--orange2); }
+  .alert.info { background: rgba(80,144,208,0.10); border: 1px solid rgba(80,144,208,0.3); color: var(--blue2); }
+  .alert.success { background: rgba(74,156,106,0.10); border: 1px solid rgba(74,156,106,0.3); color: var(--green2); }
+  .alert.danger { background: rgba(192,74,74,0.10); border: 1px solid rgba(192,74,74,0.3); color: var(--red2); }
+  .alert.gold { background: rgba(212,168,67,0.10); border: 1px solid rgba(212,168,67,0.3); color: var(--gold2); }
+
+  /* ── TAG BADGES ── */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; margin: 2px; }
+  .badge.gold { background: rgba(212,168,67,0.2); color: var(--gold2); border: 1px solid rgba(212,168,67,0.3); }
+  .badge.green { background: rgba(74,156,106,0.2); color: var(--green2); border: 1px solid rgba(74,156,106,0.3); }
+  .badge.red { background: rgba(192,74,74,0.2); color: var(--red2); border: 1px solid rgba(192,74,74,0.3); }
+  .badge.blue { background: rgba(80,144,208,0.2); color: var(--blue2); border: 1px solid rgba(80,144,208,0.3); }
+  .badge.purple { background: rgba(122,74,176,0.2); color: var(--purple2); border: 1px solid rgba(122,74,176,0.3); }
+  .badge.orange { background: rgba(192,112,48,0.2); color: var(--orange2); border: 1px solid rgba(192,112,48,0.3); }
+  .badge.teal { background: rgba(42,136,136,0.2); color: var(--teal2); border: 1px solid rgba(42,136,136,0.3); }
+  .badge.pink { background: rgba(176,80,128,0.2); color: var(--pink2); border: 1px solid rgba(176,80,128,0.3); }
+
+  /* ── FLOWCHART ── */
+  .flow-container { overflow-x: auto; padding-bottom: 16px; }
+  .flow-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 700px;
   }
-  table.eco {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-    margin-bottom: 24px;
+  .flow-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    min-height: 60px;
   }
-  table.eco th {
-    background: var(--bg3);
+  .flow-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    text-align: center;
+    min-width: 110px;
+    max-width: 160px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .flow-node.start { background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(212,168,67,0.05)); border-color: var(--gold); color: var(--gold2); font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 1px; }
+  .flow-node.process { border-color: var(--blue); color: var(--blue2); }
+  .flow-node.decision { background: rgba(122,74,176,0.12); border-color: var(--purple); color: var(--purple2); clip-path: polygon(8% 50%, 50% 0%, 92% 50%, 50% 100%); min-height: 60px; display: flex; align-items: center; justify-content: center; min-width: 120px; }
+  .flow-node.reward { background: rgba(74,156,106,0.12); border-color: var(--green); color: var(--green2); }
+  .flow-node.fail { background: rgba(192,74,74,0.12); border-color: var(--red); color: var(--red2); }
+  .flow-arrow {
+    color: var(--text-dim);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .flow-arrow.down { transform: rotate(90deg); }
+  .flow-arrow-text { font-size: 11px; color: var(--text-dim); text-align: center; }
+
+  /* ── ECONOMY TABLE ── */
+  .eco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .eco-table th {
+    background: var(--surface2);
     color: var(--gold);
     font-family: 'Cinzel', serif;
     font-size: 11px;
     letter-spacing: 1px;
-    padding: 10px 14px;
+    padding: 10px 12px;
     text-align: left;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
   }
-  table.eco td {
-    padding: 9px 14px;
-    border-bottom: 1px solid rgba(42,48,72,0.5);
-    color: #c0c8dd;
-    vertical-align: top;
-  }
-  table.eco tr:hover td { background: rgba(255,255,255,0.02); }
-  table.eco td:first-child { color: var(--white); font-weight: 600; }
-  .bal { color: var(--emerald2); font-weight: 600; }
-  .unbal { color: var(--ruby); font-weight: 600; }
-  .note { color: var(--orange); font-size: 12px; font-style: italic; }
+  .eco-table td { padding: 8px 12px; border-bottom: 1px solid rgba(42,48,69,0.4); }
+  .eco-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .eco-table .num { text-align: right; font-family: 'Courier New', monospace; }
+  .eco-table .ok { color: var(--green2); }
+  .eco-table .warn { color: var(--orange2); }
+  .eco-table .bad { color: var(--red2); }
 
-  /* ── ALERT BOX ── */
-  .alert {
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    font-size: 14px;
-  }
-  .alert.warn { background: rgba(230,126,34,0.1); border-left: 3px solid var(--orange); }
-  .alert.good { background: rgba(46,204,113,0.08); border-left: 3px solid var(--emerald); }
-  .alert.bad  { background: rgba(231,76,60,0.08);  border-left: 3px solid var(--ruby); }
-  .alert.info { background: rgba(52,152,219,0.08);  border-left: 3px solid var(--sapphire); }
-  .alert strong { display: block; margin-bottom: 6px; font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 0.5px; }
-
-  /* ── CONNECTION MAP ── */
-  .conn-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
-  }
-  .conn-card {
-    background: var(--bg2);
+  /* ── SEASON/TIME CARDS ── */
+  .season-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .season-card {
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 18px;
+    padding: 16px;
+    text-align: center;
+    transition: all 0.2s;
   }
-  .conn-card h4 {
-    font-family: 'Cinzel', serif;
-    font-size: 13px;
-    color: var(--gold2);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .conn-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 5px 0;
-    border-bottom: 1px solid rgba(42,48,72,0.4);
-    font-size: 13px;
-    color: #a0a8c0;
-  }
-  .conn-item:last-child { border-bottom: none; }
-  .arrow { color: var(--gold); font-size: 11px; margin-top: 3px; flex-shrink: 0; }
+  .season-card:hover { transform: translateY(-2px); }
+  .season-icon { font-size: 36px; margin-bottom: 8px; }
+  .season-title { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 1px; margin-bottom: 8px; }
+  .season-up { color: var(--green2); font-size: 12px; }
+  .season-down { color: var(--red2); font-size: 12px; }
 
-  /* RESPONSIVE */
+  /* ── TIMELINE (jam) ── */
+  .timeline {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    padding: 12px 0;
+    border-radius: 8px;
+  }
+  .time-slot {
+    flex: 1;
+    min-width: 60px;
+    text-align: center;
+    padding: 10px 4px;
+    border-right: 1px solid var(--border);
+    font-size: 11px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .time-slot:last-child { border-right: none; }
+  .time-slot.sibuk { background: rgba(192,74,74,0.15); }
+  .time-slot.normal { background: rgba(80,144,208,0.08); }
+  .time-slot.sepi { background: rgba(42,48,69,0.5); }
+  .time-slot .time-label { color: var(--text-dim); margin-bottom: 4px; font-weight: bold; }
+  .time-slot .time-status { font-weight: bold; margin-bottom: 2px; }
+  .time-slot.sibuk .time-status { color: var(--red2); }
+  .time-slot.normal .time-status { color: var(--blue2); }
+  .time-slot.sepi .time-status { color: var(--text-dim); }
+  .time-slot .time-mult { font-size: 13px; font-weight: bold; }
+  .time-slot.sibuk .time-mult { color: var(--orange2); }
+  .time-slot.normal .time-mult { color: var(--silver2); }
+  .time-slot.sepi .time-mult { color: var(--text-dim); }
+
+  /* ── CONNECTION LINES ── */
+  .connects {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 8px;
+  }
+  .connect-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(42,48,69,0.4); font-size: 13px; }
+  .connect-item:last-child { border-bottom: none; }
+  .connect-arrow { color: var(--gold-dim); font-size: 16px; }
+
+  /* ── RECOMMENDATION BOX ── */
+  .rec-box {
+    background: linear-gradient(135deg, rgba(212,168,67,0.08), rgba(122,74,176,0.08));
+    border: 1px solid rgba(212,168,67,0.2);
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 16px;
+  }
+  .rec-title { font-family: 'Cinzel', serif; font-size: 14px; color: var(--gold); margin-bottom: 12px; letter-spacing: 1px; }
+  .rec-item { padding: 8px 0; border-bottom: 1px solid rgba(42,48,69,0.4); font-size: 14px; }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; background: rgba(212,168,67,0.2); color: var(--gold2); border: 1px solid rgba(212,168,67,0.3); margin-right: 8px; font-family: 'Cinzel', serif; }
+
+  /* ── ISSUE BOX ── */
+  .issue-box {
+    background: rgba(192,74,74,0.06);
+    border: 1px solid rgba(192,74,74,0.2);
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 12px;
+  }
+  .issue-title { font-family: 'Cinzel', serif; font-size: 14px; color: var(--red2); margin-bottom: 12px; }
+  .issue-item { padding: 6px 0; border-bottom: 1px solid rgba(42,48,69,0.3); font-size: 13px; display: flex; gap: 10px; }
+  .issue-item:last-child { border-bottom: none; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap { margin: 6px 0; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); margin-bottom: 3px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border-glow); border-radius: 3px; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    .hero { padding: 32px 16px 24px; }
-    .cards-grid { grid-template-columns: 1fr; }
-    table.eco { font-size: 12px; }
-    table.eco td, table.eco th { padding: 8px 10px; }
+    .nav-tabs { padding: 10px; }
+    .tab-btn { font-size: 10px; padding: 6px 10px; }
+    .section { padding: 14px; }
   }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-title">⚔️ RPG BOT SYSTEM</div>
-  <div class="hero-sub">Flowchart · Panduan · Koneksi Fitur · Analisis Ekonomi</div>
-  <div class="hero-tags">
-    <span class="htag">53 Fitur</span>
-    <span class="htag">PET System</span>
-    <span class="htag">Dynamic Economy</span>
-    <span class="htag">Seasonal Market</span>
-    <span class="htag">Gear Progression</span>
+<div class="header">
+  <h1>⚔️ RPG BOT — PANDUAN LENGKAP & FLOWCHART ⚔️</h1>
+  <p>Sistem Ekonomi · Koneksi Fitur · Analisis Balance · Rekomendasi Musim & Jam</p>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('overview')">🗺️ Overview</button>
+  <button class="tab-btn" onclick="showTab('flowchart')">🔀 Flowchart</button>
+  <button class="tab-btn" onclick="showTab('resource')">⛏️ Resource</button>
+  <button class="tab-btn" onclick="showTab('ekonomi')">💰 Ekonomi</button>
+  <button class="tab-btn" onclick="showTab('absen')">🎁 Absen & Reward</button>
+  <button class="tab-btn" onclick="showTab('combat')">⚔️ Combat & Crime</button>
+  <button class="tab-btn" onclick="showTab('sosial')">👥 Sosial</button>
+  <button class="tab-btn" onclick="showTab('pet')">🐉 Pet</button>
+  <button class="tab-btn" onclick="showTab('balance')">⚖️ Balance</button>
+  <button class="tab-btn" onclick="showTab('musimjam')">🌤️ Musim & Jam</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: OVERVIEW -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section active" id="tab-overview">
+  <div class="section-title">🗺️ OVERVIEW — Peta Seluruh Fitur RPG</div>
+
+  <div class="grid-3">
+
+    <!-- PROFIL & AKUN -->
+    <div class="card silver">
+      <h3 class="silver">👤 PROFIL & AKUN</h3>
+      <div class="info-row"><span class="info-label">Lihat profil</span><span class="cmd">.profile</span></div>
+      <div class="info-row"><span class="info-label">Lihat EXP</span><span class="cmd">.exp</span></div>
+      <div class="info-row"><span class="info-label">Info bank/money</span><span class="cmd">.bank / .atm</span></div>
+      <div class="info-row"><span class="info-label">Inventory</span><span class="cmd">.inv</span></div>
+      <div class="info-row"><span class="info-label">Role kamu</span><span class="cmd">.role</span></div>
+      <div class="info-row"><span class="info-label">Leaderboard</span><span class="cmd">.lb</span></div>
+      <div class="info-row"><span class="info-label">Semua profil</span><span class="cmd">.allprofile</span></div>
+      <div class="alert info" style="margin-top:10px;font-size:12px;">📋 Profil menampilkan: Level, EXP, Money, Bank, Health, Stamina, Tools, Pet, Crate</div>
+    </div>
+
+    <!-- KEUANGAN -->
+    <div class="card gold">
+      <h3 class="gold">💰 KEUANGAN</h3>
+      <div class="info-row"><span class="info-label">Nabung ke bank</span><span class="cmd">.nabung</span></div>
+      <div class="info-row"><span class="info-label">Tarik dari bank</span><span class="cmd">.narik / .tarik</span></div>
+      <div class="info-row"><span class="info-label">Transfer ke orang</span><span class="cmd">.tf / .transfer</span></div>
+      <div class="info-row"><span class="info-label">Pajak transfer</span><span class="info-value gold">Dinamis (jam+musim)</span></div>
+      <div class="info-row"><span class="info-label">Giveaway</span><span class="cmd">.giveaway</span></div>
+      <div class="alert gold" style="margin-top:10px;font-size:12px;">💡 Transfer punya sistem pajak: Jam Sibuk +30%, Weekend +10-45%, Musim berpengaruh pada item boost</div>
+    </div>
+
+    <!-- RESOURCE -->
+    <div class="card orange">
+      <h3 class="orange">⛏️ RESOURCE</h3>
+      <div class="info-row"><span class="info-label">Menambang</span><span class="cmd">.nambang</span></div>
+      <div class="info-row"><span class="info-label">Menebang pohon</span><span class="cmd">.nebang</span></div>
+      <div class="info-row"><span class="info-label">Mulung sampah</span><span class="cmd">.mulung</span></div>
+      <div class="info-row"><span class="info-label">Mancing ikan</span><span class="cmd">.mancing</span></div>
+      <div class="info-row"><span class="info-label">Berburu hewan</span><span class="cmd">.berburu</span></div>
+      <div class="info-row"><span class="info-label">Berkebon buah</span><span class="cmd">.berkebon</span></div>
+      <div class="info-row"><span class="info-label">Hunter monster</span><span class="cmd">.hunter</span></div>
+      <div class="info-row"><span class="info-label">Adventure</span><span class="cmd">.adventure</span></div>
+    </div>
+
+    <!-- CRAFT & TOOLS -->
+    <div class="card teal">
+      <h3 class="teal">🔨 CRAFT & TOOLS</h3>
+      <div class="info-row"><span class="info-label">Workshop</span><span class="cmd">.craft</span></div>
+      <div class="info-row"><span class="info-label">Upgrade sword</span><span class="cmd">.craft upgrade sword</span></div>
+      <div class="info-row"><span class="info-label">Upgrade pickaxe</span><span class="cmd">.craft upgrade pickaxe</span></div>
+      <div class="info-row"><span class="info-label">Upgrade armor</span><span class="cmd">.craft upgrade armor</span></div>
+      <div class="info-row"><span class="info-label">Upgrade rod</span><span class="cmd">.craft upgrade fishingrod</span></div>
+      <div class="info-row"><span class="info-label">Recycle trash</span><span class="cmd">.craft string</span></div>
+      <div class="alert info" style="margin-top:10px;font-size:12px;">⚒️ Tools Tier 1-5. Tier lebih tinggi = multiplier reward lebih besar!</div>
+    </div>
+
+    <!-- TOKO & PASAR -->
+    <div class="card blue">
+      <h3 class="blue">🏪 TOKO & PASAR</h3>
+      <div class="info-row"><span class="info-label">Shop utama</span><span class="cmd">.shop / .toko</span></div>
+      <div class="info-row"><span class="info-label">Beli item</span><span class="cmd">.shop buy &lt;item&gt;</span></div>
+      <div class="info-row"><span class="info-label">Jual item</span><span class="cmd">.shop sell / .jual</span></div>
+      <div class="info-row"><span class="info-label">Pasar hewan/ikan</span><span class="cmd">.pasar</span></div>
+      <div class="info-row"><span class="info-label">Harga dinamis</span><span class="info-value blue">Per jam + musim</span></div>
+      <div class="info-row"><span class="info-label">Buka crate</span><span class="cmd">.open</span></div>
+    </div>
+
+    <!-- MASAK & MAKAN -->
+    <div class="card green">
+      <h3 class="green">🍳 MASAK & MAKAN</h3>
+      <div class="info-row"><span class="info-label">Memasak</span><span class="cmd">.cook</span></div>
+      <div class="info-row"><span class="info-label">Makan stamina</span><span class="cmd">.eat</span></div>
+      <div class="info-row"><span class="info-label">Heal HP</span><span class="cmd">.heal / .health</span></div>
+      <div class="info-row"><span class="info-label">Max Stamina</span><span class="info-value green">300</span></div>
+      <div class="info-row"><span class="info-label">Max Health</span><span class="info-value green">200</span></div>
+      <div class="info-row"><span class="info-label">Lihat buah</span><span class="cmd">.buah</span></div>
+      <div class="alert success" style="margin-top:10px;font-size:12px;">🍽️ Tier 1: +30-50 stamina | Tier 2: +50-70 | Tier 3: +70-90</div>
+    </div>
+
+    <!-- ABSEN & REWARD -->
+    <div class="card purple">
+      <h3 class="purple">🎁 ABSEN & REWARD</h3>
+      <div class="info-row"><span class="info-label">Hourly (1 jam)</span><span class="cmd">.hourly</span></div>
+      <div class="info-row"><span class="info-label">Daily (24 jam)</span><span class="cmd">.daily</span></div>
+      <div class="info-row"><span class="info-label">Weekly (7 hari)</span><span class="cmd">.weekly</span></div>
+      <div class="info-row"><span class="info-label">Monthly (30 hari)</span><span class="cmd">.monthly</span></div>
+      <div class="info-row"><span class="info-label">Yearly (365 hari)</span><span class="cmd">.yearly</span></div>
+      <div class="info-row"><span class="info-label">Streak bonus</span><span class="info-value purple">7 hari → Uncommon</span></div>
+    </div>
+
+    <!-- CRIME & JUDI -->
+    <div class="card red">
+      <h3 class="red">🎰 JUDI & CRIME</h3>
+      <div class="info-row"><span class="info-label">Judi solo</span><span class="cmd">.judi</span></div>
+      <div class="info-row"><span class="info-label">Judi PVP</span><span class="cmd">.judipvp</span></div>
+      <div class="info-row"><span class="info-label">Spaceman</span><span class="cmd">.spaceman</span></div>
+      <div class="info-row"><span class="info-label">Maling</span><span class="cmd">.maling</span></div>
+      <div class="info-row"><span class="info-label">Merampok target</span><span class="cmd">.merampok @</span></div>
+      <div class="info-row"><span class="info-label">Membunuh target</span><span class="cmd">.membunuh @</span></div>
+      <div class="info-row"><span class="info-label">Ngelonte</span><span class="cmd">.ngelonte</span></div>
+      <div class="info-row"><span class="info-label">Ngewe</span><span class="cmd">.ngewe</span></div>
+    </div>
+
+    <!-- PET -->
+    <div class="card pink">
+      <h3 class="pink">🐉 PET</h3>
+      <div class="info-row"><span class="info-label">Adventure pet</span><span class="cmd">.adventurepet</span></div>
+      <div class="info-row"><span class="info-label">Beri makan</span><span class="cmd">.feed &lt;pet&gt;</span></div>
+      <div class="info-row"><span class="info-label">Level up pet</span><span class="cmd">.leveluppet</span></div>
+      <div class="info-row"><span class="info-label">Naga 🐉</span><span class="info-value pink">Max Lv.10</span></div>
+      <div class="info-row"><span class="info-label">Phonix 🦜</span><span class="info-value pink">Max Lv.10</span></div>
+      <div class="info-row"><span class="info-label">Griffin 🦅</span><span class="info-value pink">Max Lv.10</span></div>
+      <div class="info-row"><span class="info-label">Kyubi 🦊</span><span class="info-value pink">Max Lv.10</span></div>
+      <div class="info-row"><span class="info-label">Centaur 🐎</span><span class="info-value pink">Max Lv.10</span></div>
+    </div>
+
+  </div>
+
+  <!-- KONEKSI ANTAR FITUR RINGKASAN -->
+  <div class="section-title" style="margin-top:28px;">🔗 Koneksi Utama Antar Fitur</div>
+  <div class="grid-2">
+    <div class="connects">
+      <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);margin-bottom:10px;letter-spacing:1px;">CHAIN RESOURCE → EKONOMI</div>
+      <div class="connect-item">⛏️ <b>.nambang</b> <span class="connect-arrow">→</span> Rock, Iron, Gold, Diamond → <span class="badge teal">.craft</span></div>
+      <div class="connect-item">🪓 <b>.nebang</b> <span class="connect-arrow">→</span> Wood → <span class="badge teal">.craft</span> <span class="badge blue">.shop sell</span></div>
+      <div class="connect-item">🗑️ <b>.mulung</b> <span class="connect-arrow">→</span> Botol, Kaleng, Kardus, Trash → <span class="badge blue">.shop sell</span> <span class="badge teal">.craft string</span></div>
+      <div class="connect-item">🎣 <b>.mancing</b> <span class="connect-arrow">→</span> Ikan → <span class="badge green">.cook</span> <span class="badge blue">.pasar sell</span></div>
+      <div class="connect-item">🏹 <b>.berburu</b> <span class="connect-arrow">→</span> Hewan → <span class="badge green">.cook</span> <span class="badge blue">.pasar sell</span></div>
+      <div class="connect-item">🌱 <b>.berkebon</b> <span class="connect-arrow">→</span> Buah → <span class="badge green">.eat</span> <span class="badge blue">.shop sell</span></div>
+    </div>
+    <div class="connects">
+      <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);margin-bottom:10px;letter-spacing:1px;">CHAIN GEAR → EFISIENSI</div>
+      <div class="connect-item">🔨 <b>.craft sword</b> <span class="connect-arrow">→</span> Unlock <span class="badge red">.berburu</span> <span class="badge orange">.hunter</span> <span class="badge red">.membunuh</span></div>
+      <div class="connect-item">🎣 <b>.craft fishingrod</b> <span class="connect-arrow">→</span> Unlock <span class="badge blue">.mancing</span></div>
+      <div class="connect-item">⛏️ <b>.craft pickaxe</b> <span class="connect-arrow">→</span> Unlock <span class="badge orange">.berkebon</span></div>
+      <div class="connect-item">🥼 <b>.craft armor</b> <span class="connect-arrow">→</span> Unlock <span class="badge purple">.adventure</span> <span class="badge red">.berburu</span></div>
+      <div class="connect-item">🍳 <b>.cook</b> <span class="connect-arrow">→</span> Makanan → <span class="badge green">.eat</span> → Stamina → Semua aktivitas</div>
+      <div class="connect-item">💊 <b>.heal</b> <span class="connect-arrow">→</span> HP → Unlock <span class="badge red">.berburu</span> <span class="badge purple">.adventure</span></div>
+    </div>
   </div>
 </div>
 
-<!-- NAV -->
-<nav class="nav">
-  <button class="nav-btn active" onclick="showTab('flowchart')">🗺️ FLOWCHART</button>
-  <button class="nav-btn" onclick="showTab('panduan')">📖 PANDUAN FITUR</button>
-  <button class="nav-btn" onclick="showTab('koneksi')">🔗 KONEKSI FITUR</button>
-  <button class="nav-btn" onclick="showTab('ekonomi')">💰 ANALISIS EKONOMI</button>
-  <button class="nav-btn" onclick="showTab('pet')">🐉 SISTEM PET</button>
-</nav>
-
-<div class="container">
-
-<!-- ════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
 <!-- TAB: FLOWCHART -->
-<!-- ════════════════════════════════════════ -->
-<div id="tab-flowchart" class="section active">
-  <div class="section-title">🗺️ Flowchart Sistem RPG — Gambaran Besar</div>
-
-  <div class="flowchart-wrap">
-  <svg class="flow" viewBox="0 0 1200 1700" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <!-- Arrow markers -->
-      <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L8,3 z" fill="#d4a843"/>
-      </marker>
-      <marker id="arr-g" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L8,3 z" fill="#2ecc71"/>
-      </marker>
-      <marker id="arr-r" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L8,3 z" fill="#e74c3c"/>
-      </marker>
-      <marker id="arr-b" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L8,3 z" fill="#3498db"/>
-      </marker>
-      <marker id="arr-p" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-        <path d="M0,0 L0,6 L8,3 z" fill="#9b59b6"/>
-      </marker>
-      <!-- Glow filter -->
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="glow2">
-        <feGaussianBlur stdDeviation="5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- BG -->
-    <rect width="1200" height="1700" fill="#0a0c10"/>
-    <rect x="10" y="10" width="1180" height="1680" rx="16" fill="#10131a" stroke="#2a3048" stroke-width="1"/>
-
-    <!-- LEGEND -->
-    <rect x="30" y="30" width="520" height="34" rx="6" fill="#181c26" stroke="#2a3048"/>
-    <text x="46" y="52" fill="#d4a843" font-size="11" font-family="Cinzel">LEGENDA:</text>
-    <rect x="120" y="38" width="14" height="14" rx="3" fill="#1a3a1a" stroke="#2ecc71"/>
-    <text x="138" y="50" fill="#57ef8d" font-size="11">SUMBER DAYA</text>
-    <rect x="240" y="38" width="14" height="14" rx="3" fill="#1a1a3a" stroke="#3498db"/>
-    <text x="258" y="50" fill="#5dade2" font-size="11">PROSES</text>
-    <rect x="330" y="38" width="14" height="14" rx="3" fill="#3a1a1a" stroke="#e74c3c"/>
-    <text x="348" y="50" fill="#e74c3c" font-size="11">RISIKO/KRIMINAL</text>
-    <rect x="455" y="38" width="14" height="14" rx="3" fill="#2a1a3a" stroke="#9b59b6"/>
-    <text x="473" y="50" fill="#c39bd3" font-size="11">JUDI</text>
-
-    <!-- ══════════ LAYER 1: MASUK BOT ══════════ -->
-    <text x="600" y="85" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">① MASUK &amp; KARAKTER</text>
-    
-    <!-- REGISTER / PROFILE -->
-    <rect x="430" y="96" width="340" height="44" rx="8" fill="#1a2030" stroke="#d4a843" stroke-width="1.5"/>
-    <text x="600" y="113" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="12" font-weight="700">👤 PROFIL USER</text>
-    <text x="600" y="129" text-anchor="middle" fill="#8090aa" font-size="11">.profile · .bank · .limit · .exp · .roleku</text>
-
-    <!-- ══════════ LAYER 2: ABSEN / KLAIM ══════════ -->
-    <text x="600" y="170" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">② SISTEM ABSEN — INCOME PASIF</text>
-
-    <!-- Hourly -->
-    <rect x="30" y="182" width="155" height="54" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="108" y="201" text-anchor="middle" fill="#2ecc71" font-size="13">⚡ Hourly</text>
-    <text x="108" y="216" text-anchor="middle" fill="#6b7280" font-size="10">.hourly | CD: 1 jam</text>
-    <text x="108" y="228" text-anchor="middle" fill="#57ef8d" font-size="10">+EXP +Money</text>
-
-    <!-- Daily -->
-    <rect x="205" y="182" width="155" height="54" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="282" y="201" text-anchor="middle" fill="#2ecc71" font-size="13">🎁 Daily</text>
-    <text x="282" y="216" text-anchor="middle" fill="#6b7280" font-size="10">.daily | CD: 24 jam</text>
-    <text x="282" y="228" text-anchor="middle" fill="#57ef8d" font-size="10">+Limit +Money ±Bonus</text>
-
-    <!-- Weekly -->
-    <rect x="380" y="182" width="155" height="54" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="457" y="201" text-anchor="middle" fill="#2ecc71" font-size="13">📅 Weekly</text>
-    <text x="457" y="216" text-anchor="middle" fill="#6b7280" font-size="10">.weekly | CD: 7 hari</text>
-    <text x="457" y="228" text-anchor="middle" fill="#57ef8d" font-size="10">+EXP +Money +Limit</text>
-
-    <!-- Monthly -->
-    <rect x="555" y="182" width="155" height="54" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="632" y="201" text-anchor="middle" fill="#2ecc71" font-size="13">📆 Monthly</text>
-    <text x="632" y="216" text-anchor="middle" fill="#6b7280" font-size="10">.monthly | CD: 30 hari</text>
-    <text x="632" y="228" text-anchor="middle" fill="#57ef8d" font-size="10">+EXP +Money +Limit</text>
-
-    <!-- Yearly -->
-    <rect x="730" y="182" width="155" height="54" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="807" y="201" text-anchor="middle" fill="#2ecc71" font-size="13">🎊 Yearly</text>
-    <text x="807" y="216" text-anchor="middle" fill="#6b7280" font-size="10">.yearly | CD: 1 tahun</text>
-    <text x="807" y="228" text-anchor="middle" fill="#57ef8d" font-size="10">+EXP +Money +Limit</text>
-
-    <!-- Giveaway -->
-    <rect x="905" y="182" width="260" height="54" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="1035" y="201" text-anchor="middle" fill="#2ecc71" font-size="13">🎉 Giveaway</text>
-    <text x="1035" y="216" text-anchor="middle" fill="#6b7280" font-size="10">.giveaway start/join/draw</text>
-    <text x="1035" y="228" text-anchor="middle" fill="#57ef8d" font-size="10">Event: hadiah money</text>
-
-    <!-- arrows absen → profile -->
-    <line x1="108" y1="236" x2="108" y2="270" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-g)"/>
-    <line x1="282" y1="236" x2="282" y2="270" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-g)"/>
-    <line x1="457" y1="236" x2="457" y2="270" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-g)"/>
-    <line x1="632" y1="236" x2="632" y2="270" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-g)"/>
-    <line x1="807" y1="236" x2="807" y2="270" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-g)"/>
-
-    <!-- ══════════ LAYER 3: SUMBER DAYA ══════════ -->
-    <text x="600" y="300" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">③ SUMBER DAYA — RESOURCE FARMING</text>
-
-    <!-- Mining -->
-    <rect x="30" y="314" width="170" height="64" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1.5"/>
-    <text x="115" y="334" text-anchor="middle" fill="#2ecc71" font-size="14">⛏️ Nambang</text>
-    <text x="115" y="349" text-anchor="middle" fill="#6b7280" font-size="10">.nambang | CD: 30m</text>
-    <text x="115" y="363" text-anchor="middle" fill="#57ef8d" font-size="10">Rock,Coal,Iron,Gold,Diamond</text>
-    <text x="115" y="375" text-anchor="middle" fill="#e74c3c" font-size="10">⚡40 Stamina req</text>
-
-    <!-- Logging -->
-    <rect x="220" y="314" width="170" height="64" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1.5"/>
-    <text x="305" y="334" text-anchor="middle" fill="#2ecc71" font-size="14">🪓 Nebang</text>
-    <text x="305" y="349" text-anchor="middle" fill="#6b7280" font-size="10">.nebang | CD: 60m</text>
-    <text x="305" y="363" text-anchor="middle" fill="#57ef8d" font-size="10">Wood, String, ±Rock</text>
-    <text x="305" y="375" text-anchor="middle" fill="#e74c3c" font-size="10">⚡10 Stamina req</text>
-
-    <!-- Fishing -->
-    <rect x="410" y="314" width="170" height="64" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1.5"/>
-    <text x="495" y="334" text-anchor="middle" fill="#2ecc71" font-size="14">🎣 Mancing</text>
-    <text x="495" y="349" text-anchor="middle" fill="#6b7280" font-size="10">.mancing | CD: 30m</text>
-    <text x="495" y="363" text-anchor="middle" fill="#57ef8d" font-size="10">Ikan,Lele,Nila,Paus,dll</text>
-    <text x="495" y="375" text-anchor="middle" fill="#e74c3c" font-size="10">🎣 Rod req | ⚡20 Stamina</text>
-
-    <!-- Hunting -->
-    <rect x="600" y="314" width="170" height="64" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1.5"/>
-    <text x="685" y="334" text-anchor="middle" fill="#2ecc71" font-size="14">🏹 Berburu</text>
-    <text x="685" y="349" text-anchor="middle" fill="#6b7280" font-size="10">.berburu | CD: 60m</text>
-    <text x="685" y="363" text-anchor="middle" fill="#57ef8d" font-size="10">Sapi,Ayam,Panda,dll</text>
-    <text x="685" y="375" text-anchor="middle" fill="#e74c3c" font-size="10">⚔️+🥼 req | ⚡25+HP30</text>
-
-    <!-- Mulung -->
-    <rect x="790" y="314" width="170" height="64" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1.5"/>
-    <text x="875" y="334" text-anchor="middle" fill="#2ecc71" font-size="14">🗑️ Mulung</text>
-    <text x="875" y="349" text-anchor="middle" fill="#6b7280" font-size="10">.mulung | CD: 30m</text>
-    <text x="875" y="363" text-anchor="middle" fill="#57ef8d" font-size="10">Botol,Kaleng,Kardus</text>
-    <text x="875" y="375" text-anchor="middle" fill="#e74c3c" font-size="10">⚡20 Stamina req</text>
-
-    <!-- Kebun -->
-    <rect x="980" y="314" width="185" height="64" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1.5"/>
-    <text x="1072" y="334" text-anchor="middle" fill="#2ecc71" font-size="14">🌱 Berkebon</text>
-    <text x="1072" y="349" text-anchor="middle" fill="#6b7280" font-size="10">.berkebon | CD: 30m</text>
-    <text x="1072" y="363" text-anchor="middle" fill="#57ef8d" font-size="10">Apel,Pisang,Anggur,dll</text>
-    <text x="1072" y="375" text-anchor="middle" fill="#e74c3c" font-size="10">⛏️ req | 500 bibit each</text>
-
-    <!-- ══════════ LAYER 4: GEAR & CRAFTING ══════════ -->
-    <text x="600" y="416" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">④ CRAFTING — GEAR PROGRESSION</text>
-
-    <!-- Craft center -->
-    <rect x="380" y="428" width="450" height="78" rx="10" fill="#1a1f30" stroke="#d4a843" stroke-width="1.5"/>
-    <text x="605" y="450" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">🔨 CRAFT SYSTEM (.craft)</text>
-    <text x="450" y="468" text-anchor="middle" fill="#8090aa" font-size="11">⚔️ Sword: Wood+Iron</text>
-    <text x="450" y="481" text-anchor="middle" fill="#8090aa" font-size="11">⛏️ Pickaxe: Wood+Rock+Iron+String</text>
-    <text x="450" y="494" text-anchor="middle" fill="#8090aa" font-size="11">⛷️ Rod: Wood+Iron+String</text>
-    <text x="750" y="468" text-anchor="middle" fill="#8090aa" font-size="11">🥼 Armor: Iron+Diamond</text>
-    <text x="750" y="481" text-anchor="middle" fill="#c39bd3" font-size="11">5 Tier: Wooden→Netherite</text>
-    <text x="750" y="494" text-anchor="middle" fill="#f0c96a" font-size="11">String: .craft string (100 Trash→10 String)</text>
-
-    <!-- Durability box -->
-    <rect x="870" y="428" width="295" height="78" rx="10" fill="#1a1a1a" stroke="#6b7280" stroke-width="1"/>
-    <text x="1017" y="450" text-anchor="middle" fill="#f0c96a" font-family="Cinzel" font-size="12">🔧 DURABILITAS</text>
-    <text x="1017" y="465" text-anchor="middle" fill="#6b7280" font-size="10">Turun setiap aktivitas</text>
-    <text x="1017" y="478" text-anchor="middle" fill="#6b7280" font-size="10">Tier 1=100, T2=200, T3=400,</text>
-    <text x="1017" y="491" text-anchor="middle" fill="#6b7280" font-size="10">T4=700 · Habis = turun tier</text>
-    <text x="1017" y="501" text-anchor="middle" fill="#e74c3c" font-size="9">auto-downgrade handler aktif!</text>
-
-    <!-- Arrow: resources → craft -->
-    <line x1="115" y1="378" x2="490" y2="428" stroke="#d4a843" stroke-width="1.2" marker-end="url(#arr)"/>
-    <line x1="305" y1="378" x2="520" y2="428" stroke="#d4a843" stroke-width="1.2" marker-end="url(#arr)"/>
-    <line x1="875" y1="378" x2="740" y2="428" stroke="#d4a843" stroke-width="1.2" marker-end="url(#arr)"/>
-
-    <!-- ══════════ LAYER 5: STAMINA + HEALTH ══════════ -->
-    <text x="270" y="540" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑤ KONDISI KARAKTER</text>
-
-    <!-- Stamina -->
-    <rect x="30" y="554" width="230" height="56" rx="8" fill="#2a1a10" stroke="#e67e22" stroke-width="1.5"/>
-    <text x="145" y="572" text-anchor="middle" fill="#e67e22" font-size="13">⚡ STAMINA (max 300)</text>
-    <text x="145" y="587" text-anchor="middle" fill="#8090aa" font-size="10">Isi: .eat [makanan/buah]</text>
-    <text x="145" y="598" text-anchor="middle" fill="#8090aa" font-size="10">Buah+20 | Masakan+40</text>
-
-    <!-- Health -->
-    <rect x="280" y="554" width="230" height="56" rx="8" fill="#3a1010" stroke="#e74c3c" stroke-width="1.5"/>
-    <text x="395" y="572" text-anchor="middle" fill="#e74c3c" font-size="13">❤️ HEALTH (max 200)</text>
-    <text x="395" y="587" text-anchor="middle" fill="#8090aa" font-size="10">Isi: .heal [jumlah potion]</text>
-    <text x="395" y="598" text-anchor="middle" fill="#8090aa" font-size="10">1 Potion = +50 HP</text>
-
-    <!-- Cook box -->
-    <rect x="530" y="554" width="230" height="56" rx="8" fill="#1a2030" stroke="#3498db" stroke-width="1"/>
-    <text x="645" y="572" text-anchor="middle" fill="#5dade2" font-size="13">🍳 MEMASAK (.masak)</text>
-    <text x="645" y="587" text-anchor="middle" fill="#8090aa" font-size="10">Hewan/Ikan + Coal → Masakan</text>
-    <text x="645" y="598" text-anchor="middle" fill="#8090aa" font-size="10">Masakan .eat → +40 Stamina</text>
-
-    <!-- Eat connect arrows -->
-    <line x1="495" y1="363" x2="160" y2="554" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/>
-    <line x1="685" y1="378" x2="645" y2="554" stroke="#3498db" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-b)"/>
-
-    <!-- ══════════ LAYER 6: PENDAPATAN AKTIF ══════════ -->
-    <text x="600" y="645" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑥ PENDAPATAN AKTIF — KERJA &amp; PETUALANGAN</text>
-
-    <!-- Ojek -->
-    <rect x="30" y="658" width="150" height="58" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="105" y="677" text-anchor="middle" fill="#2ecc71" font-size="13">🛵 Ojek</text>
-    <text x="105" y="692" text-anchor="middle" fill="#6b7280" font-size="10">.ojek | CD: 5m</text>
-    <text x="105" y="704" text-anchor="middle" fill="#57ef8d" font-size="10">+Money +EXP cepat</text>
-
-    <!-- Ngewe -->
-    <rect x="195" y="658" width="150" height="58" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="270" y="677" text-anchor="middle" fill="#2ecc71" font-size="13">💋 Ngewe</text>
-    <text x="270" y="692" text-anchor="middle" fill="#6b7280" font-size="10">.ngewe | CD: 10m</text>
-    <text x="270" y="704" text-anchor="middle" fill="#57ef8d" font-size="10">30k-150k Money</text>
-
-    <!-- Ngelonte -->
-    <rect x="360" y="658" width="150" height="58" rx="8" fill="#1a2a1a" stroke="#2ecc71" stroke-width="1"/>
-    <text x="435" y="677" text-anchor="middle" fill="#2ecc71" font-size="13">🌃 Ngelonte</text>
-    <text x="435" y="692" text-anchor="middle" fill="#6b7280" font-size="10">.ngelonte | CD: 12j</text>
-    <text x="435" y="704" text-anchor="middle" fill="#57ef8d" font-size="10">High payout</text>
-
-    <!-- Adventure -->
-    <rect x="525" y="658" width="155" height="58" rx="8" fill="#1a1a3a" stroke="#3498db" stroke-width="1.5"/>
-    <text x="602" y="677" text-anchor="middle" fill="#5dade2" font-size="13">🗺️ Adventure</text>
-    <text x="602" y="692" text-anchor="middle" fill="#6b7280" font-size="10">.adventure | CD: 60m</text>
-    <text x="602" y="704" text-anchor="middle" fill="#57ef8d" font-size="10">+Money +EXP +Crate</text>
-
-    <!-- Hunter -->
-    <rect x="695" y="658" width="155" height="58" rx="8" fill="#1a1a3a" stroke="#3498db" stroke-width="1.5"/>
-    <text x="772" y="677" text-anchor="middle" fill="#5dade2" font-size="13">⚔️ Hunter</text>
-    <text x="772" y="692" text-anchor="middle" fill="#6b7280" font-size="10">.hunter | CD: 30m</text>
-    <text x="772" y="704" text-anchor="middle" fill="#57ef8d" font-size="10">Monster loot + EXP</text>
-
-    <!-- Berdagang -->
-    <rect x="865" y="658" width="155" height="58" rx="8" fill="#1a1a3a" stroke="#3498db" stroke-width="1"/>
-    <text x="942" y="677" text-anchor="middle" fill="#5dade2" font-size="13">🤝 Berdagang</text>
-    <text x="942" y="692" text-anchor="middle" fill="#6b7280" font-size="10">.berdagang @target | 30m</text>
-    <text x="942" y="704" text-anchor="middle" fill="#57ef8d" font-size="10">PvP trade, bagi hasil</text>
-
-    <!-- ══════════ LAYER 7: KRIMINAL ══════════ -->
-    <text x="600" y="750" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑦ AKSI KRIMINAL — BERISIKO!</text>
-
-    <!-- Maling -->
-    <rect x="30" y="764" width="165" height="60" rx="8" fill="#2a1010" stroke="#e74c3c" stroke-width="1.5"/>
-    <text x="112" y="784" text-anchor="middle" fill="#e74c3c" font-size="13">🦹 Maling</text>
-    <text x="112" y="799" text-anchor="middle" fill="#6b7280" font-size="10">.maling | CD: 30m</text>
-    <text x="112" y="811" text-anchor="middle" fill="#e87a6e" font-size="10">Botol,Kaleng,Kardus,Money</text>
-
-    <!-- Merampok -->
-    <rect x="210" y="764" width="165" height="60" rx="8" fill="#2a1010" stroke="#e74c3c" stroke-width="1.5"/>
-    <text x="292" y="784" text-anchor="middle" fill="#e74c3c" font-size="13">🔫 Merampok</text>
-    <text x="292" y="799" text-anchor="middle" fill="#6b7280" font-size="10">.merampok @target | 60m</text>
-    <text x="292" y="811" text-anchor="middle" fill="#e87a6e" font-size="10">Curi money player lain</text>
-
-    <!-- Membunuh -->
-    <rect x="390" y="764" width="165" height="60" rx="8" fill="#2a1010" stroke="#e74c3c" stroke-width="1.5"/>
-    <text x="472" y="784" text-anchor="middle" fill="#e74c3c" font-size="13">🗡️ Membunuh</text>
-    <text x="472" y="799" text-anchor="middle" fill="#6b7280" font-size="10">.membunuh @target | 60m</text>
-    <text x="472" y="811" text-anchor="middle" fill="#e87a6e" font-size="10">Curi EXP target</text>
-
-    <!-- ══════════ LAYER 8: JUDI ══════════ -->
-    <text x="870" y="750" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑧ JUDI — HIGH RISK</text>
-
-    <!-- Judi -->
-    <rect x="590" y="764" width="150" height="60" rx="8" fill="#2a1a3a" stroke="#9b59b6" stroke-width="1.5"/>
-    <text x="665" y="784" text-anchor="middle" fill="#c39bd3" font-size="13">🎲 Judi</text>
-    <text x="665" y="799" text-anchor="middle" fill="#6b7280" font-size="10">.judi [amount] | CD: 5s</text>
-    <text x="665" y="811" text-anchor="middle" fill="#c39bd3" font-size="10">Roll 0-75 vs Bot 0-100</text>
-
-    <!-- JudiPVP -->
-    <rect x="755" y="764" width="155" height="60" rx="8" fill="#2a1a3a" stroke="#9b59b6" stroke-width="1.5"/>
-    <text x="832" y="784" text-anchor="middle" fill="#c39bd3" font-size="13">🎮 JudiPVP</text>
-    <text x="832" y="799" text-anchor="middle" fill="#6b7280" font-size="10">.judipvp [bet] @target</text>
-    <text x="832" y="811" text-anchor="middle" fill="#c39bd3" font-size="10">PvP spin SPIN!</text>
-
-    <!-- Spaceman -->
-    <rect x="925" y="764" width="165" height="60" rx="8" fill="#2a1a3a" stroke="#9b59b6" stroke-width="1.5"/>
-    <text x="1007" y="784" text-anchor="middle" fill="#c39bd3" font-size="13">🚀 Spaceman</text>
-    <text x="1007" y="799" text-anchor="middle" fill="#6b7280" font-size="10">.spaceman [bet]</text>
-    <text x="1007" y="811" text-anchor="middle" fill="#c39bd3" font-size="10">Max bet 500k · .cashout</text>
-
-    <!-- ══════════ LAYER 9: MARKET ══════════ -->
-    <text x="600" y="862" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑨ PASAR &amp; TRANSAKSI</text>
-
-    <!-- Shop -->
-    <rect x="30" y="876" width="210" height="72" rx="8" fill="#1a1f30" stroke="#d4a843" stroke-width="1.5"/>
-    <text x="135" y="897" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13">🏪 SHOP</text>
-    <text x="135" y="912" text-anchor="middle" fill="#6b7280" font-size="10">.shop · .buy · .sell</text>
-    <text x="135" y="925" text-anchor="middle" fill="#8090aa" font-size="10">Harga dinamis: jam+musim+weekend</text>
-    <text x="135" y="936" text-anchor="middle" fill="#f0c96a" font-size="10">Material, Crate, Bibit, Pet Food</text>
-
-    <!-- Pasar -->
-    <rect x="260" y="876" width="210" height="72" rx="8" fill="#1a1f30" stroke="#d4a843" stroke-width="1.5"/>
-    <text x="365" y="897" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13">🏬 PASAR</text>
-    <text x="365" y="912" text-anchor="middle" fill="#6b7280" font-size="10">.pasar · .jual</text>
-    <text x="365" y="925" text-anchor="middle" fill="#8090aa" font-size="10">Hewan + Ikan, harga dinamis</text>
-    <text x="365" y="936" text-anchor="middle" fill="#f0c96a" font-size="10">Musim pengaruhi harga item!</text>
-
-    <!-- Transfer -->
-    <rect x="490" y="876" width="210" height="72" rx="8" fill="#1a1f30" stroke="#d4a843" stroke-width="1"/>
-    <text x="595" y="897" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13">💸 TRANSFER</text>
-    <text x="595" y="912" text-anchor="middle" fill="#6b7280" font-size="10">.tf @target item jumlah</text>
-    <text x="595" y="925" text-anchor="middle" fill="#8090aa" font-size="10">Pajak dinamis per item tier</text>
-    <text x="595" y="936" text-anchor="middle" fill="#f0c96a" font-size="10">Anti tax-dodge: 3x kecil=locked</text>
-
-    <!-- Bank -->
-    <rect x="720" y="876" width="180" height="72" rx="8" fill="#1a1f30" stroke="#d4a843" stroke-width="1"/>
-    <text x="810" y="897" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13">🏦 BANK</text>
-    <text x="810" y="912" text-anchor="middle" fill="#6b7280" font-size="10">.nabung · .narik · .bank</text>
-    <text x="810" y="925" text-anchor="middle" fill="#8090aa" font-size="10">1 Money = 1 Bank (ATM)</text>
-    <text x="810" y="936" text-anchor="middle" fill="#f0c96a" font-size="10">Simpan aman dari rampok!</text>
-
-    <!-- Limit/ToMoney -->
-    <rect x="920" y="876" width="240" height="72" rx="8" fill="#1a1f30" stroke="#d4a843" stroke-width="1"/>
-    <text x="1040" y="897" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13">🪙 LIMIT ↔ MONEY</text>
-    <text x="1040" y="912" text-anchor="middle" fill="#6b7280" font-size="10">.tomoney [jumlah/all]</text>
-    <text x="1040" y="925" text-anchor="middle" fill="#8090aa" font-size="10">2 EXP per limit konversi</text>
-    <text x="1040" y="936" text-anchor="middle" fill="#f0c96a" font-size="10">Limit → EXP bonus</text>
-
-    <!-- ══════════ LAYER 10: CRATE & OPEN ══════════ -->
-    <text x="600" y="984" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑩ CRATE SYSTEM</text>
-
-    <!-- Open Crate -->
-    <rect x="200" y="998" width="800" height="72" rx="10" fill="#1a1f30" stroke="#d4a843" stroke-width="1.5"/>
-    <text x="600" y="1018" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13">📦 OPEN CRATE (.open [jenis] [jumlah])</text>
-    <text x="400" y="1036" text-anchor="middle" fill="#6b7280" font-size="11">⚪ Common (zonk 20%) | 🟢 Uncommon (12%) | 🟣 Mythic (6%) | 🟡 Legendary (3%)</text>
-    <text x="400" y="1052" text-anchor="middle" fill="#6b7280" font-size="11">🎫 Pet Crate (2% chance pet · tidak zonk)</text>
-    <text x="850" y="1036" text-anchor="middle" fill="#f0c96a" font-size="11">Free: max 5x buka</text>
-    <text x="850" y="1052" text-anchor="middle" fill="#c39bd3" font-size="11">Premium: max 20x buka</text>
-
-    <!-- ══════════ LAYER 11: PET ══════════ -->
-    <text x="600" y="1108" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑪ PET SYSTEM</text>
-
-    <rect x="80" y="1122" width="1040" height="72" rx="10" fill="#181030" stroke="#9b59b6" stroke-width="1.5"/>
-    <text x="600" y="1142" text-anchor="middle" fill="#c39bd3" font-family="Cinzel" font-size="13">🐉 PET SYSTEM — Naga · Phonix · Centaur · Griffin · Kyubi</text>
-    <text x="350" y="1160" text-anchor="middle" fill="#6b7280" font-size="11">.feed [pet] — Beri makan | .levelup — Naikkan level (max 10)</text>
-    <text x="350" y="1175" text-anchor="middle" fill="#6b7280" font-size="11">.adventure-pet — Petualangan bersama pet</text>
-    <text x="850" y="1160" text-anchor="middle" fill="#6b7280" font-size="11">Masing-masing 1 makanan khusus</text>
-    <text x="850" y="1175" text-anchor="middle" fill="#6b7280" font-size="11">Stamina pet: max 100 | Level XP: lvl×1000</text>
-
-    <!-- ══════════ LAYER 12: PROGRESS / LEVEL ══════════ -->
-    <text x="600" y="1232" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑫ LEVEL &amp; PROGRESS</text>
-
-    <rect x="80" y="1246" width="490" height="68" rx="10" fill="#1a1a1a" stroke="#d4a843" stroke-width="1"/>
-    <text x="325" y="1266" text-anchor="middle" fill="#f0c96a" font-family="Cinzel" font-size="12">📈 EXP → LEVEL → ROLE</text>
-    <text x="325" y="1283" text-anchor="middle" fill="#6b7280" font-size="11">Lv.1: Pendatang → Lv.100: Legenda Hidup</text>
-    <text x="325" y="1298" text-anchor="middle" fill="#6b7280" font-size="11">Lv.1000: Master Tanpa Tanding 🏆</text>
-
-    <rect x="590" y="1246" width="530" height="68" rx="10" fill="#1a1a1a" stroke="#d4a843" stroke-width="1"/>
-    <text x="855" y="1266" text-anchor="middle" fill="#f0c96a" font-family="Cinzel" font-size="12">🏆 LEADERBOARD (.lb [kategori])</text>
-    <text x="855" y="1283" text-anchor="middle" fill="#6b7280" font-size="11">level · exp · money · bank · diamond · gold</text>
-    <text x="855" y="1298" text-anchor="middle" fill="#6b7280" font-size="11">wood · hewan · ikan · allprofile</text>
-
-    <!-- ══════════ LAYER 13: VIEW ══════════ -->
-    <text x="600" y="1354" text-anchor="middle" fill="#d4a843" font-family="Cinzel" font-size="13" font-weight="700">⑬ CEK &amp; VIEW</text>
-
-    <rect x="80" y="1368" width="200" height="54" rx="8" fill="#1a1a20" stroke="#6b7280"/>
-    <text x="180" y="1389" text-anchor="middle" fill="#8090aa" font-size="12">🎒 .inv</text>
-    <text x="180" y="1406" text-anchor="middle" fill="#6b7280" font-size="10">Semua item inventory</text>
-
-    <rect x="300" y="1368" width="200" height="54" rx="8" fill="#1a1a20" stroke="#6b7280"/>
-    <text x="400" y="1389" text-anchor="middle" fill="#8090aa" font-size="12">🐄 .kandang</text>
-    <text x="400" y="1406" text-anchor="middle" fill="#6b7280" font-size="10">List hewan hasil berburu</text>
-
-    <rect x="520" y="1368" width="200" height="54" rx="8" fill="#1a1a20" stroke="#6b7280"/>
-    <text x="620" y="1389" text-anchor="middle" fill="#8090aa" font-size="12">🐟 .kolam</text>
-    <text x="620" y="1406" text-anchor="middle" fill="#6b7280" font-size="10">List ikan hasil mancing</text>
-
-    <rect x="740" y="1368" width="200" height="54" rx="8" fill="#1a1a20" stroke="#6b7280"/>
-    <text x="840" y="1389" text-anchor="middle" fill="#8090aa" font-size="12">🍎 .buah</text>
-    <text x="840" y="1406" text-anchor="middle" fill="#6b7280" font-size="10">Stok buah dari kebun</text>
-
-    <rect x="960" y="1368" width="200" height="54" rx="8" fill="#1a1a20" stroke="#6b7280"/>
-    <text x="1060" y="1389" text-anchor="middle" fill="#8090aa" font-size="12">📊 .allprofile</text>
-    <text x="1060" y="1406" text-anchor="middle" fill="#6b7280" font-size="10">Profil lengkap semua</text>
-
-    <!-- MAIN FLOW ARROWS -->
-    <!-- Absen → Keuangan -->
-    <path d="M600 118 L600 170" stroke="#d4a843" stroke-width="1.5" marker-end="url(#arr)" fill="none"/>
-    <!-- Resource → Stamina -->
-    <path d="M875 378 L640 554" stroke="#e67e22" stroke-width="1" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
-    <!-- Cook → Eat chain -->
-    <path d="M645 610 L395 610 L395 598" stroke="#e67e22" stroke-width="1" stroke-dasharray="3,3" fill="none" marker-end="url(#arr)"/>
-    <!-- Resources → Market -->
-    <path d="M495 378 L365 876" stroke="#d4a843" stroke-width="1" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
-    <path d="M685 378 L365 876" stroke="#d4a843" stroke-width="1" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
-    <!-- Active income → Money -->
-    <path d="M602 716 L595 876" stroke="#2ecc71" stroke-width="1" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-g)"/>
-    <!-- Crate → pet crate -->
-    <path d="M600 1070 L600 1122" stroke="#9b59b6" stroke-width="1.5" marker-end="url(#arr-p)" fill="none"/>
-    <!-- open crate → EXP/Level -->
-    <path d="M700 1070 L325 1246" stroke="#d4a843" stroke-width="1" stroke-dasharray="4,3" fill="none" marker-end="url(#arr)"/>
-    <!-- Level → Role -->
-    <path d="M325 1314 L325 1368" stroke="#d4a843" stroke-width="1" fill="none" marker-end="url(#arr)"/>
-  </svg>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════ -->
-<!-- TAB: PANDUAN FITUR -->
-<!-- ════════════════════════════════════════ -->
-<div id="tab-panduan" class="section">
-  <div class="section-title">📖 Panduan Lengkap Setiap Fitur</div>
-
-  <!-- ABSEN -->
-  <div class="eco-title">⏰ SISTEM ABSEN — INCOME PASIF</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">⚡</span>
-      <div class="card-title">HOURLY</div>
-      <code class="card-cmd">.hourly</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Klaim hadiah setiap 1 jam sekali. Ini sumber EXP dan Money paling konsisten untuk player aktif.</p>
-        <p><strong>Reward Free:</strong> EXP 3.000–9.000 · Money 800–7.000</p>
-        <p><strong>Reward Premium:</strong> EXP 8.000–18.000 · Money 4.000–15.000</p>
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-flowchart">
+  <div class="section-title">🔀 FLOWCHART — Alur Aktivitas Utama</div>
+
+  <div class="grid-2">
+
+    <!-- FLOWCHART MANCING -->
+    <div class="card blue">
+      <h3 class="blue">🎣 Alur: MANCING</h3>
+      <div class="flow-container">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:280px;">
+          <div class="flow-node start">.mancing</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Punya Fishing Rod?</div>
+          <div style="display:flex;gap:20px;align-items:flex-start;margin:4px 0;">
+            <div style="text-align:center;"><div style="color:var(--red2);font-size:11px;">❌ Tidak</div><div class="flow-node fail" style="min-width:90px;font-size:11px;">.craft fishingrod</div></div>
+            <div style="text-align:center;"><div style="color:var(--green2);font-size:11px;">✅ Ya</div><div class="flow-node process" style="min-width:90px;font-size:11px;">Stamina ≥ 20?</div></div>
+          </div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Cooldown 30 menit clear?</div>
+          <div class="flow-arrow down">→</div>
+          <div style="display:flex;gap:20px;margin:4px 0;">
+            <div style="text-align:center;"><div style="color:var(--orange2);font-size:11px;">10% gagal</div><div class="flow-node fail" style="min-width:90px;font-size:11px;">-Stamina<br>-Rod Durability</div></div>
+            <div style="text-align:center;"><div style="color:var(--green2);font-size:11px;">90% sukses</div><div class="flow-node reward" style="min-width:90px;font-size:11px;">+Ikan, Paus,<br>Lele, Bawal,<br>Nila, Kepiting,<br>Udang</div></div>
+          </div>
+          <div class="flow-arrow down" style="color:var(--green2);">→</div>
+          <div class="flow-node reward" style="font-size:11px;">→ .cook → .eat (Stamina)<br>→ .pasar sell (Money)</div>
+        </div>
       </div>
-      <div class="tag-row">
-        <span class="tag cd">CD: 1 jam</span>
-        <span class="tag gives">+EXP +Money</span>
+      <div class="alert info" style="margin-top:10px;font-size:11px;">Rod Tier 1-4: multiplier x1, x1.5, x2, x3, x4</div>
+    </div>
+
+    <!-- FLOWCHART BERBURU -->
+    <div class="card red">
+      <h3 class="red">🏹 Alur: BERBURU</h3>
+      <div class="flow-container">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:280px;">
+          <div class="flow-node start">.berburu</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Punya Sword & Armor?</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Stamina ≥ 25 & Health ≥ 30?</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Cooldown 60 menit clear?</div>
+          <div class="flow-arrow down">→</div>
+          <div style="display:flex;gap:20px;margin:4px 0;">
+            <div style="text-align:center;"><div style="color:var(--orange2);font-size:11px;">15% gagal</div><div class="flow-node fail" style="min-width:90px;font-size:11px;">-Health, -Stamina<br>-Armor&Sword Dur.</div></div>
+            <div style="text-align:center;"><div style="color:var(--green2);font-size:11px;">85% sukses</div><div class="flow-node reward" style="min-width:90px;font-size:11px;">+12 jenis hewan<br>+EXP +Money<br>Gear bonus x1-x4</div></div>
+          </div>
+          <div class="flow-arrow down" style="color:var(--green2);">→</div>
+          <div class="flow-node reward" style="font-size:11px;">→ .cook → .eat (Stamina)<br>→ .pasar sell (Money)</div>
+        </div>
+      </div>
+      <div class="alert danger" style="margin-top:10px;font-size:11px;">Gear bonus = SwordMultiplier × (1 + Armor×0.15)</div>
+    </div>
+
+    <!-- FLOWCHART NAMBANG -->
+    <div class="card orange">
+      <h3 class="orange">⛏️ Alur: NAMBANG</h3>
+      <div class="flow-container">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:280px;">
+          <div class="flow-node start">.nambang</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Stamina ≥ 40?</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Cooldown 30 menit clear?</div>
+          <div class="flow-arrow down">→</div>
+          <div style="display:flex;gap:20px;margin:4px 0;">
+            <div style="text-align:center;"><div style="color:var(--orange2);font-size:11px;">15% gagal</div><div class="flow-node fail" style="min-width:90px;font-size:11px;">Gua runtuh<br>-40 Stamina</div></div>
+            <div style="text-align:center;"><div style="color:var(--green2);font-size:11px;">85% sukses</div><div class="flow-node reward" style="min-width:90px;font-size:11px;">+Rock, Coal, Iron<br>+Gold (35%)<br>+Diamond (20%)<br>+EXP +Money</div></div>
+          </div>
+          <div class="flow-arrow down" style="color:var(--green2);">→</div>
+          <div class="flow-node reward" style="font-size:11px;">→ .craft (buat gear)<br>→ .shop sell (money)</div>
+        </div>
+      </div>
+      <div class="alert warn" style="margin-top:10px;font-size:11px;">Note: nambang tidak butuh pickaxe! Bug atau fitur?</div>
+    </div>
+
+    <!-- FLOWCHART CRAFT -->
+    <div class="card teal">
+      <h3 class="teal">🔨 Alur: CRAFT & UPGRADE</h3>
+      <div class="flow-container">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:280px;">
+          <div class="flow-node start">.craft &lt;item&gt;</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Sudah punya tool?</div>
+          <div style="display:flex;gap:20px;margin:4px 0;">
+            <div style="text-align:center;"><div style="color:var(--blue2);font-size:11px;">Belum</div><div class="flow-node process" style="min-width:90px;font-size:11px;">Bahan cukup?</div></div>
+            <div style="text-align:center;"><div style="color:var(--gold2);font-size:11px;">Sudah</div><div class="flow-node process" style="min-width:90px;font-size:11px;">.craft upgrade<br>&lt;item&gt;</div></div>
+          </div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node reward" style="font-size:11px;">Tool Tier +1<br>Durability reset<br>Multiplier naik</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node reward" style="font-size:11px;">Unlock / boost:<br>.berburu .mancing<br>.nambang .berkebon<br>.adventure</div>
+        </div>
+      </div>
+      <div class="alert info" style="margin-top:10px;font-size:11px;">Tier 1: dur 100 | Tier 3: dur 400 | Tier 5: dur 700</div>
+    </div>
+
+    <!-- FLOWCHART ADVENTURE -->
+    <div class="card purple">
+      <h3 class="purple">🗺️ Alur: ADVENTURE</h3>
+      <div class="flow-container">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:280px;">
+          <div class="flow-node start">.adventure</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Armor + Health ≥ 80 + Stamina ≥ 35?</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Cooldown 60 menit clear?</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Pilih lokasi random (20 lokasi)</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node reward" style="font-size:11px;">+EXP +Money +Crate<br>+Trash (untuk recycle)<br>Armor multiplier x1-x4</div>
+        </div>
+      </div>
+      <div class="alert info" style="margin-top:10px;font-size:11px;">Adventure → Trash → .craft string → Pickaxe & Rod upgrade</div>
+    </div>
+
+    <!-- FLOWCHART TRANSFER -->
+    <div class="card gold">
+      <h3 class="gold">💸 Alur: TRANSFER (dengan pajak)</h3>
+      <div class="flow-container">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;min-width:280px;">
+          <div class="flow-node start">.tf @target item jumlah</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Cek jam sekarang</div>
+          <div style="display:flex;gap:10px;margin:4px 0;flex-wrap:wrap;justify-content:center;">
+            <div class="flow-node fail" style="min-width:85px;font-size:10px;">🌙 Sepi<br>00-05: x0.8</div>
+            <div class="flow-node process" style="min-width:85px;font-size:10px;">☀️ Normal<br>x1.0</div>
+            <div class="flow-node fail" style="min-width:85px;font-size:10px;">🔥 Sibuk<br>7-9,12-13,18-21: x1.3</div>
+          </div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Weekend? (+10-45%)</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node process" style="font-size:12px;">Musim boost item tertentu?</div>
+          <div class="flow-arrow down">→</div>
+          <div class="flow-node reward" style="font-size:11px;">Hitung total pajak<br>Transfer sukses<br>Anti tax-dodge: 3x kecil dalam 5 menit → locked</div>
+        </div>
       </div>
     </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🎁</span>
-      <div class="card-title">DAILY</div>
-      <code class="card-cmd">.daily</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Klaim harian untuk Limit dan Money. Ada sistem <strong>Streak</strong> — setiap 7 hari berturut-turut dapat Uncommon Crate. Ada bonus random (Potion, Trash, Iron, Common Crate).</p>
-        <p><strong>Reward Free:</strong> Limit 30–80 · Money 3k–18k</p>
-        <p><strong>Reward Premium:</strong> Limit 80–150 · Money 8k–35k</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag cd">CD: 24 jam</span>
-        <span class="tag gives">+Limit +Money ±Bonus</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">📅</span>
-      <div class="card-title">WEEKLY / MONTHLY / YEARLY</div>
-      <code class="card-cmd">.weekly · .monthly · .yearly</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Hadiah besar untuk player loyal. Semakin jarang, semakin besar reward dan kemungkinan bonus crate/diamond.</p>
-        <p><strong>Weekly:</strong> EXP 8k–25k · Money 15k–80k · Limit 20–60 + bonus random</p>
-        <p><strong>Monthly:</strong> EXP 15k–60k · Money 30k–150k · Limit 80–200 + Mythic/Diamond chance</p>
-        <p><strong>Yearly:</strong> EXP 50k–200k · Money 80k–600k · Limit 150–400 + Legendary chance</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag cd">7d / 30d / 1 tahun</span>
-        <span class="tag gives">Big Reward</span>
-      </div>
-    </div>
+
   </div>
 
-  <!-- RESOURCE -->
-  <div class="eco-title">⛏️ RESOURCE FARMING</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">⛏️</span>
-      <div class="card-title">NAMBANG (MENAMBANG)</div>
-      <code class="card-cmd">.nambang</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Menggali gua untuk mendapat mineral mentah. Material utama untuk crafting semua gear tier tinggi.</p>
-        <p><strong>Hasil:</strong> Rock 10–200 · Coal 1–20 · Iron 5–30 · Gold (35%) · Diamond (20%)</p>
-        <p><strong>Bonus:</strong> +EXP 2k–8k · +Money 3k–15k</p>
-        <p><strong>Gagal 15%:</strong> Stamina -40, tidak dapat apapun</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ 40 Stamina</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">Rock Coal Iron Gold Diamond</span>
-        <span class="tag links">→ Craft Gear</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🪓</span>
-      <div class="card-title">NEBANG (MENEBANG POHON)</div>
-      <code class="card-cmd">.nebang</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mendapat Wood dan String. Bahan dasar crafting semua alat tier pertama. String sulit didapat sehingga berharga.</p>
-        <p><strong>Hasil:</strong> Wood 100–1500 · String 5–80 · Rock bonus (30%)</p>
-        <p><strong>Bonus:</strong> +EXP 1k–5k · +Money 1k–8k</p>
-        <p><strong>Gagal 20%:</strong> Diserang lebah, Stamina -10</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ 10 Stamina</span>
-        <span class="tag cd">CD: 60 menit</span>
-        <span class="tag gives">Wood String</span>
-        <span class="tag links">→ Craft Gear · Cook (kayu bakar tak langsung)</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🎣</span>
-      <div class="card-title">MANCING</div>
-      <code class="card-cmd">.mancing</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mendapat berbagai jenis ikan untuk dimasak atau dijual di Pasar. Fishing Rod tier tinggi melipatgandakan hasil.</p>
-        <p><strong>Hasil:</strong> Ikan, Lele, Nila, Bawal, Paus, Kepiting, Udang (dikalikan rod multiplier)</p>
-        <p><strong>Rod multiplier:</strong> T1×1, T2×1.5, T3×2, T4×3, T5×4</p>
-        <p><strong>Gagal 10%:</strong> Rod durability -8 hingga -35</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">🎣 Fishing Rod</span>
-        <span class="tag req">⚡ 20 Stamina</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">Ikan dll</span>
-        <span class="tag links">→ .masak → .eat | → .pasar</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🏹</span>
-      <div class="card-title">BERBURU</div>
-      <code class="card-cmd">.berburu</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mendapat hewan buruan. Gear tier tinggi melipatgandakan semua hasil. Ini aktivitas farming paling menguntungkan tapi butuh gear lengkap.</p>
-        <p><strong>Hasil:</strong> 12 jenis hewan (Banteng, Harimau, Gajah, dll) × gear multiplier</p>
-        <p><strong>Sword multiplier:</strong> T1×1, T2×1.5, T3×2, T4×3, T5×4</p>
-        <p><strong>Armor bonus:</strong> +15% per tier</p>
-        <p><strong>+EXP 3k–15k · +Money 10k–60k (×gear)</strong></p>
-        <p><strong>Gagal 15%:</strong> Kena serangan balik, HP dan durability berkurang</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚔️ Sword</span>
-        <span class="tag req">🥼 Armor</span>
-        <span class="tag req">⚡25 Stamina · ❤️30 HP</span>
-        <span class="tag cd">CD: 60 menit</span>
-        <span class="tag gives">Hewan Beragam</span>
-        <span class="tag links">→ .masak → .eat | → .pasar</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🗑️</span>
-      <div class="card-title">MULUNG</div>
-      <code class="card-cmd">.mulung</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mengumpulkan sampah (Botol, Kaleng, Kardus). Item ini dijual di Shop/Transfer. Juga dapat Trash yang bisa dikonversi ke String via .craft string.</p>
-        <p><strong>Hasil:</strong> Botol, Kaleng, Kardus + EXP dan Money</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ 20 Stamina</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">Botol Kaleng Kardus</span>
-        <span class="tag links">→ .shop sell | → .craft string</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🌱</span>
-      <div class="card-title">BERKEBON</div>
-      <code class="card-cmd">.berkebon</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Menanam bibit buah (500 per jenis) dan panen hasil. Buah bisa dimakan langsung (+20 stamina) atau dijual. Pickaxe dibutuhkan untuk mengolah lahan.</p>
-        <p><strong>Bibit:</strong> Pisang, Anggur, Mangga, Jeruk, Apel — beli via .shop buy bibit[nama]</p>
-        <p><strong>Buah:</strong> Dimakan (+20 stamina) atau dijual ke Shop</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⛏️ Pickaxe</span>
-        <span class="tag req">500 bibit setiap jenis</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">Buah 5 jenis</span>
-        <span class="tag links">→ .eat (+20 stamina) | → .shop sell</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- CRAFT -->
-  <div class="eco-title">🔨 CRAFTING SYSTEM</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">🔨</span>
-      <div class="card-title">CRAFT &amp; UPGRADE</div>
-      <code class="card-cmd">.craft [item] · .craft upgrade [item]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Membuat dan meningkatkan alat. Setiap gear naik tier meningkatkan reward aktivitas secara signifikan.</p>
-        <p><strong>Tier Sistem (5 tier):</strong> Wooden → Stone → Iron → Diamond → Netherite</p>
-        <p>⚔️ <strong>Sword T1:</strong> 10 Wood + 15 Iron | berguna untuk .berburu dan .hunter</p>
-        <p>⛏️ <strong>Pickaxe T1:</strong> 10 Wood + 5 Rock + 5 Iron + 20 String | untuk .berkebon</p>
-        <p>🎣 <strong>Rod T1:</strong> 10 Wood + 2 Iron + 20 String | untuk .mancing</p>
-        <p>🥼 <strong>Armor T1:</strong> 30 Iron + 2 Diamond | untuk .berburu dan .adventure</p>
-        <p><strong>Recycle:</strong> .craft string [n] → 100 Trash = 10 String</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Wood Rock Iron Diamond Gold String</span>
-        <span class="tag gives">Gear +Multiplier</span>
-        <span class="tag links">→ Berburu · Mancing · Berkebon · Adventure · Hunter</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#6b7280">
-      <span class="card-icon">🔧</span>
-      <div class="card-title">DURABILITAS (Auto Handler)</div>
-      <code class="card-cmd">— Otomatis berjalan —</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mengatur kondisi alat. Setiap aktivitas menguras durabilitas. Jika habis, gear turun satu tier otomatis.</p>
-        <p><strong>Durabilitas awal:</strong> T1=100 · T2=200 · T3=400 · T4=700 · T5=700</p>
-        <p><strong>Saat habis:</strong> gear downgrade ke tier -1, durabilitas reset ke 30</p>
-        <p>Cek via .profile atau .inv. Upgrade gear = lebih tahan lama!</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag cd">Auto — setiap command</span>
-        <span class="tag links">→ Crafting · Berburu · Mancing · Hunter</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- KONDISI KARAKTER -->
-  <div class="eco-title">❤️ KONDISI KARAKTER</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#e67e22">
-      <span class="card-icon">⚡</span>
-      <div class="card-title">STAMINA (Max 300)</div>
-      <code class="card-cmd">.eat [makanan] [jumlah]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Stamina adalah syarat utama semua aktivitas farming. Habis stamina = tidak bisa berburu, nambang, mancing, dll.</p>
-        <p><strong>Isi dengan:</strong> Buah segar (+20/buah) atau Makanan masak (+40/item)</p>
-        <p><strong>Makanan masak:</strong> ayambakar, steak, rendang, ikanbakar, dll (dari .masak)</p>
-        <p><strong>Buah:</strong> pisang, apel, mangga, jeruk, anggur (dari .berkebon)</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Punya makanan/buah</span>
-        <span class="tag gives">+Stamina</span>
-        <span class="tag links">→ Semua aktivitas farming</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#e74c3c">
-      <span class="card-icon">❤️</span>
-      <div class="card-title">HEALTH / HEAL (Max 200)</div>
-      <code class="card-cmd">.heal [jumlah]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Health dibutuhkan untuk .adventure (min 80) dan .berburu (min 30). Berkurang karena aktivitas, kriminal, atau diserang player lain.</p>
-        <p><strong>Isi dengan:</strong> 1 Potion = +50 HP. Beli potion di .shop buy potion</p>
-        <p><strong>Berkurang karena:</strong> berburu, adventure, hunter, dirampok, dibunuh</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Punya Potion</span>
-        <span class="tag gives">+HP</span>
-        <span class="tag links">→ Adventure · Berburu</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#3498db">
-      <span class="card-icon">🍳</span>
-      <div class="card-title">MASAK (COOK)</div>
-      <code class="card-cmd">.masak [nama] [jumlah]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mengubah bahan mentah (hewan/ikan) + Coal menjadi makanan masak. Makanan masak memberikan +40 stamina per item saat .eat.</p>
-        <p><strong>Daftar masakan:</strong> ayambakar, steak, rendang, gulai, babipanggang, ikanbakar, lelebakar, nilabakar, bawalbakar, udangbakar, pausbakar, kepitingbakar</p>
-        <p><strong>Formula:</strong> 1 hewan/ikan + 1 Coal = 1 makanan</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Hewan/Ikan + Coal</span>
-        <span class="tag gives">Makanan +40 Stamina</span>
-        <span class="tag links">← Berburu/Mancing | → .eat</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- PENDAPATAN AKTIF -->
-  <div class="eco-title">💼 PENDAPATAN AKTIF</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🛵</span>
-      <div class="card-title">OJEK (Ngojek Online)</div>
-      <code class="card-cmd">.ojek</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Cara cepat dapat money dan EXP kecil tanpa gear. Cooldown sangat pendek (5 menit) cocok untuk spam income.</p>
-        <p><strong>Reward:</strong> Money dan EXP random · Health dan Stamina sedikit berkurang</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ Stamina · ❤️ HP min</span>
-        <span class="tag cd">CD: 5 menit</span>
-        <span class="tag gives">+Money +EXP cepat</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">💋</span>
-      <div class="card-title">NGEWE</div>
-      <code class="card-cmd">.ngewe</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Sumber money medium-besar. Reward 30k–150k per klaim dengan kemungkinan bonus rare (Potion, Diamond, Trash).</p>
-        <p><strong>Bonus rare:</strong> 5% Potion · 7% Diamond · 18% Trash</p>
-        <p><strong>Berkurang:</strong> Stamina dan Health</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ 30–50 Stamina</span>
-        <span class="tag cd">CD: 10 menit</span>
-        <span class="tag gives">30k–150k Money</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#2ecc71">
-      <span class="card-icon">🌃</span>
-      <div class="card-title">NGELONTE</div>
-      <code class="card-cmd">.ngelonte</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Aktivitas payout tinggi tapi cooldown panjang. Cocok untuk player yang tidak selalu aktif tapi mau income besar tiap sesi.</p>
-        <p><strong>Syarat:</strong> Stamina 40–65 · Health min 20</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ 40–65 Stamina · ❤️ 20 HP</span>
-        <span class="tag cd">CD: 12 jam</span>
-        <span class="tag gives">High Money</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#3498db">
-      <span class="card-icon">🗺️</span>
-      <div class="card-title">ADVENTURE</div>
-      <code class="card-cmd">.adventure</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Petualangan ke lokasi random untuk money, EXP, dan Crate. Armor tier tinggi melipatgandakan semua reward. Cara utama mendapat crate tanpa beli.</p>
-        <p><strong>Armor multiplier:</strong> T1×1, T2×1.5, T3×2, T4×3, T5×4</p>
-        <p><strong>Gagal 15%:</strong> Rugi HP, Stamina, Durability armor</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">🥼 Armor · ❤️ 80 HP · ⚡ 35 Stamina</span>
-        <span class="tag cd">CD: 60 menit</span>
-        <span class="tag gives">+Money +EXP +Crate</span>
-        <span class="tag links">→ Open Crate · Level Up</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#3498db">
-      <span class="card-icon">⚔️</span>
-      <div class="card-title">HUNTER (Berburu Monster)</div>
-      <code class="card-cmd">.hunter</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Berburu monster dengan 13 area berbeda (Goblin sampai Dragon). Reward EXP dan loot besar. Area terbuka sesuai level/gear.</p>
-        <p><strong>Area 1:</strong> Goblin, Slime, Wolf | <strong>Area 13:</strong> Dragon variants</p>
-        <p><strong>Syarat:</strong> Armor + Sword keduanya harus ada</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚔️ Sword + 🥼 Armor</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">+EXP +Money +Loot</span>
-        <span class="tag links">← Craft | → Level Up</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#3498db">
-      <span class="card-icon">🤝</span>
-      <div class="card-title">BERDAGANG (PvP Trade)</div>
-      <code class="card-cmd">.berdagang @target</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Bertransaksi dengan player lain dan berbagi keuntungan. Sistem ekonomi sosial yang mendorong interaksi antar player.</p>
-        <p><strong>Cara kerja:</strong> Mention target, hasil dibagi antara keduanya</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Target terdaftar</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">+Money bagi dua</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- KRIMINAL -->
-  <div class="eco-title">🦹 AKSI KRIMINAL</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#e74c3c">
-      <span class="card-icon">🦹</span>
-      <div class="card-title">MALING</div>
-      <code class="card-cmd">.maling</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mencuri dari berbagai tempat (warung, jemuran, pasar malam, dll). Mendapat Botol, Kaleng, Kardus, atau Money. Ada chance gagal dan ketahuan.</p>
-        <p><strong>Gagal:</strong> Berkurang Stamina signifikan</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">⚡ 35–60 Stamina</span>
-        <span class="tag cd">CD: 30 menit</span>
-        <span class="tag gives">Barang/Money curi</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#e74c3c">
-      <span class="card-icon">🔫</span>
-      <div class="card-title">MERAMPOK (PvP Curi Money)</div>
-      <code class="card-cmd">.merampok @target</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Merampok money player lain. Ada chance gagal dan kemungkinan balik badan. Target harus punya minimal 10.000 money.</p>
-        <p><strong>Gagal:</strong> Kehilangan Stamina, HP berkurang</p>
-        <p>⚠️ <strong>Strategi bertahan:</strong> Simpan money di bank (.nabung) agar aman!</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Target punya 10k+ money</span>
-        <span class="tag cd">CD: 60 menit</span>
-        <span class="tag gives">+Money curi</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#e74c3c">
-      <span class="card-icon">🗡️</span>
-      <div class="card-title">MEMBUNUH (PvP Curi EXP)</div>
-      <code class="card-cmd">.membunuh @target</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Mencuri EXP dari player lain. Berbeda dari merampok yang curi money, ini menyasar EXP/level. Target harus punya health cukup (> 10 HP).</p>
-        <p><strong>Resiko:</strong> Jika gagal, kamu yang kehilangan HP dan Stamina</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Target HP > 10</span>
-        <span class="tag cd">CD: 60 menit</span>
-        <span class="tag gives">+EXP curi</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- JUDI -->
-  <div class="eco-title">🎲 SISTEM JUDI</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🎲</span>
-      <div class="card-title">JUDI (vs Bot)</div>
-      <code class="card-cmd">.judi [amount|all]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Bertaruh money melawan bot. Roll player 0–75, roll bot 0–100. <strong>Player dirugikan secara sistemik</strong> karena range bot lebih tinggi!</p>
-        <p><strong>Menang:</strong> ×2 taruhan | <strong>Kalah:</strong> kehilangan taruhan | <strong>Seri:</strong> uang kembali</p>
-        <p>⚠️ Secara probabilistik, bot lebih sering menang.</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Punya Money</span>
-        <span class="tag cd">CD: 5 detik</span>
-        <span class="tag gives">×2 Money (jika menang)</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🎮</span>
-      <div class="card-title">JUDI PVP</div>
-      <code class="card-cmd">.judipvp [bet] @target</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Duel taruhan money antar player. Lebih fair karena sama-sama manusia. Lawan harus ketik "terima", lalu keduanya spin.</p>
-        <p><strong>Proses:</strong> Challenge → terima/tolak → kedua ketik SPIN → hasil keluar</p>
-        <p><strong>Waktu tunggu:</strong> 1 menit sebelum auto batal</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Keduanya punya cukup money</span>
-        <span class="tag gives">Winner ambil semua</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🚀</span>
-      <div class="card-title">SPACEMAN</div>
-      <code class="card-cmd">.spaceman [bet]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Game multiplier. Spaceman terbang, multiplier naik, kamu harus .cashout sebelum jatuh. Semakin lama tahan = semakin besar payout.</p>
-        <p><strong>Max bet:</strong> 500.000 money | <strong>Max multiplier:</strong> 5×</p>
-        <p><strong>Cashout:</strong> ketik .cashout sebelum spaceman jatuh</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Max 500k bet</span>
-        <span class="tag gives">Max ×5 Payout</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- MARKET -->
-  <div class="eco-title">🏪 PASAR &amp; TRANSAKSI</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">🏪</span>
-      <div class="card-title">SHOP (Toko Dinamis)</div>
-      <code class="card-cmd">.shop · .buy [item] [qty] · .sell [item] [qty]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Beli dan jual item material, crate, bibit, buah, dan makanan pet. Harga berubah setiap jam berdasarkan musim dan hari.</p>
-        <p><strong>Weekend:</strong> Harga naik 10–45%</p>
-        <p><strong>Musim Hujan:</strong> Wood naik, bibit turun</p>
-        <p><strong>Musim Semi:</strong> Bibit dan buah naik</p>
-        <p><strong>Item yang bisa dibeli:</strong> Potion, Limit, Coal, Diamond, Crate, Bibit, Buah, Pet Food</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Punya Money</span>
-        <span class="tag gives">Item beragam</span>
-        <span class="tag links">→ Craft · Eat · Feed Pet</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">🏬</span>
-      <div class="card-title">PASAR (Jual Hewan &amp; Ikan)</div>
-      <code class="card-cmd">.pasar · .jual [item] [qty]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Menjual hewan buruan dan ikan tangkapan. Harga juga dinamis berdasarkan musim (musim kemarau hewan mahal, musim hujan ikan mahal).</p>
-        <p><strong>Contoh harga base:</strong> Harimau ~9k, Gajah ~8k, Paus ~7k per ekor</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag gives">+Money dari jual hewan/ikan</span>
-        <span class="tag links">← Berburu/Mancing</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">💸</span>
-      <div class="card-title">TRANSFER (Pajak Dinamis)</div>
-      <code class="card-cmd">.tf @target [item] [jumlah]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Kirim item/money ke player lain. Ada sistem pajak berdasarkan nilai item, jam, musim, dan weekend.</p>
-        <p><strong>Tier pajak:</strong> Diamond/Gold tertinggi, botol/trash paling rendah</p>
-        <p><strong>Anti abuse:</strong> Transfer kecil 3x dalam 5 menit = locked sementara</p>
-        <p><strong>.tf cek [item] [jumlah]:</strong> Simulasi pajak sebelum transfer</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Cukup item</span>
-        <span class="tag gives">Transfer ± pajak</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">🏦</span>
-      <div class="card-title">BANK (Nabung &amp; Narik)</div>
-      <code class="card-cmd">.nabung [jumlah/all] · .narik [jumlah/all]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Menyimpan money ke ATM/Bank agar aman dari .merampok. Money di bank tidak bisa dicuri. Ratio 1:1 (1 money = 1 bank).</p>
-        <p><strong>.nabung:</strong> Money → Bank | <strong>.narik:</strong> Bank → Money</p>
-        <p><strong>.bank:</strong> Cek saldo bank user lain</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag gives">Aman dari rampok</span>
-        <span class="tag links">← .merampok hanya kena money, bukan bank</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- CRATE -->
-  <div class="eco-title">📦 CRATE SYSTEM</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">📦</span>
-      <div class="card-title">OPEN CRATE</div>
-      <code class="card-cmd">.open [jenis] [jumlah]</code>
-      <div class="card-body">
-        <p><strong>Kegunaan:</strong> Buka crate untuk reward random. Semakin tinggi rarity = semakin besar dan langka reward.</p>
-        <p>⚪ <strong>Common:</strong> Zonk 20% — Money 100–200, EXP 50–100, Trash, Potion rare</p>
-        <p>🟢 <strong>Uncommon:</strong> Zonk 12% — Money 100–300, String, Iron rare</p>
-        <p>🟣 <strong>Mythic:</strong> Zonk 6% — Money–1000, Diamond rare (10%)</p>
-        <p>🟡 <strong>Legendary:</strong> Zonk 3% — Money–1500, EXP–1000, Gold rare</p>
-        <p>🎫 <strong>Pet Crate:</strong> Tanpa zonk — 2% chance dapat pet (atau money 1k)</p>
-        <p><strong>Max buka:</strong> Free 5x · Premium 20x per sekali</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">Punya Crate</span>
-        <span class="tag gives">Money EXP Item Langka</span>
-        <span class="tag links">← Adventure · Daily (streak) · Shop · Weekly</span>
+  <!-- FLOWCHART EKONOMI LENGKAP -->
+  <div class="section-title" style="margin-top:24px;">🔄 SIKLUS EKONOMI LENGKAP</div>
+  <div class="card gold">
+    <div style="overflow-x:auto;">
+      <div style="min-width:600px;padding:10px;">
+        <div style="display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;text-align:center;line-height:1.8;">
+          <div style="background:rgba(212,168,67,0.12);border:1px solid var(--gold);border-radius:8px;padding:12px 16px;min-width:120px;">
+            <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--gold);">SUMBER</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Absen, Kerja<br>Crime, Judi</div>
+          </div>
+          <div style="color:var(--gold);font-size:24px;">→</div>
+          <div style="background:rgba(80,144,208,0.12);border:1px solid var(--blue);border-radius:8px;padding:12px 16px;min-width:120px;">
+            <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--blue2);">MONEY</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">.nabung → Bank<br>.narik ← Bank</div>
+          </div>
+          <div style="color:var(--gold);font-size:24px;">→</div>
+          <div style="background:rgba(42,136,136,0.12);border:1px solid var(--teal);border-radius:8px;padding:12px 16px;min-width:120px;">
+            <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--teal2);">BELI</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">.shop buy<br>Potion, Coal<br>Bibit, Bumbu</div>
+          </div>
+          <div style="color:var(--gold);font-size:24px;">→</div>
+          <div style="background:rgba(122,74,176,0.12);border:1px solid var(--purple);border-radius:8px;padding:12px 16px;min-width:120px;">
+            <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--purple2);">AKTIVITAS</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">Mancing, Berburu<br>Nambang, dll</div>
+          </div>
+          <div style="color:var(--gold);font-size:24px;">→</div>
+          <div style="background:rgba(74,156,106,0.12);border:1px solid var(--green);border-radius:8px;padding:12px 16px;min-width:120px;">
+            <div style="font-family:'Cinzel',serif;font-size:12px;color:var(--green2);">JUAL</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">.shop sell<br>.pasar sell<br>.berdagang</div>
+          </div>
+          <div style="color:var(--gold);font-size:24px;">↻</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════ -->
-<!-- TAB: KONEKSI FITUR -->
-<!-- ════════════════════════════════════════ -->
-<div id="tab-koneksi" class="section">
-  <div class="section-title">🔗 Peta Koneksi Antar Fitur</div>
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: RESOURCE -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-resource">
+  <div class="section-title">⛏️ RESOURCE — Panduan Setiap Fitur Pengumpulan</div>
+  <div class="grid-2">
 
-  <div class="alert info"><strong>ℹ️ Cara Membaca</strong>Setiap fitur terhubung satu sama lain membentuk loop ekonomi. Panah menunjukkan arah aliran resource/dampak.</div>
+    <div class="card orange">
+      <h3 class="orange">⛏️ NAMBANG <span class="cmd orange">.nambang</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value orange">30 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value orange">≥ 40</span></div>
+      <div class="info-row"><span class="info-label">Gear dibutuhkan</span><span class="info-value">Tidak ada (⚠️)</span></div>
+      <div class="info-row"><span class="info-label">Chance gagal</span><span class="info-value red">15%</span></div>
+      <div class="info-row"><span class="info-label">Hasil</span><span class="info-value green">Rock, Coal, Iron, Gold, Diamond</span></div>
+      <div class="info-row"><span class="info-label">EXP didapat</span><span class="info-value blue">2.000 – 10.000</span></div>
+      <div class="info-row"><span class="info-label">Money didapat</span><span class="info-value gold">3.000 – 18.000</span></div>
+      <div class="info-row"><span class="info-label">Gold chance</span><span class="info-value">35%</span></div>
+      <div class="info-row"><span class="info-label">Diamond chance</span><span class="info-value">20%</span></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-dim);">🔗 <b>Koneksi:</b></div>
+      <div style="font-size:12px;margin-top:4px;">Iron + Diamond + Gold → <span class="badge teal">.craft</span> (buat semua gear)</div>
+      <div style="font-size:12px;">Rock + Iron → <span class="badge teal">.craft upgrade</span></div>
+      <div style="font-size:12px;">Coal → <span class="badge green">.cook</span> (bahan bakar masak)</div>
+      <div style="font-size:12px;">Coal → <span class="badge blue">.shop sell</span></div>
+    </div>
 
-  <div class="conn-grid">
-    <div class="conn-card">
-      <h4>⛏️ Nambang</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.craft</strong> — Rock, Iron, Gold, Diamond untuk crafting semua gear</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.shop sell iron/rock/diamond</strong> — Jual mineral langsung</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.tf</strong> — Transfer mineral ke teman</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.eat</strong> — Butuh stamina 40 sebelum nambang</span></div>
+    <div class="card orange">
+      <h3 class="orange">🪓 NEBANG <span class="cmd orange">.nebang</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value orange">60 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value orange">≥ 10</span></div>
+      <div class="info-row"><span class="info-label">Gear dibutuhkan</span><span class="info-value">Tidak ada</span></div>
+      <div class="info-row"><span class="info-label">Hasil</span><span class="info-value green">Wood</span></div>
+      <div class="info-row"><span class="info-label">EXP didapat</span><span class="info-value blue">1.000 – 5.000+</span></div>
+      <div class="info-row"><span class="info-label">Money didapat</span><span class="info-value gold">Ada</span></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-dim);">🔗 <b>Koneksi:</b></div>
+      <div style="font-size:12px;margin-top:4px;">Wood → <span class="badge teal">.craft sword/pickaxe/fishingrod</span></div>
+      <div style="font-size:12px;">Wood → <span class="badge blue">.shop sell</span> (harga naik di musim hujan)</div>
     </div>
-    <div class="conn-card">
-      <h4>🪓 Nebang</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.craft</strong> — Wood untuk semua craft tier 1, String untuk Pickaxe dan Rod</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.shop sell wood</strong> — Jual kayu</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.craft string</strong> — Trash → String via recycle</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.eat</strong> — Butuh stamina 10</span></div>
+
+    <div class="card teal">
+      <h3 class="teal">🗑️ MULUNG <span class="cmd teal">.mulung</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value teal">30 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value teal">≥ 20</span></div>
+      <div class="info-row"><span class="info-label">Hasil</span><span class="info-value green">Botol, Kaleng, Kardus, Trash</span></div>
+      <div class="info-row"><span class="info-label">EXP didapat</span><span class="info-value blue">Ada</span></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-dim);">🔗 <b>Koneksi:</b></div>
+      <div style="font-size:12px;margin-top:4px;">Botol/Kaleng/Kardus → <span class="badge blue">.shop sell</span></div>
+      <div style="font-size:12px;">Trash → <span class="badge teal">.craft string</span> (100 trash = 10 string)</div>
+      <div style="font-size:12px;">String → <span class="badge teal">.craft pickaxe / fishingrod</span></div>
+      <div class="alert info" style="margin-top:8px;font-size:11px;">Trash juga didapat dari .adventure dan buka crate</div>
     </div>
-    <div class="conn-card">
-      <h4>🎣 Mancing</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.masak</strong> — Ikan + Coal → makanan +40 stamina</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.pasar</strong> — Jual ikan mentah (harga dinamis)</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.eat</strong> setelah masak ikan → isi stamina</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.craft fishingrod</strong> — Butuh fishing rod</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.eat</strong> — Butuh stamina 20</span></div>
+
+    <div class="card blue">
+      <h3 class="blue">🎣 MANCING <span class="cmd blue">.mancing</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value blue">30 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value blue">≥ 20</span></div>
+      <div class="info-row"><span class="info-label">Gear wajib</span><span class="info-value orange">Fishing Rod</span></div>
+      <div class="info-row"><span class="info-label">Chance gagal</span><span class="info-value red">10%</span></div>
+      <div class="info-row"><span class="info-label">Hasil ikan</span><span class="info-value green">Ikan, Paus, Bawal, Lele, Nila, Kepiting, Udang</span></div>
+      <div class="info-row"><span class="info-label">Rod Tier 1 mult</span><span class="info-value">x1.0</span></div>
+      <div class="info-row"><span class="info-label">Rod Tier 4 mult</span><span class="info-value">x3.0</span></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-dim);">🔗 <b>Koneksi:</b></div>
+      <div style="font-size:12px;margin-top:4px;">Ikan → <span class="badge green">.cook</span> → Makanan → <span class="badge green">.eat</span> (Stamina)</div>
+      <div style="font-size:12px;">Ikan → <span class="badge blue">.pasar sell</span> (harga naik musim hujan)</div>
+      <div style="font-size:12px;">Paus → <span class="badge green">.cook pausbakar/paussteak</span> (Tier 3 stamina)</div>
     </div>
-    <div class="conn-card">
-      <h4>🏹 Berburu</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.masak</strong> — Hewan + Coal → makanan masak</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.pasar</strong> — Jual hewan (musim kemarau mahal)</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.kandang</strong> — Lihat stok hewan</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.craft sword + armor</strong> — Gear wajib</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.heal + .eat</strong> — HP 30 + Stamina 25</span></div>
+
+    <div class="card red">
+      <h3 class="red">🏹 BERBURU <span class="cmd red">.berburu</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value red">60 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value red">≥ 25</span></div>
+      <div class="info-row"><span class="info-label">Health butuh</span><span class="info-value red">≥ 30</span></div>
+      <div class="info-row"><span class="info-label">Gear wajib</span><span class="info-value orange">Sword + Armor</span></div>
+      <div class="info-row"><span class="info-label">Chance gagal</span><span class="info-value red">15%</span></div>
+      <div class="info-row"><span class="info-label">12 jenis hewan</span><span class="info-value green">Banteng, Harimau, Gajah, Kambing, Panda, Buaya, Kerbau, Sapi, Monyet, Babihutan, Babi, Ayam</span></div>
+      <div class="info-row"><span class="info-label">EXP didapat</span><span class="info-value blue">3.000 – 75.000 (gear mult)</span></div>
+      <div class="info-row"><span class="info-label">Money didapat</span><span class="info-value gold">10.000 – 360.000 (gear mult)</span></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-dim);">🔗 <b>Koneksi:</b></div>
+      <div style="font-size:12px;margin-top:4px;">Hewan → <span class="badge green">.cook</span> → Makanan → <span class="badge green">.eat</span></div>
+      <div style="font-size:12px;">Hewan → <span class="badge blue">.pasar sell</span> (harga naik musim kemarau)</div>
     </div>
-    <div class="conn-card">
-      <h4>🌱 Berkebon</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.eat [buah]</strong> — Buah segar +20 stamina langsung</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.shop sell [buah]</strong> — Jual buah (Musim Semi/Kemarau mahal)</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.buah</strong> — Cek stok buah</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.craft pickaxe</strong> — Butuh pickaxe</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.shop buy bibit[nama]</strong> — Beli bibit 500 pcs</span></div>
+
+    <div class="card green">
+      <h3 class="green">🌱 BERKEBON <span class="cmd green">.berkebon</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value green">30 menit</span></div>
+      <div class="info-row"><span class="info-label">Gear wajib</span><span class="info-value orange">Pickaxe</span></div>
+      <div class="info-row"><span class="info-label">Bibit minimal</span><span class="info-value orange">500 setiap jenis!</span></div>
+      <div class="info-row"><span class="info-label">Hasil</span><span class="info-value green">Pisang, Anggur, Mangga, Jeruk, Apel</span></div>
+      <div class="info-row"><span class="info-label">Stamina gain</span><span class="info-value blue">Saat dimakan: +15-28</span></div>
+      <hr class="divider">
+      <div style="font-size:12px;color:var(--text-dim);">🔗 <b>Koneksi:</b></div>
+      <div style="font-size:12px;margin-top:4px;">Buah → <span class="badge green">.eat</span> (+15-28 stamina per buah)</div>
+      <div style="font-size:12px;">Buah → <span class="badge green">.cook ikanbakar</span> (butuh jeruk)</div>
+      <div style="font-size:12px;">Buah → <span class="badge blue">.shop sell</span> (harga naik musim semi/kemarau)</div>
+      <div class="alert warn" style="margin-top:8px;font-size:11px;">⚠️ Bibit beli di .shop buy bibitpisang, dst. Minimum 500 tiap jenis = butuh 2.500 bibit total! Sangat mahal untuk pemula.</div>
     </div>
-    <div class="conn-card">
-      <h4>🗑️ Mulung</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.shop sell botol/kaleng/kardus</strong> — Jual sampah</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.craft string</strong> — Trash → String (100 trash = 10 string)</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.eat</strong> — Butuh stamina 20</span></div>
-    </div>
-    <div class="conn-card">
-      <h4>🔨 Craft</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.berburu</strong> — Sword+Armor wajib, tier tinggi = reward ×4</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.mancing</strong> — Fishing Rod tier tinggi = ×4 ikan</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.berkebon</strong> — Pickaxe wajib</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.adventure / .hunter</strong> — Armor wajib, Sword wajib</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.nambang + .nebang</strong> — Sumber semua bahan craft</span></div>
-    </div>
-    <div class="conn-card">
-      <h4>📦 Open Crate</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>Money, EXP</strong> — Langsung ke stat karakter</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>Iron, Diamond, Gold</strong> — Material untuk .craft</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>Crate lagi</strong> — Kadang dapat crate dari isi crate!</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>Pet</strong> — Pet Crate beri 5 jenis pet</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.adventure</strong> — Sumber utama crate gratis</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.daily (streak)</strong> — Uncommon Crate tiap 7 hari</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.shop buy</strong> — Beli crate langsung</span></div>
-    </div>
-    <div class="conn-card">
-      <h4>🐉 Pet System</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.adventure-pet</strong> — Petualangan bersama pet</span></div>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>.levelup</strong> — Naikkan level pet hingga max 10</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.feed [pet]</strong> — Isi stamina pet (5 makanan per kali)</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.shop buy makanan[pet]</strong> — Beli makanan pet @5000</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.open pet</strong> — Dapatkan pet (2% chance)</span></div>
-    </div>
-    <div class="conn-card">
-      <h4>🏦 Bank</h4>
-      <div class="conn-item"><span class="arrow">→</span><span><strong>Aman dari .merampok</strong> — money di bank tidak bisa dicuri</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.nabung</strong> — Money → Bank</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.narik</strong> — Bank → Money (untuk belanja)</span></div>
-    </div>
-    <div class="conn-card">
-      <h4>⚡ Stamina</h4>
-      <div class="conn-item"><span class="arrow">→</span><span>Syarat hampir semua aktivitas farming</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.eat buah</strong> — +20 per buah (dari .berkebon)</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.eat masakan</strong> — +40 per item (dari .masak)</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.masak</strong> ← ikan/hewan dari .mancing/.berburu</span></div>
-    </div>
-    <div class="conn-card">
-      <h4>❤️ Health</h4>
-      <div class="conn-item"><span class="arrow">→</span><span>Syarat .adventure (min 80) dan .berburu (min 30)</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.heal</strong> — Gunakan Potion (+50 HP)</span></div>
-      <div class="conn-item"><span class="arrow">←</span><span><strong>.shop buy potion</strong> — Beli potion</span></div>
-      <div class="conn-item"><span class="arrow">→ berkurang</span><span>Dari berburu, adventure, merampok, dibunuh</span></div>
-    </div>
+
   </div>
 </div>
 
-<!-- ════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════════════════ -->
 <!-- TAB: EKONOMI -->
-<!-- ════════════════════════════════════════ -->
-<div id="tab-ekonomi" class="section">
-  <div class="section-title">💰 Analisis Keseimbangan Ekonomi RPG</div>
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-ekonomi">
+  <div class="section-title">💰 EKONOMI — Harga & Sistem Toko</div>
 
-  <div class="alert warn">
-    <strong>⚠️ Kesimpulan Umum</strong>
-    Sistem ekonomi sudah dirancang baik dengan harga dinamis dan musiman. Namun ada beberapa ketidakseimbangan yang perlu diperhatikan dan diperbaiki.
-  </div>
-
-  <!-- INCOME COMPARISON -->
-  <div class="eco-section">
-    <div class="eco-title">📊 Perbandingan Income Per Aktivitas</div>
-    <table class="eco">
-      <tr>
-        <th>Aktivitas</th><th>CD</th><th>Income Money</th><th>Income EXP</th><th>Status</th><th>Catatan</th>
-      </tr>
-      <tr>
-        <td>⚡ Hourly</td><td>1 jam</td><td>800–15.000</td><td>3.000–18.000</td><td class="bal">✅ Seimbang</td><td>Sumber EXP pasif terbaik</td>
-      </tr>
-      <tr>
-        <td>🎁 Daily</td><td>24 jam</td><td>3.000–35.000</td><td>—</td><td class="bal">✅ Seimbang</td><td>Streak mechanic bagus</td>
-      </tr>
-      <tr>
-        <td>📅 Weekly</td><td>7 hari</td><td>15.000–180.000</td><td>8.000–60.000</td><td class="bal">✅ Seimbang</td><td>Reward proporsional</td>
-      </tr>
-      <tr>
-        <td>🛵 Ojek</td><td>5 menit</td><td>Rendah–Medium</td><td>Kecil</td><td class="bal">✅ Seimbang</td><td>CD pendek, income kecil — fair</td>
-      </tr>
-      <tr>
-        <td>💋 Ngewe</td><td>10 menit</td><td>30.000–150.000</td><td>5.000–40.000</td><td class="unbal">⚠️ Terlalu Tinggi</td><td>Income 30k-150k per 10 menit terlalu besar jika dimanfaatkan terus. Disarankan naikkan CD ke 30m.</td>
-      </tr>
-      <tr>
-        <td>🗺️ Adventure</td><td>60 menit</td><td>Tinggi (×armor)</td><td>Tinggi</td><td class="bal">✅ Seimbang</td><td>Gate di armor dan HP, proporsional</td>
-      </tr>
-      <tr>
-        <td>🏹 Berburu</td><td>60 menit</td><td>10k–60k (×gear)</td><td>3k–15k (×gear)</td><td class="bal">✅ Seimbang</td><td>Gear gate menjaga keseimbangan</td>
-      </tr>
-      <tr>
-        <td>🎣 Mancing</td><td>30 menit</td><td>Dari jual ikan</td><td>—</td><td class="bal">✅ Seimbang</td><td>Perlu masak atau jual dulu</td>
-      </tr>
-      <tr>
-        <td>⛏️ Nambang</td><td>30 menit</td><td>3k–15k</td><td>2k–8k</td><td class="bal">✅ Seimbang</td><td>Mineral lebih berharga di craft</td>
-      </tr>
-      <tr>
-        <td>🌃 Ngelonte</td><td>12 jam</td><td>Tinggi</td><td>—</td><td class="bal">✅ Seimbang</td><td>CD panjang kompensasi reward besar</td>
-      </tr>
-      <tr>
-        <td>🎲 Judi</td><td>5 detik</td><td>±Taruhan (×2 atau 0)</td><td>—</td><td class="unbal">⚠️ Player Dirugikan</td><td>Roll player 0–75, bot 0–100. Bot secara matematis unggul ~57% kasus</td>
-      </tr>
-      <tr>
-        <td>🚀 Spaceman</td><td>—</td><td>Max ×5 bet</td><td>—</td><td class="bal">✅ Seimbang</td><td>Max 500k, cap multiplier 5×</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- CRAFT ECONOMY -->
-  <div class="eco-section">
-    <div class="eco-title">🔨 Analisis Craft &amp; Gear Economy</div>
-    <table class="eco">
-      <tr><th>Gear</th><th>Tier 1 Cost</th><th>Tier 5 Reward Bonus</th><th>Status</th><th>Catatan</th></tr>
-      <tr>
-        <td>⚔️ Sword</td><td>10 Wood + 15 Iron</td><td>×4 reward berburu</td><td class="bal">✅ Worth</td><td>Investasi terbayar dalam beberapa sesi berburu</td>
-      </tr>
-      <tr>
-        <td>⛏️ Pickaxe</td><td>10W + 5R + 5I + 20String</td><td>Gate berkebon</td><td class="bal">✅ Seimbang</td><td>String dari nebang, chain logis</td>
-      </tr>
-      <tr>
-        <td>🎣 Fishing Rod</td><td>10W + 2I + 20String</td><td>×4 ikan</td><td class="bal">✅ Seimbang</td><td>Tier 5 ikan sangat banyak, worth</td>
-      </tr>
-      <tr>
-        <td>🥼 Armor</td><td>30 Iron + 2 Diamond</td><td>×4 adventure + +75% berburu</td><td class="unbal">⚠️ T1 Mahal</td><td>Diamond T1 butuh beli atau mining luck. Tier 1 armor agak barrier tinggi untuk new player</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- DURABILITY ANALYSIS -->
-  <div class="eco-section">
-    <div class="eco-title">🔧 Analisis Durabilitas</div>
-    <table class="eco">
-      <tr><th>Aspek</th><th>Kondisi Saat Ini</th><th>Status</th><th>Rekomendasi</th></tr>
-      <tr>
-        <td>Durabilitas Berburu</td><td>Armor -15 to -60, Sword -10 to -55 per session</td><td class="unbal">⚠️ Tidak Konsisten</td><td>Range terlalu lebar. Varians tinggi membuat player tidak bisa prediksi kapan gear rusak. Pertimbangkan batas atas lebih rendah.</td>
-      </tr>
-      <tr>
-        <td>Downgrade saat habis</td><td>Gear turun 1 tier, durability reset ke 30</td><td class="bal">✅ Bagus</td><td>Sistem downgrade lebih baik dari hapus total — player masih bisa lanjut</td>
-      </tr>
-      <tr>
-        <td>Durabilitas Mancing</td><td>-15 to -90 per session</td><td class="unbal">⚠️ Terlalu Tinggi</td><td>Max -90 terlalu ekstrim. Rod T1 100 durability bisa rusak dalam 1–2 sesi. Kurangi max ke 50.</td>
-      </tr>
-      <tr>
-        <td>Notifikasi rusak</td><td>Pesan .craft fishingrod jika rusak</td><td class="bal">✅ Ada</td><td>Sudah ada peringatan, baik untuk UX</td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- CRATE ECONOMY -->
-  <div class="eco-section">
-    <div class="eco-title">📦 Analisis Crate Economy</div>
-    <table class="eco">
-      <tr><th>Crate</th><th>Harga Beli</th><th>Harga Jual</th><th>Zonk Rate</th><th>Status</th></tr>
-      <tr>
-        <td>⚪ Common</td><td>~500</td><td>~60</td><td>20%</td><td class="bal">✅ Seimbang</td></tr>
-      <tr>
-        <td>🟢 Uncommon</td><td>~1.000</td><td>~120</td><td>12%</td><td class="bal">✅ Seimbang</td></tr>
-      <tr>
-        <td>🟣 Mythic</td><td>~5.000</td><td>~350</td><td>6%</td><td class="bal">✅ Seimbang</td></tr>
-      <tr>
-        <td>🟡 Legendary</td><td>~7.000</td><td>~450</td><td>3%</td><td class="bal">✅ Seimbang</td></tr>
-      <tr>
-        <td>🎫 Pet</td><td>~2.500</td><td>~300</td><td>0% (tapi 98% 0 dapat)</td><td class="unbal">⚠️ Pet 2% Terlalu Rendah</td></tr>
-    </table>
-    <div class="alert warn"><strong>⚠️ Pet Crate Balance Issue</strong>Pet Crate harga 2.500, tapi chance dapat pet hanya 2%. Artinya butuh rata-rata 50 crate = 125.000 money untuk dapat 1 pet. Jika sudah punya semua pet, crate jadi money 1.000 per buka — sangat tidak efisien. Pertimbangkan naikkan chance ke 5–8%.</div>
-  </div>
-
-  <!-- OVERALL -->
-  <div class="eco-section">
-    <div class="eco-title">🏆 Ringkasan &amp; Rekomendasi</div>
-    <div class="alert good">
-      <strong>✅ Yang Sudah Baik</strong>
-      <ul style="margin-top:8px;padding-left:18px;line-height:1.9">
-        <li>Sistem harga dinamis (jam, musim, weekend) sangat inovatif</li>
-        <li>Gear progression dengan multiplier reward terasa rewarding</li>
-        <li>Durability downgrade (bukan delete) memberikan safety net</li>
-        <li>Streak system di daily mendorong konsistensi</li>
-        <li>Bank system melindungi dari PvP ekonomi</li>
-        <li>Anti tax-dodge di transfer (.tf) sudah baik</li>
-        <li>Variasi sumber income sangat beragam (13+ cara dapat money)</li>
-      </ul>
+  <div class="grid-2">
+    <div class="card blue">
+      <h3 class="blue">🏪 SHOP — Fitur Dinamis</h3>
+      <div class="info-row"><span class="info-label">Update harga</span><span class="info-value blue">Setiap jam (seed waktu)</span></div>
+      <div class="info-row"><span class="info-label">Fluktuasi normal</span><span class="info-value">±15% dari base</span></div>
+      <div class="info-row"><span class="info-label">Weekend bonus</span><span class="info-value orange">+10% ~ +45%</span></div>
+      <div class="info-row"><span class="info-label">Musim pengaruh</span><span class="info-value green">Wood, Bibit, Buah</span></div>
+      <div class="info-row"><span class="info-label">Indikator tren</span><span class="info-value">🔥📈➡️📉💸</span></div>
+      <div class="alert gold" style="margin-top:10px;font-size:12px;">💡 Harga sama untuk semua orang dalam 1 jam yang sama (seed deterministik)</div>
     </div>
-    <div class="alert bad">
-      <strong>❌ Yang Perlu Diperbaiki</strong>
-      <ul style="margin-top:8px;padding-left:18px;line-height:1.9">
-        <li><strong>.ngewe CD terlalu pendek:</strong> 10 menit dengan 30k–150k income bisa dimanfaatkan secara agresif. Naikan ke 30–60 menit.</li>
-        <li><strong>Judi sistematis merugikan player:</strong> Roll 0–75 vs bot 0–100. Bot menang ~57%. Tidak ada win rate yang fair. Pertimbangkan range sama atau 0–100 vs 0–100.</li>
-        <li><strong>Pet Crate 2% terlalu rendah:</strong> Dengan harga 2.500 dan 2% chance, expected cost 125k per pet. Naikkan ke 5–8%.</li>
-        <li><strong>Mancing durability -90 terlalu ekstrim:</strong> Rod T1 bisa rusak dalam 1 sesi. Batasi max ke -50.</li>
-        <li><strong>Armor T1 butuh Diamond:</strong> Diamond sulit didapat new player (butuh beli atau luck mining). Pertimbangkan T1 armor tanpa diamond, diamond mulai dari T2.</li>
-        <li><strong>Tidak ada sink EXP:</strong> EXP hanya naik, tidak ada cara "menggunakan" EXP selain level. Pertimbangkan EXP untuk unlock area/fitur khusus.</li>
-        <li><strong>Berkebon 500 bibit SEMUA jenis:</strong> Total 2.500 bibit minimal. Barrier sangat tinggi untuk new player. Pertimbangkan 100 bibit per jenis untuk mulai.</li>
-      </ul>
+
+    <div class="card orange">
+      <h3 class="orange">🏬 PASAR — Hewan & Ikan</h3>
+      <div class="info-row"><span class="info-label">Base harga semua</span><span class="info-value orange">9.000 (hewan)</span></div>
+      <div class="info-row"><span class="info-label">Base harga ikan</span><span class="info-value blue">7.000 (ikan)</span></div>
+      <div class="info-row"><span class="info-label">Musim hujan</span><span class="info-value blue">Ikan x1.3</span></div>
+      <div class="info-row"><span class="info-label">Musim kemarau</span><span class="info-value orange">Hewan x1.4</span></div>
+      <div class="info-row"><span class="info-label">Weekend</span><span class="info-value gold">+10% ~ +50%</span></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:24px;">📊 Tabel Harga Base Item</div>
+  <div class="card gold" style="overflow-x:auto;">
+    <table class="eco-table">
+      <thead>
+        <tr>
+          <th>Item</th><th>Kategori</th><th class="num">Beli</th><th class="num">Jual</th><th>Keterangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>💎 Diamond</td><td><span class="badge gold">Berharga</span></td><td class="num">55.000</td><td class="num ok">2.200</td><td>Dari nambang (20%), craft gear</td></tr>
+        <tr><td>🥇 Gold</td><td><span class="badge gold">Berharga</span></td><td class="num">50.000</td><td class="num ok">2.500</td><td>Dari nambang (35%), craft tier 4-5</td></tr>
+        <tr><td>🔩 Iron</td><td><span class="badge blue">Material</span></td><td class="num">2.500</td><td class="num ok">250</td><td>Dari nambang, daily bonus</td></tr>
+        <tr><td>🪨 Rock</td><td><span class="badge blue">Material</span></td><td class="num">1.000</td><td class="num ok">850</td><td>Dari nambang, jumlah banyak</td></tr>
+        <tr><td>🪵 Wood</td><td><span class="badge blue">Material</span></td><td class="num">40</td><td class="num">30</td><td>Dari nebang, musim hujan naik x1.3</td></tr>
+        <tr><td>🕸️ String</td><td><span class="badge blue">Material</span></td><td class="num">1.500</td><td class="num">180</td><td>Dari recycle trash (100→10)</td></tr>
+        <tr><td>🖤 Coal</td><td><span class="badge teal">Bahan bakar</span></td><td class="num">1.500</td><td class="num bad">-</td><td>Dari nambang, untuk .cook</td></tr>
+        <tr><td>🧪 Potion</td><td><span class="badge red">Konsumsi</span></td><td class="num">1.000</td><td class="num">120</td><td>Heal 40-60 HP per potion</td></tr>
+        <tr><td>🍶 Botol/Kaleng</td><td><span class="badge teal">Sampah</span></td><td class="num">30</td><td class="num">22</td><td>Dari mulung</td></tr>
+        <tr><td>🗑️ Trash</td><td><span class="badge teal">Sampah</span></td><td class="num">500</td><td class="num">80</td><td>Dari mulung/adventure/crate</td></tr>
+        <tr><td>🐮 Hewan (base)</td><td><span class="badge orange">Pasar</span></td><td class="num">-</td><td class="num ok">9.000</td><td>Dari berburu, naik musim kemarau x1.4</td></tr>
+        <tr><td>🐟 Ikan (base)</td><td><span class="badge blue">Pasar</span></td><td class="num">-</td><td class="num ok">7.000</td><td>Dari mancing, naik musim hujan x1.3</td></tr>
+        <tr><td>🍌 Bibit buah</td><td><span class="badge green">Tanaman</span></td><td class="num">5</td><td class="num">3</td><td>Minimal 500 per jenis untuk berkebon</td></tr>
+        <tr><td>🍎 Buah</td><td><span class="badge green">Konsumsi</span></td><td class="num">125</td><td class="num">100</td><td>Dari berkebon, +15-28 stamina</td></tr>
+        <tr><td>🐾 Makanan pet</td><td><span class="badge pink">Pet</span></td><td class="num">5.000</td><td class="num">400</td><td>Untuk isi stamina pet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="margin-top:24px;">⚠️ ANOMALI EKONOMI</div>
+  <div class="grid-2">
+    <div class="issue-box">
+      <div class="issue-title">🚨 Masalah Balance yang Ditemukan</div>
+      <div class="issue-item"><span style="color:var(--red2);">1.</span><div><b>Rock beli 1.000, jual 850</b> — spread sangat sempit. Pemain bisa farm rock dari nambang dan jual nyaris break even. Tidak ada insentif menarik beli rock di shop.</div></div>
+      <div class="issue-item"><span style="color:var(--red2);">2.</span><div><b>Nambang tidak butuh Pickaxe</b> — secara desain harusnya pickaxe meningkatkan hasil mining, tapi di file nambang.js tidak ada pengecekan pickaxe sama sekali. Bug atau disengaja?</div></div>
+      <div class="issue-item"><span style="color:var(--red2);">3.</span><div><b>Berburu reward sangat besar</b> — money 10k-360k per sesi, EXP 3k-75k per sesi (60 menit CD). Bisa 576k - 8.640.000 money/hari dari berburu saja dengan gear Netherite.</div></div>
+      <div class="issue-item"><span style="color:var(--red2);">4.</span><div><b>Judi player range 0-75, bot 0-100</b> — win rate player matematika hanya ~36%. House edge sangat tinggi, tidak sustainable.</div></div>
+      <div class="issue-item"><span style="color:var(--red2);">5.</span><div><b>Bibit berkebon minimum 500 setiap jenis</b> — butuh 2.500 bibit total × 5 rupiah = 12.500 per sesi tapi reward buah sangat kecil jika dijual.</div></div>
+      <div class="issue-item"><span style="color:var(--red2);">6.</span><div><b>Nambang tanpa cooldown di gagal</b> — saat gua runtuh (gagal), lastfishing/nambang tetap dicatat. Sudah benar.</div></div>
+    </div>
+
+    <div class="rec-box">
+      <div class="rec-title">✅ Saran Perbaikan Balance</div>
+      <div class="rec-item"><span class="rec-tag">CRAFT</span>Tambahkan cek pickaxe di nambang.js. Pickaxe tier tinggi = yield rock/iron lebih banyak.</div>
+      <div class="rec-item"><span class="rec-tag">JUDI</span>Ubah rollPlayer ke 0-90 (bukan 0-75) agar win rate ~47.5%. Atau tambah pity system.</div>
+      <div class="rec-item"><span class="rec-tag">BERBURU</span>Kurangi money reward berburu 30-40%. Ganti dengan lebih banyak hewan item daripada direct money.</div>
+      <div class="rec-item"><span class="rec-tag">BERKEBON</span>Kurangi minimum bibit dari 500 ke 50 per jenis. Atau buat bibit tidak habis (perkebunan permanen).</div>
+      <div class="rec-item"><span class="rec-tag">ROCK</span>Turunkan harga beli rock ke 500 atau naikkan harga jual ke 1.200 agar lebih worth tambang lalu jual.</div>
+      <div class="rec-item"><span class="rec-tag">SHOP</span>Tambahkan komisi 5-10% saat sell item untuk sink uang dari ekonomi.</div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════ -->
-<!-- TAB: PET SYSTEM -->
-<!-- ════════════════════════════════════════ -->
-<div id="tab-pet" class="section">
-  <div class="section-title">🐉 Panduan Sistem Pet</div>
-
-  <div class="alert info"><strong>ℹ️ Tentang Pet System</strong>Pet adalah makhluk mitos yang bisa kamu miliki dan tingkatkan levelnya. Pet didapat dari Pet Crate (2% chance) dan dirawat dengan memberi makan serta petualangan.</div>
-
-  <div class="eco-title">🐉 Daftar Pet</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🐉</span>
-      <div class="card-title">NAGA</div>
-      <div class="card-body">
-        <p><strong>Makanan:</strong> makanannaga (5.000/beli, 400/jual)</p>
-        <p><strong>Stamina Pet:</strong> Max 100 · 1 makanan = +20 stamina</p>
-        <p><strong>Level:</strong> 1–10 (MAX) · XP: level × 1.000</p>
-        <p><strong>Feed:</strong> .feed naga</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">makanannaga</span>
-        <span class="tag links">→ .adventure-pet | .levelup</span>
-      </div>
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: ABSEN & REWARD -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-absen">
+  <div class="section-title">🎁 ABSEN & REWARD</div>
+  <div class="grid-3">
+    <div class="card purple">
+      <h3 class="purple">⚡ HOURLY <span class="cmd purple">.hourly</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value purple">1 jam</span></div>
+      <div class="info-row"><span class="info-label">EXP (free)</span><span class="info-value blue">3.000 – 9.000</span></div>
+      <div class="info-row"><span class="info-label">EXP (premium)</span><span class="info-value gold">8.000 – 18.000</span></div>
+      <div class="info-row"><span class="info-label">Money (free)</span><span class="info-value">800 – 7.000</span></div>
+      <div class="info-row"><span class="info-label">Money (premium)</span><span class="info-value gold">4.000 – 15.000</span></div>
     </div>
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🦜</span>
-      <div class="card-title">PHONIX (Phoenix)</div>
-      <div class="card-body">
-        <p><strong>Makanan:</strong> makananphonix</p>
-        <p><strong>Stamina Pet:</strong> Max 100</p>
-        <p><strong>Level:</strong> 1–10 (MAX)</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">makananphonix</span>
-        <span class="tag links">→ .adventure-pet | .levelup</span>
-      </div>
+    <div class="card purple">
+      <h3 class="purple">🌞 DAILY <span class="cmd purple">.daily</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value purple">24 jam</span></div>
+      <div class="info-row"><span class="info-label">Limit (free)</span><span class="info-value">30 – 80</span></div>
+      <div class="info-row"><span class="info-label">Limit (premium)</span><span class="info-value gold">80 – 150</span></div>
+      <div class="info-row"><span class="info-label">Money (free)</span><span class="info-value">3.000 – 18.000</span></div>
+      <div class="info-row"><span class="info-label">Money (premium)</span><span class="info-value gold">8.000 – 35.000</span></div>
+      <div class="info-row"><span class="info-label">Bonus random 10%</span><span class="info-value green">+Potion</span></div>
+      <div class="info-row"><span class="info-label">Bonus random 10%</span><span class="info-value">+Trash</span></div>
+      <div class="info-row"><span class="info-label">Bonus random 7%</span><span class="info-value blue">+Iron</span></div>
+      <div class="info-row"><span class="info-label">Bonus random 5%</span><span class="info-value">+Common Crate</span></div>
+      <div class="info-row"><span class="info-label">Streak bonus</span><span class="info-value purple">Setiap 7 hari → +1 Uncommon</span></div>
     </div>
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🐎</span>
-      <div class="card-title">CENTAUR</div>
-      <div class="card-body">
-        <p><strong>Makanan:</strong> makanancentaur</p>
-        <p><strong>Stamina Pet:</strong> Max 100</p>
-        <p><strong>Level:</strong> 1–10 (MAX)</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">makanancentaur</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🦅</span>
-      <div class="card-title">GRIFFIN</div>
-      <div class="card-body">
-        <p><strong>Makanan:</strong> makanangriffin</p>
-        <p><strong>Stamina Pet:</strong> Max 100</p>
-        <p><strong>Level:</strong> 1–10 (MAX)</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">makanangriffin</span>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#9b59b6">
-      <span class="card-icon">🦊</span>
-      <div class="card-title">KYUBI</div>
-      <div class="card-body">
-        <p><strong>Makanan:</strong> makanankyubi</p>
-        <p><strong>Stamina Pet:</strong> Max 100</p>
-        <p><strong>Level:</strong> 1–10 (MAX)</p>
-      </div>
-      <div class="tag-row">
-        <span class="tag req">makanankyubi</span>
-      </div>
+    <div class="card purple">
+      <h3 class="purple">📅 WEEKLY <span class="cmd purple">.weekly</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value purple">7 hari</span></div>
+      <div class="info-row"><span class="info-label">EXP (free)</span><span class="info-value blue">8.000 – 25.000</span></div>
+      <div class="info-row"><span class="info-label">EXP (premium)</span><span class="info-value gold">20.000 – 60.000</span></div>
+      <div class="info-row"><span class="info-label">Money (free)</span><span class="info-value">15.000 – 80.000</span></div>
+      <div class="info-row"><span class="info-label">Money (premium)</span><span class="info-value gold">40.000 – 180.000</span></div>
+      <div class="info-row"><span class="info-label">Limit (free)</span><span class="info-value">20 – 60</span></div>
+      <div class="info-row"><span class="info-label">Bonus 20%</span><span class="info-value green">+Uncommon Crate</span></div>
+      <div class="info-row"><span class="info-label">Bonus 15%</span><span class="info-value blue">+Iron</span></div>
+      <div class="info-row"><span class="info-label">Bonus 10%</span><span class="info-value">+Potion</span></div>
+      <div class="info-row"><span class="info-label">Bonus 10%</span><span class="info-value">+Diamond</span></div>
     </div>
   </div>
 
-  <div class="eco-title">📋 Alur Merawat Pet</div>
-  <div class="cards-grid">
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">1️⃣</span>
-      <div class="card-title">DAPATKAN PET</div>
-      <code class="card-cmd">.open pet</code>
-      <div class="card-body">
-        <p>Buka Pet Crate yang didapat dari shop (.shop buy pet) atau adventure.</p>
-        <p><strong>Chance:</strong> 2% per buka untuk dapat pet</p>
-        <p>Jika semua pet sudah dimiliki, dapat money 1.000 sebagai gantinya</p>
-      </div>
+  <div class="section-title" style="margin-top:24px;">📦 BUKA CRATE <span class="cmd">.open</span></div>
+  <div class="grid-4">
+    <div class="card silver">
+      <h3 class="silver">⚪ Common</h3>
+      <div style="font-size:12px;">Beli: 500 | Jual: 60</div>
+      <div style="font-size:12px;margin-top:8px;color:var(--text-dim);">Reward:</div>
+      <div style="font-size:12px;">💰 Money: 100-200</div>
+      <div style="font-size:12px;">✨ EXP: 50-100</div>
+      <div style="font-size:12px;">🗑️ Trash: 0-5</div>
+      <div style="font-size:12px;">🧪 Potion: 10% chance</div>
+      <div style="font-size:12px;">⚪ Common: 10% chance</div>
     </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">2️⃣</span>
-      <div class="card-title">BELI MAKANAN PET</div>
-      <code class="card-cmd">.shop buy makanan[pet] [qty]</code>
-      <div class="card-body">
-        <p>Setiap pet punya makanan khusus. Harga sekitar 5.000 per item.</p>
-        <p><strong>Contoh:</strong> .shop buy makanannaga 10</p>
-        <p>1 makanan = +20 stamina pet (butuh ceil((100-stamina)/20) makanan untuk penuh)</p>
-      </div>
+    <div class="card green">
+      <h3 class="green">🟢 Uncommon</h3>
+      <div style="font-size:12px;">Beli: 1.000 | Jual: 120</div>
+      <div style="font-size:12px;margin-top:8px;color:var(--text-dim);">Reward:</div>
+      <div style="font-size:12px;">💰 Money: 100-300</div>
+      <div style="font-size:12px;">✨ EXP: 50-200</div>
+      <div style="font-size:12px;">🕸️ String: 0-3</div>
+      <div style="font-size:12px;">🧪 Potion: 20% chance</div>
+      <div style="font-size:12px;">🔩 Iron: 10% chance</div>
     </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">3️⃣</span>
-      <div class="card-title">BERI MAKAN</div>
-      <code class="card-cmd">.feed [nama pet]</code>
-      <div class="card-body">
-        <p>Isi stamina pet hingga 100. Otomatis hitung berapa makanan yang dibutuhkan.</p>
-        <p><strong>Contoh:</strong> .feed naga</p>
-      </div>
+    <div class="card purple">
+      <h3 class="purple">🟣 Mythic</h3>
+      <div style="font-size:12px;">Beli: 5.000 | Jual: 350</div>
+      <div style="font-size:12px;margin-top:8px;color:var(--text-dim);">Reward:</div>
+      <div style="font-size:12px;">💰 Money: 100-1.000</div>
+      <div style="font-size:12px;">✨ EXP: 50-500</div>
+      <div style="font-size:12px;">🔩 Iron: 0-5</div>
+      <div style="font-size:12px;">🧪 Potion: 50% chance</div>
+      <div style="font-size:12px;">💎 Diamond: 10% chance</div>
     </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">4️⃣</span>
-      <div class="card-title">LEVEL UP PET</div>
-      <code class="card-cmd">.levelup</code>
-      <div class="card-body">
-        <p>Naikkan level semua pet yang memenuhi syarat EXP. Level naik berdasarkan EXP yang terkumpul.</p>
-        <p><strong>XP threshold:</strong> Level saat ini × 1.000</p>
-        <p>Jadi level 1 → 2 butuh 1.000 XP, level 9 → 10 butuh 9.000 XP</p>
-        <p><strong>Max level:</strong> 10 (MAX)</p>
-      </div>
-    </div>
-    <div class="card" style="--card-accent:#d4a843">
-      <span class="card-icon">5️⃣</span>
-      <div class="card-title">PETUALANGAN PET</div>
-      <code class="card-cmd">.adventure-pet</code>
-      <div class="card-body">
-        <p>Kirim pet berpetualangan untuk mendapat reward tambahan.</p>
-        <p>Pet butuh stamina cukup sebelum bisa dikirim berpetualangan</p>
-      </div>
+    <div class="card gold">
+      <h3 class="gold">🟡 Legendary</h3>
+      <div style="font-size:12px;">Beli: 7.000 | Jual: 450</div>
+      <div style="font-size:12px;margin-top:8px;color:var(--text-dim);">Reward:</div>
+      <div style="font-size:12px;">💰 Money: 100-1.500</div>
+      <div style="font-size:12px;">✨ EXP: 50-1.000</div>
+      <div style="font-size:12px;">🔩 Iron: 0-8</div>
+      <div style="font-size:12px;">🧪 Potion: 0-10</div>
+      <div style="font-size:12px;">🥇 Gold: 10% chance</div>
+      <div style="font-size:12px;">💎 Diamond: 10% chance</div>
     </div>
   </div>
+  <div class="alert warn" style="margin-top:12px;font-size:12px;">⚠️ Crate legendary beli 7.000 tapi reward max money 1.500 — ROI sangat negatif kecuali mendapat gold/diamond. Disarankan naikkan expected value legendary atau turunkan harganya.</div>
+</div>
 
-  <div class="eco-title">📊 Analisis Pet Economy</div>
-  <div class="alert bad">
-    <strong>❌ Masalah: Pet sangat mahal didapat</strong>
-    Dengan harga Pet Crate ~2.500 dan chance 2%, butuh rata-rata 50 crate = 125.000 money untuk dapat 1 pet. Untuk semua 5 pet = 625.000 money hanya dari crate. Belum termasuk makanan pet @5.000 untuk level up. Total investasi bisa jutaan money — sangat barrier untuk casual player.
-  </div>
-  <div class="alert good">
-    <strong>✅ Yang Baik</strong>
-    Level max 10 memberikan goal yang jelas. XP threshold bertahap (level×1000) terasa progress yang masuk akal. Sistem feed per jenis makanan menambah depth ekonomi yang menarik.
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: COMBAT & CRIME -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-combat">
+  <div class="section-title">⚔️ COMBAT, CRIME & JUDI</div>
+  <div class="grid-2">
+
+    <div class="card red">
+      <h3 class="red">🎲 JUDI <span class="cmd red">.judi</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value red">5 detik</span></div>
+      <div class="info-row"><span class="info-label">Roll Bot</span><span class="info-value red">0 – 100</span></div>
+      <div class="info-row"><span class="info-label">Roll Player</span><span class="info-value orange">0 – 75 (lebih lemah!)</span></div>
+      <div class="info-row"><span class="info-label">Player menang jika</span><span class="info-value">rollPlayer > rollBot</span></div>
+      <div class="info-row"><span class="info-label">Win rate estimasi</span><span class="info-value red">~36%</span></div>
+      <div class="info-row"><span class="info-label">Reward menang</span><span class="info-value gold">Taruhan × 2</span></div>
+      <div class="alert danger" style="margin-top:10px;font-size:12px;">🎰 Spaceman: max taruhan 500k, multiplier naik sampai x5.0, crash random. Cashout manual dengan .cashout</div>
+    </div>
+
+    <div class="card red">
+      <h3 class="red">⚔️ JUDIPVP <span class="cmd red">.judipvp</span></h3>
+      <div class="info-row"><span class="info-label">Sistem</span><span class="info-value">Tag lawan → terima/tolak → SPIN</span></div>
+      <div class="info-row"><span class="info-label">Timeout terima</span><span class="info-value red">1 menit</span></div>
+      <div class="info-row"><span class="info-label">Winner</span><span class="info-value gold">Ambil semua taruhan</span></div>
+      <div class="info-row"><span class="info-label">Fair</span><span class="info-value green">50/50 (PVP)</span></div>
+    </div>
+
+    <div class="card red">
+      <h3 class="red">🦹 MALING <span class="cmd red">.maling</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value red">30 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value red">35 – 60 (random)</span></div>
+      <div class="info-row"><span class="info-label">Chance gagal</span><span class="info-value red">Ada (tertangkap)</span></div>
+      <div class="info-row"><span class="info-label">Hasil sukses</span><span class="info-value gold">Money, Botol, Kaleng, Kardus, Trash</span></div>
+      <div class="info-row"><span class="info-label">Target</span><span class="info-value">NPC (bukan player)</span></div>
+    </div>
+
+    <div class="card red">
+      <h3 class="red">🔫 MERAMPOK <span class="cmd red">.merampok @</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value red">60 menit</span></div>
+      <div class="info-row"><span class="info-label">Target money min</span><span class="info-value orange">≥ 10.000</span></div>
+      <div class="info-row"><span class="info-label">Target</span><span class="info-value">Player lain (PVP)</span></div>
+      <div class="info-row"><span class="info-label">Hasil sukses</span><span class="info-value gold">% dari money target</span></div>
+    </div>
+
+    <div class="card red">
+      <h3 class="red">🗡️ MEMBUNUH <span class="cmd red">.membunuh @</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value red">60 menit</span></div>
+      <div class="info-row"><span class="info-label">Target min HP</span><span class="info-value orange">> 10</span></div>
+      <div class="info-row"><span class="info-label">Efek sukses</span><span class="info-value red">Target kehilangan HP besar</span></div>
+      <div class="info-row"><span class="info-label">Reward</span><span class="info-value gold">EXP + Money</span></div>
+    </div>
+
+    <div class="card pink">
+      <h3 class="pink">💃 NGELONTE <span class="cmd pink">.ngelonte</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value pink">12 jam</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value pink">40 – 65</span></div>
+      <div class="info-row"><span class="info-label">Health butuh</span><span class="info-value pink">≥ 20</span></div>
+      <div class="info-row"><span class="info-label">Money didapat</span><span class="info-value gold">Besar (12 jam CD)</span></div>
+      <div class="info-row"><span class="info-label">EXP didapat</span><span class="info-value blue">Ada</span></div>
+      <div class="info-row"><span class="info-label">Rare bonus</span><span class="info-value">Potion/Diamond/Iron/Trash</span></div>
+    </div>
+
+    <div class="card pink">
+      <h3 class="pink">💕 NGEWE <span class="cmd pink">.ngewe</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value pink">10 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value pink">30 – 50</span></div>
+      <div class="info-row"><span class="info-label">Money didapat</span><span class="info-value gold">30.000 – 150.000</span></div>
+      <div class="info-row"><span class="info-label">EXP didapat</span><span class="info-value blue">5.000 – 40.000</span></div>
+      <div class="info-row"><span class="info-label">Rare bonus 5%</span><span class="info-value">+Potion</span></div>
+      <div class="info-row"><span class="info-label">Rare bonus 7%</span><span class="info-value gold">+Diamond</span></div>
+    </div>
+
+    <div class="card orange">
+      <h3 class="orange">🛵 OJEK <span class="cmd orange">.ojekk</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value orange">5 menit</span></div>
+      <div class="info-row"><span class="info-label">Stamina butuh</span><span class="info-value orange">20 – 40</span></div>
+      <div class="info-row"><span class="info-label">Health butuh</span><span class="info-value red">≥ 10</span></div>
+      <div class="info-row"><span class="info-label">Money didapat</span><span class="info-value gold">Variatif per order</span></div>
+      <div class="info-row"><span class="info-label">Skenario</span><span class="info-value">5+ skenario random</span></div>
+    </div>
+
   </div>
 </div>
 
-</div><!-- end container -->
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: SOSIAL -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-sosial">
+  <div class="section-title">👥 SOSIAL & INTERAKSI</div>
+  <div class="grid-2">
+
+    <div class="card gold">
+      <h3 class="gold">💸 TRANSFER <span class="cmd">.tf / .transfer</span></h3>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:10px;">Sistem transfer paling kompleks — ada pajak dinamis berlapis</p>
+      <div class="info-row"><span class="info-label">Pajak tier Receh</span><span class="info-value teal">Botol/Kaleng → rendah</span></div>
+      <div class="info-row"><span class="info-label">Pajak tier Murah</span><span class="info-value green">Common crate, wood, buah</span></div>
+      <div class="info-row"><span class="info-label">Pajak tier Medium</span><span class="info-value blue">Mythic, Iron, String</span></div>
+      <div class="info-row"><span class="info-label">Pajak tier Mahal</span><span class="info-value orange">Hewan, ikan</span></div>
+      <div class="info-row"><span class="info-label">Pajak tier Mewah</span><span class="info-value red">Diamond, Gold</span></div>
+      <div class="info-row"><span class="info-label">Jam Sibuk</span><span class="info-value red">x1.3 pajak</span></div>
+      <div class="info-row"><span class="info-label">Jam Sepi</span><span class="info-value green">x0.8 pajak</span></div>
+      <div class="info-row"><span class="info-label">Weekend</span><span class="info-value orange">Pajak lebih tinggi</span></div>
+      <div class="info-row"><span class="info-label">Anti tax-dodge</span><span class="info-value red">3x transfer kecil/5 menit → lock</span></div>
+      <div class="info-row"><span class="info-label">Free threshold</span><span class="info-value green">Money: 500k gratis pajak</span></div>
+    </div>
+
+    <div class="card green">
+      <h3 class="green">🤝 BERDAGANG <span class="cmd green">.berdagang @</span></h3>
+      <div class="info-row"><span class="info-label">Cooldown</span><span class="info-value green">30 menit</span></div>
+      <div class="info-row"><span class="info-label">Target</span><span class="info-value">Player lain</span></div>
+      <div class="info-row"><span class="info-label">Fungsi</span><span class="info-value">Dagang antar player, dapat EXP+Money</span></div>
+      <div class="info-row"><span class="info-label">Cooldown target</span><span class="info-value orange">Target juga kena CD 30 menit</span></div>
+    </div>
+
+    <div class="card gold">
+      <h3 class="gold">🎁 GIVEAWAY <span class="cmd">.giveaway</span></h3>
+      <div class="info-row"><span class="info-label">Start giveaway</span><span class="info-value">.giveaway start &lt;id&gt; &lt;hadiah&gt;</span></div>
+      <div class="info-row"><span class="info-label">Join giveaway</span><span class="info-value">.giveaway join &lt;id&gt;</span></div>
+      <div class="info-row"><span class="info-label">End giveaway</span><span class="info-value">.giveaway end &lt;id&gt;</span></div>
+      <div class="info-row"><span class="info-label">Hadiah</span><span class="info-value gold">Money dari host</span></div>
+      <div class="info-row"><span class="info-label">Winner</span><span class="info-value">Random satu pemenang</span></div>
+    </div>
+
+    <div class="card teal">
+      <h3 class="teal">🏆 LEADERBOARD <span class="cmd teal">.lb</span></h3>
+      <p style="font-size:13px;color:var(--text-dim);margin-bottom:10px;">Kategori yang bisa dilihat:</p>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <span class="badge gold">level</span><span class="badge blue">exp</span><span class="badge gold">money</span>
+        <span class="badge blue">bank</span><span class="badge teal">diamond</span><span class="badge gold">gold</span>
+        <span class="badge orange">iron</span><span class="badge teal">wood</span><span class="badge orange">rock</span>
+        <span class="badge green">hewan</span><span class="badge blue">ikan</span><span class="badge purple">crate</span>
+        <span class="badge pink">pet</span><span class="badge teal">botol</span><span class="badge teal">kaleng</span>
+        <span class="badge teal">trash</span><span class="badge teal">string</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: PET -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-pet">
+  <div class="section-title">🐉 SISTEM PET</div>
+  <div class="grid-3">
+    <div class="card pink">
+      <h3 class="pink">🐉 Naga</h3>
+      <div class="info-row"><span class="info-label">Rarity</span><span class="info-value gold">Dari Pet Crate (5%)</span></div>
+      <div class="info-row"><span class="info-label">Makanan</span><span class="info-value">.shop buy makanannaga</span></div>
+      <div class="info-row"><span class="info-label">Harga makanan</span><span class="info-value orange">5.000 per unit</span></div>
+      <div class="info-row"><span class="info-label">Max Level</span><span class="info-value gold">10</span></div>
+    </div>
+    <div class="card pink">
+      <h3 class="pink">🦜 Phonix</h3>
+      <div class="info-row"><span class="info-label">Rarity</span><span class="info-value gold">Dari Pet Crate (5%)</span></div>
+      <div class="info-row"><span class="info-label">Makanan</span><span class="info-value">.shop buy makananphonix</span></div>
+      <div class="info-row"><span class="info-label">Harga makanan</span><span class="info-value orange">5.000 per unit</span></div>
+      <div class="info-row"><span class="info-label">Max Level</span><span class="info-value gold">10</span></div>
+    </div>
+    <div class="card pink">
+      <h3 class="pink">🦅 Griffin</h3>
+      <div class="info-row"><span class="info-label">Rarity</span><span class="info-value gold">Dari Pet Crate (5%)</span></div>
+      <div class="info-row"><span class="info-label">Makanan</span><span class="info-value">.shop buy makanangriffin</span></div>
+      <div class="info-row"><span class="info-label">Harga makanan</span><span class="info-value orange">5.000 per unit</span></div>
+      <div class="info-row"><span class="info-label">Max Level</span><span class="info-value gold">10</span></div>
+    </div>
+    <div class="card pink">
+      <h3 class="pink">🦊 Kyubi</h3>
+      <div class="info-row"><span class="info-label">Rarity</span><span class="info-value gold">Dari Pet Crate (5%)</span></div>
+      <div class="info-row"><span class="info-label">Makanan</span><span class="info-value">.shop buy makanankyubi</span></div>
+      <div class="info-row"><span class="info-label">Harga makanan</span><span class="info-value orange">5.000 per unit</span></div>
+      <div class="info-row"><span class="info-label">Max Level</span><span class="info-value gold">10</span></div>
+    </div>
+    <div class="card pink">
+      <h3 class="pink">🐎 Centaur</h3>
+      <div class="info-row"><span class="info-label">Rarity</span><span class="info-value gold">Dari Pet Crate (5%)</span></div>
+      <div class="info-row"><span class="info-label">Makanan</span><span class="info-value">.shop buy makanancentaur</span></div>
+      <div class="info-row"><span class="info-label">Harga makanan</span><span class="info-value orange">5.000 per unit</span></div>
+      <div class="info-row"><span class="info-label">Max Level</span><span class="info-value gold">10</span></div>
+    </div>
+    <div class="card gold">
+      <h3 class="gold">📋 ALUR PET</h3>
+      <div style="font-size:13px;">
+        <div style="margin:6px 0;">1️⃣ Beli <span class="cmd">.shop buy pet</span> (2.500)</div>
+        <div style="margin:6px 0;">2️⃣ Buka <span class="cmd">.open pet</span> → dapat 1 dari 5 pet (5% each)</div>
+        <div style="margin:6px 0;">3️⃣ Beli makanan <span class="cmd">.shop buy makanan&lt;pet&gt;</span></div>
+        <div style="margin:6px 0;">4️⃣ Beri makan <span class="cmd">.feed &lt;pet&gt;</span> (stamina pet ≥ 20)</div>
+        <div style="margin:6px 0;">5️⃣ <span class="cmd">.adventurepet</span> untuk dapat reward</div>
+        <div style="margin:6px 0;">6️⃣ <span class="cmd">.leveluppet</span> untuk naik level</div>
+      </div>
+      <div class="alert warn" style="margin-top:10px;font-size:11px;">⚠️ Pet crate 5% per pet, total 25% dapat pet dari 1 crate. Bisa dapat kosong jika kelima slot tidak kena.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: BALANCE -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-balance">
+  <div class="section-title">⚖️ ANALISIS BALANCE EKONOMI RPG</div>
+
+  <div class="grid-2">
+    <div class="card gold">
+      <h3 class="gold">📈 INCOME PER HARI (estimasi aktif)</h3>
+      <table class="eco-table">
+        <thead><tr><th>Sumber</th><th>Cooldown</th><th class="num">Money/Hari (Free)</th><th class="num">Money/Hari (Premium)</th></tr></thead>
+        <tbody>
+          <tr><td>Hourly</td><td>1 jam</td><td class="num">19.200 – 168.000</td><td class="num ok">96.000 – 360.000</td></tr>
+          <tr><td>Daily</td><td>1 hari</td><td class="num">3.000 – 18.000</td><td class="num ok">8.000 – 35.000</td></tr>
+          <tr><td>Berburu (85% hit)</td><td>60 menit</td><td class="num ok">204.000 – 720.000+</td><td class="num ok">sama</td></tr>
+          <tr><td>Nambang</td><td>30 menit</td><td class="num">144.000 – 432.000</td><td class="num">sama</td></tr>
+          <tr><td>Ojek</td><td>5 menit</td><td class="num">Sangat besar</td><td class="num">sama</td></tr>
+          <tr><td>Ngewe</td><td>10 menit</td><td class="num ok">4.320.000 – 21.600.000</td><td class="num ok">sama</td></tr>
+          <tr><td>Ngelonte</td><td>12 jam</td><td class="num">2x/hari</td><td class="num">sama</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card red">
+      <h3 class="red">📉 PENGELUARAN UTAMA</h3>
+      <table class="eco-table">
+        <thead><tr><th>Pengeluaran</th><th class="num">Estimasi/Hari</th><th>Keterangan</th></tr></thead>
+        <tbody>
+          <tr><td>Potion (heal)</td><td class="num">1.000 – 10.000</td><td>Tergantung aktivitas combat</td></tr>
+          <tr><td>Coal (masak)</td><td class="num">1.500 – 15.000</td><td>Tergantung berapa masakan</td></tr>
+          <tr><td>Bibit berkebon</td><td class="num">12.500+</td><td>2.500 bibit per sesi</td></tr>
+          <tr><td>Makanan pet</td><td class="num">5.000 – 50.000</td><td>Per pet per feed</td></tr>
+          <tr><td>Craft/upgrade</td><td class="num">Jarang</td><td>1x beli, tahan lama</td></tr>
+          <tr><td>Beli crate</td><td class="num">Opsional</td><td>ROI bisa negatif</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="rec-box" style="margin-top:20px;">
+    <div class="rec-title">🔍 KESIMPULAN BALANCE</div>
+    <div class="rec-item"><span class="rec-tag">✅ BAIK</span><b>Sistem musim & jam di shop/pasar/transfer</b> sudah ada dan cukup kompleks. Harga dinamis tiap jam, weekend naik, musim berpengaruh. Ini bagian terbaik sistem.</div>
+    <div class="rec-item"><span class="rec-tag">⚠️ INFLASI</span><b>Money masuk terlalu besar</b> vs money keluar. Ngewe 30-150k per 10 menit = bisa 4-21 juta/hari. Tidak ada money sink yang cukup kuat.</div>
+    <div class="rec-item"><span class="rec-tag">🔧 FIX</span><b>Tambahkan pajak jual di shop/pasar</b> (sink 5-10%). Tambahkan biaya repair gear secara otomatis. Tambahkan sistem tax progresif saat berburu berulang.</div>
+    <div class="rec-item"><span class="rec-tag">⚠️ JUDI</span><b>Win rate judi solo hanya ~36%</b> (player 0-75 vs bot 0-100). Terlalu merugikan player. Pemain akan berhenti judi setelah rugi berkali-kali.</div>
+    <div class="rec-item"><span class="rec-tag">✅ BAIK</span><b>Sistem gear tier 1-5 dengan durability</b> bagus. Memberi tujuan jangka menengah. Multiplier berburu dari x1 sampai x4+ memberi insentif upgrade.</div>
+    <div class="rec-item"><span class="rec-tag">✅ BAIK</span><b>Streak daily</b> (7 hari → uncommon crate) adalah engagement loop yang efektif untuk player aktif.</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- TAB: MUSIM & JAM -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="section" id="tab-musimjam">
+  <div class="section-title">🌤️ MUSIM & JAM — Status Saat Ini & Rekomendasi</div>
+
+  <!-- JAM SAAT INI -->
+  <div class="section-title" style="font-size:16px;margin-bottom:14px;">⏰ SISTEM JAM (yang sudah ada di .transfer)</div>
+  <div class="timeline" id="timelineBar"></div>
+  <div class="alert gold" style="margin-top:10px;font-size:12px;margin-bottom:20px;">
+    💡 Sistem jam sudah ada di <b>Transfer</b> dan <b>Shop/Pasar</b> (fluktuasi harga per jam). Tapi belum ada di aktivitas resource seperti mancing, berburu, nambang.
+  </div>
+
+  <!-- MUSIM SAAT INI -->
+  <div class="section-title" style="font-size:16px;margin-bottom:14px;">🌿 MUSIM (yang sudah ada)</div>
+  <div class="season-grid">
+    <div class="season-card" style="border-color:rgba(80,144,208,0.4);">
+      <div class="season-icon">❄️</div>
+      <div class="season-title" style="color:var(--blue2);">Musim Hujan</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">Des, Jan, Feb</div>
+      <div class="season-up">📈 Ikan +30% | Wood +30%</div>
+      <div class="season-down">📉 Bibit -20% | Buah -10%</div>
+      <div class="season-down">📉 Hewan -10%</div>
+    </div>
+    <div class="season-card" style="border-color:rgba(122,74,176,0.4);">
+      <div class="season-icon">🌸</div>
+      <div class="season-title" style="color:var(--purple2);">Musim Semi</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">Mar, Apr, Mei</div>
+      <div class="season-up">📈 Bibit +40% | Buah +30%</div>
+      <div class="season-up">📈 Ikan +10% | Hewan +20%</div>
+    </div>
+    <div class="season-card" style="border-color:rgba(192,112,48,0.4);">
+      <div class="season-icon">☀️</div>
+      <div class="season-title" style="color:var(--orange2);">Musim Kemarau</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">Jun, Jul, Agu</div>
+      <div class="season-up">📈 Hewan +40% | Buah +50%</div>
+      <div class="season-up">📈 Bibit +20%</div>
+      <div class="season-down">📉 Wood -10% | Ikan -10%</div>
+    </div>
+    <div class="season-card" style="border-color:rgba(192,168,80,0.4);">
+      <div class="season-icon">🍂</div>
+      <div class="season-title" style="color:var(--gold2);">Musim Gugur</div>
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">Sep, Okt, Nov</div>
+      <div class="season-up">📈 Wood +20% | Ikan +0%</div>
+      <div class="season-up">📈 Hewan +10%</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- REKOMENDASI MUSIM & JAM UNTUK FITUR BARU -->
+  <div class="section-title" style="font-size:18px;margin-top:20px;">🌟 REKOMENDASI: Fitur yang Cocok Ditambah Musim & Jam</div>
+
+  <div class="grid-2">
+
+    <div class="rec-box">
+      <div class="rec-title">⏰ FITUR COCOK DITAMBAH JAM</div>
+
+      <div class="rec-item">
+        <span class="rec-tag">🎣 MANCING</span>
+        <div>
+          <b>Jam Sibuk (subuh 04-06, sore 16-18):</b> Ikan aktif menggigit → +20-30% jumlah hasil<br>
+          <b>Jam Sepi (10-14 siang):</b> Ikan malas → -20% hasil<br>
+          <b>Weekend:</b> Banyak pemancing amatir → ikan lebih sulit +10% chance gagal
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag">🏹 BERBURU</span>
+        <div>
+          <b>Jam Sibuk (fajar 05-07, senja 17-19):</b> Hewan aktif → +25% yield<br>
+          <b>Jam Sepi (12-15 tengah hari):</b> Hewan bersembunyi → -20% yield<br>
+          <b>Malam (22-04):</b> Hewan nokturnal berbeda, bisa bonus khusus
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag">⛏️ NAMBANG</span>
+        <div>
+          <b>Jam Normal (08-17):</b> Normal<br>
+          <b>Jam Malam (22-05):</b> Gua lebih berbahaya → +5% chance gagal tapi +diamond bonus 5%<br>
+          <b>Weekend:</b> Banyak penambang → rock/iron lebih sedikit (overcrowded)
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag">🛵 OJEK</span>
+        <div>
+          <b>Jam Sibuk (07-09, 17-19):</b> Banyak orderan → +50% money<br>
+          <b>Jam Sepi (02-06 dini hari):</b> Orderan sepi → -30% money<br>
+          <b>Weekend:</b> Orderan antar tempat hiburan → +30% money
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag">🦹 MALING</span>
+        <div>
+          <b>Jam Malam (21-04):</b> Lebih gelap → -10% chance ketahuan<br>
+          <b>Jam Siang (10-15):</b> Terlalu terang → +15% chance ketahuan<br>
+          <b>Weekend:</b> Warung ramai → +20% chance ketahuan
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag">🗑️ MULUNG</span>
+        <div>
+          <b>Pagi (05-07):</b> Orang buang sampah → +30% sampah<br>
+          <b>Malam (20-23):</b> Pasar tutup, banyak sisa → +20% sampah<br>
+          <b>Weekend:</b> Lebih banyak sampah dari pesta → +40% botol & kaleng
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag">🌱 BERKEBON</span>
+        <div>
+          <b>Pagi (05-09):</b> Waktu terbaik berkebun → hasil buah +20%<br>
+          <b>Siang (11-14):</b> Terlalu panas → hasil turun -15%<br>
+          <b>Malam:</b> Tidak bisa berkebun → error atau penalty
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rec-box" style="border-color:rgba(42,136,136,0.3);">
+      <div class="rec-title" style="color:var(--teal2);">🌿 FITUR COCOK DITAMBAH MUSIM</div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">🎣 MANCING</span>
+        <div>
+          <b>Musim Hujan:</b> Ikan paus & ikan besar lebih sering muncul<br>
+          <b>Musim Kemarau:</b> Sungai surut → lebih sering gagal (15% → 20%)<br>
+          <b>Musim Semi:</b> Ikan biasa lebih banyak
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">🏹 BERBURU</span>
+        <div>
+          <b>Musim Kemarau:</b> Hewan lebih mudah ditemukan (sumber air sedikit, hewan berkumpul) → +yield<br>
+          <b>Musim Hujan:</b> Susah masuk hutan → +10% gagal<br>
+          <b>Musim Semi:</b> Banyak anak hewan (panda, kambing) → bonus yield
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">⛏️ NAMBANG</span>
+        <div>
+          <b>Musim Hujan:</b> Banjir di gua → +15% gagal tapi coal lebih banyak<br>
+          <b>Musim Kemarau:</b> Gua kering → diamond spawn rate +5%<br>
+          <b>Musim Gugur:</b> Normal, rock drop lebih banyak
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">🌱 BERKEBON</span>
+        <div>
+          <b>Musim Semi:</b> Panen melimpah → hasil buah x1.5<br>
+          <b>Musim Hujan:</b> Tanaman tenggelam → hasil turun, bibit terbuang -100<br>
+          <b>Musim Kemarau:</b> Perlu siram lebih → stamina cost naik
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">🪓 NEBANG</span>
+        <div>
+          <b>Musim Hujan:</b> Pohon basah, berat → -20% wood tapi +10% chance dapat kayu langka<br>
+          <b>Musim Gugur:</b> Banyak pohon tumbang alami → +30% wood<br>
+          <b>Musim Kemarau:</b> Pohon kering, ringan → +15% wood tapi kualitas rendah
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">🗑️ MULUNG</span>
+        <div>
+          <b>Musim Hujan:</b> Banjir bawa sampah → botol & kaleng +50%<br>
+          <b>Musim Kemarau:</b> Tempat sampah kering → hasil normal<br>
+          <b>Musim Gugur:</b> Daun gugur + sampah → trash lebih banyak
+        </div>
+      </div>
+
+      <div class="rec-item">
+        <span class="rec-tag" style="background:rgba(42,136,136,0.2);color:var(--teal2);border-color:rgba(42,136,136,0.4);">🐉 PET ADVENTURE</span>
+        <div>
+          <b>Musim Semi:</b> Pet lebih aktif → reward +20%<br>
+          <b>Musim Hujan:</b> Phonix tidak suka hujan → stamina drain lebih cepat<br>
+          <b>Musim Kemarau:</b> Naga aktif di panas → bonus damage/reward Naga
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- IMPLEMENTASI CEPAT -->
+  <div class="rec-box" style="margin-top:20px;border-color:rgba(212,168,67,0.4);">
+    <div class="rec-title">⚡ CARA IMPLEMENTASI CEPAT (Template Kode)</div>
+    <div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Copy fungsi ini ke setiap file aktivitas yang ingin ditambahkan sistem jam & musim:</div>
+    <pre style="background:var(--bg3);padding:14px;border-radius:8px;font-size:11px;overflow-x:auto;color:var(--text);border:1px solid var(--border);"><code>// ── Tambahkan di atas handler ──
+function getJamMultiplier() {
+    const hour = new Date().getHours()
+    const day = new Date().getDay()
+    const isWeekend = day === 0 || day === 6
+
+    // Jam sibuk berbeda per fitur — sesuaikan!
+    const jamSibuk = [4,5,6,16,17,18]       // pagi subuh & sore (contoh mancing/berburu)
+    const jamSepi  = [10,11,12,13,14]        // tengah hari
+
+    let mult = 1.0
+    let label = '☀️ Jam Normal'
+    if (jamSibuk.includes(hour)) { mult = 1.3; label = '🔥 Jam Sibuk' }
+    else if (jamSepi.includes(hour)) { mult = 0.8; label = '😴 Jam Sepi' }
+    if (isWeekend) { mult *= 1.1; label += ' (Weekend)' }
+    return { mult, label, isWeekend }
+}
+
+function getMusimMultiplier(kategori = 'ikan') {
+    const month = new Date().getMonth() + 1
+    const musim = {
+        '❄️ Hujan':  { ikan: 1.3, hewan: 0.9, wood: 1.3, bibit: 0.8 },
+        '🌸 Semi':   { ikan: 1.1, hewan: 1.2, wood: 1.0, bibit: 1.4 },
+        '☀️ Kemarau':{ ikan: 0.85,hewan: 1.4, wood: 0.9, bibit: 1.2 },
+        '🍂 Gugur':  { ikan: 1.0, hewan: 1.1, wood: 1.2, bibit: 1.0 },
+    }
+    let nama, data
+    if ([12,1,2].includes(month))  { nama='❄️ Hujan';   data=musim['❄️ Hujan'] }
+    if ([3,4,5].includes(month))   { nama='🌸 Semi';    data=musim['🌸 Semi'] }
+    if ([6,7,8].includes(month))   { nama='☀️ Kemarau'; data=musim['☀️ Kemarau'] }
+    if ([9,10,11].includes(month)) { nama='🍂 Gugur';   data=musim['🍂 Gugur'] }
+    return { mult: data[kategori] || 1.0, nama }
+}
+
+// ── Di dalam handler, gunakan: ──
+// const jam = getJamMultiplier()
+// const musim = getMusimMultiplier('ikan') // atau 'hewan', 'wood', 'bibit'
+// const totalMult = jam.mult * musim.mult
+// user.ikan += Math.round(hasil.ikan * totalMult)
+// 
+// Dan tampilkan di output:
+// 🕐 ${jam.label} (x${jam.mult.toFixed(1)})
+// 🌿 ${musim.nama} (x${musim.mult.toFixed(1)})</code></pre>
+  </div>
+
+  <!-- TABEL PRIORITAS IMPLEMENTASI -->
+  <div class="section-title" style="margin-top:24px;font-size:16px;">📋 Prioritas Implementasi</div>
+  <div class="card gold" style="overflow-x:auto;">
+    <table class="eco-table">
+      <thead><tr><th>Fitur</th><th>Prioritas</th><th>Jam</th><th>Musim</th><th>Alasan</th></tr></thead>
+      <tbody>
+        <tr><td>🎣 Mancing</td><td><span class="badge green">Tinggi</span></td><td class="ok">✅ Sangat cocok</td><td class="ok">✅ Sangat cocok</td><td>Ikan memang dipengaruhi waktu & cuaca di dunia nyata</td></tr>
+        <tr><td>🏹 Berburu</td><td><span class="badge green">Tinggi</span></td><td class="ok">✅ Sangat cocok</td><td class="ok">✅ Sangat cocok</td><td>Hewan aktif waktu tertentu, dipengaruhi musim</td></tr>
+        <tr><td>🛵 Ojek</td><td><span class="badge green">Tinggi</span></td><td class="ok">✅ Sangat cocok</td><td class="warn">⚠️ Kurang relevan</td><td>Permintaan ojek sangat dipengaruhi jam sibuk</td></tr>
+        <tr><td>🌱 Berkebon</td><td><span class="badge blue">Sedang</span></td><td class="warn">⚠️ Bisa</td><td class="ok">✅ Sangat cocok</td><td>Pertanian sangat dipengaruhi musim, sedikit oleh jam</td></tr>
+        <tr><td>⛏️ Nambang</td><td><span class="badge blue">Sedang</span></td><td class="warn">⚠️ Bisa</td><td class="warn">⚠️ Bisa</td><td>Efek musim bisa kreatif tapi tidak terlalu natural</td></tr>
+        <tr><td>🪓 Nebang</td><td><span class="badge blue">Sedang</span></td><td class="warn">⚠️ Bisa</td><td class="ok">✅ Cocok</td><td>Musim gugur & hujan mempengaruhi hasil kayu</td></tr>
+        <tr><td>🗑️ Mulung</td><td><span class="badge blue">Sedang</span></td><td class="ok">✅ Cocok</td><td class="warn">⚠️ Bisa</td><td>Waktu mulung mempengaruhi jenis sampah</td></tr>
+        <tr><td>🦹 Maling</td><td><span class="badge orange">Rendah</span></td><td class="ok">✅ Cocok</td><td class="bad">❌ Tidak perlu</td><td>Hanya jam malam yang relevan</td></tr>
+        <tr><td>🐉 Pet Adventure</td><td><span class="badge orange">Rendah</span></td><td class="bad">❌ Kurang natural</td><td class="warn">⚠️ Bisa kreatif</td><td>Efek per pet berbeda musim bisa jadi lore menarik</td></tr>
+        <tr><td>💕 Ngewe/Ngelonte</td><td><span class="badge red">Tidak perlu</span></td><td class="warn">⚠️ Bisa</td><td class="bad">❌ Tidak relevan</td><td>Bisa ditambah jam sibuk/sepi tapi bukan prioritas</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
 
 <script>
-function showTab(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + id).classList.add('active');
-  event.target.classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+  function showTab(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Build timeline bar
+  const tl = document.getElementById('timelineBar');
+  const sibukJam = [4,5,6,7,8,9,12,13,16,17,18,19,20,21];
+  const sepiJam = [0,1,2,3,22,23];
+  const currentHour = new Date().getHours();
+  for (let h = 0; h < 24; h++) {
+    const slot = document.createElement('div');
+    let cls = 'time-slot ';
+    let status = 'Normal';
+    let mult = 'x1.0';
+    if (sibukJam.includes(h)) { cls += 'sibuk'; status = 'SIBUK'; mult = 'x1.3'; }
+    else if (sepiJam.includes(h)) { cls += 'sepi'; status = 'Sepi'; mult = 'x0.8'; }
+    else cls += 'normal';
+    if (h === currentHour) slot.style.outline = '2px solid var(--gold)';
+    slot.className = cls;
+    slot.innerHTML = `<div class="time-label">${String(h).padStart(2,'0')}:00</div><div class="time-status">${status}</div><div class="time-mult">${mult}</div>`;
+    tl.appendChild(slot);
+  }
 </script>
 </body>
 </html>
