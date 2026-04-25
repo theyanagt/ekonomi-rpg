@@ -3,1519 +3,1421 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flowchart Adaptasi RPG Bot</title>
+<title>RPG Economy Adaptation System</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
-
   :root {
     --bg: #060a10;
-    --surface: #0d1520;
-    --border: #1a2d4a;
-    --accent1: #00e5ff;
+    --bg2: #0a1018;
+    --panel: #0d1520;
+    --panel2: #111d2e;
+    --border: #1a3050;
+    --accent: #00d4ff;
     --accent2: #ff6b35;
-    --accent3: #7fff5f;
+    --accent3: #39ff14;
     --accent4: #ffd700;
-    --accent5: #c084fc;
-    --text: #d0e8ff;
-    --text-dim: #6a8aab;
-    --glow1: rgba(0,229,255,0.15);
-    --glow2: rgba(255,107,53,0.15);
-    --glow3: rgba(127,255,95,0.15);
-    --glow4: rgba(255,215,0,0.15);
+    --text: #c8dff0;
+    --text-dim: #5a7a9a;
+    --red: #ff4757;
+    --purple: #a855f7;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
+    --glow2: 0 0 20px rgba(255,107,53,0.3);
+    --glow3: 0 0 20px rgba(57,255,20,0.3);
+    --glow4: 0 0 20px rgba(255,215,0,0.3);
   }
-
   * { margin:0; padding:0; box-sizing:border-box; }
-
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Rajdhani', sans-serif;
-    overflow-x: hidden;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  /* Grid background */
+  /* BACKGROUND GRID */
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
+    content:'';
+    position:fixed; inset:0;
     background-image:
-      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
     background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    pointer-events:none;
   }
 
-  .page-wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 30px 20px 60px;
-  }
-
-  /* HEADER */
-  .header {
-    text-align: center;
-    margin-bottom: 50px;
-    padding: 30px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: linear-gradient(135deg, rgba(0,229,255,0.05), rgba(255,107,53,0.05));
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent1), var(--accent2), transparent);
-    animation: scan 3s linear infinite;
-  }
-  @keyframes scan {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-  .header h1 {
-    font-family: 'Orbitron', monospace;
-    font-size: clamp(1.4rem, 4vw, 2.8rem);
-    font-weight: 900;
-    color: var(--accent1);
-    text-shadow: 0 0 30px rgba(0,229,255,0.5);
-    letter-spacing: 0.1em;
-    margin-bottom: 10px;
-  }
-  .header p {
-    font-size: 1.1rem;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-  }
-  .badge-row {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 16px;
-  }
-  .badge {
-    padding: 4px 14px;
-    border-radius: 2px;
-    font-size: 0.8rem;
-    font-family: 'Orbitron', monospace;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    border: 1px solid currentColor;
-  }
-  .badge.cyan  { color: var(--accent1); background: var(--glow1); }
-  .badge.orange{ color: var(--accent2); background: var(--glow2); }
-  .badge.green { color: var(--accent3); background: var(--glow3); }
-  .badge.gold  { color: var(--accent4); background: var(--glow4); }
-  .badge.purple{ color: var(--accent5); background: rgba(192,132,252,0.1); }
-
-  /* LEGEND */
-  .legend {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin-bottom: 40px;
-  }
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    background: var(--surface);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-  .legend-dot {
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* SECTION TITLES */
-  .section-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    padding: 12px 20px;
-    border-left: 3px solid var(--accent1);
-    background: linear-gradient(90deg, var(--glow1), transparent);
-    margin-bottom: 20px;
-    color: var(--accent1);
-    text-transform: uppercase;
-  }
-  .section-title.orange { border-color: var(--accent2); color: var(--accent2); background: linear-gradient(90deg, var(--glow2), transparent); }
-  .section-title.green  { border-color: var(--accent3); color: var(--accent3); background: linear-gradient(90deg, var(--glow3), transparent); }
-  .section-title.gold   { border-color: var(--accent4); color: var(--accent4); background: linear-gradient(90deg, var(--glow4), transparent); }
-  .section-title.purple { border-color: var(--accent5); color: var(--accent5); background: linear-gradient(90deg, rgba(192,132,252,0.1), transparent); }
-
-  /* DECISION BOXES */
-  .flow-section {
-    margin-bottom: 50px;
-  }
-
-  /* Time Decision Flow */
-  .time-flow {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    align-items: center;
-    margin-bottom: 40px;
-  }
-
-  /* Node styles */
-  .node {
-    position: relative;
-    padding: 14px 22px;
-    border-radius: 3px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.05em;
-    text-align: center;
-    transition: all 0.2s;
-    cursor: default;
-  }
-  .node:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.15);
-  }
-
-  /* Decision diamond-ish box */
-  .node-decision {
-    background: rgba(0,229,255,0.08);
-    border: 2px solid var(--accent1);
-    color: var(--accent1);
-    box-shadow: 0 0 20px rgba(0,229,255,0.15), inset 0 0 20px rgba(0,229,255,0.05);
-    clip-path: polygon(10px 0%, calc(100% - 10px) 0%, 100% 50%, calc(100% - 10px) 100%, 10px 100%, 0% 50%);
-    padding: 14px 40px;
-    min-width: 280px;
-  }
-  .node-decision.orange {
-    background: rgba(255,107,53,0.08);
-    border-color: var(--accent2);
-    color: var(--accent2);
-    box-shadow: 0 0 20px rgba(255,107,53,0.15), inset 0 0 20px rgba(255,107,53,0.05);
-  }
-
-  /* Action box */
-  .node-action {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    min-width: 200px;
-  }
-
-  /* Reward box */
-  .node-reward {
-    border: 1px solid;
-    font-size: 0.85rem;
-  }
-  .node-reward.cyan   { border-color: var(--accent1); background: var(--glow1); color: var(--accent1); }
-  .node-reward.orange { border-color: var(--accent2); background: var(--glow2); color: var(--accent2); }
-  .node-reward.green  { border-color: var(--accent3); background: var(--glow3); color: var(--accent3); }
-  .node-reward.gold   { border-color: var(--accent4); background: var(--glow4); color: var(--accent4); }
-  .node-reward.purple { border-color: var(--accent5); background: rgba(192,132,252,0.1); color: var(--accent5); }
-  .node-reward.red    { border-color: #ff4444; background: rgba(255,68,68,0.1); color: #ff4444; }
-
-  /* Connector arrow */
-  .arrow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
+  header {
+    text-align:center;
+    padding: 40px 20px 20px;
     position: relative;
   }
-  .arrow-line {
-    width: 2px;
-    background: var(--border);
-    flex-shrink: 0;
-  }
-  .arrow-label {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    font-family: 'Orbitron', monospace;
-    padding: 2px 8px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-  }
-  .arrow-head {
-    width: 0; height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 8px solid var(--border);
-  }
-
-  /* BIG GRID: main adaptasi table */
-  .adapt-grid {
-    display: grid;
-    gap: 16px;
-    margin-bottom: 50px;
-  }
-  .adapt-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .adapt-grid.cols-2 { grid-template-columns: 1fr 1fr; }
-  @media (max-width: 800px) {
-    .adapt-grid.cols-3 { grid-template-columns: 1fr; }
-    .adapt-grid.cols-2 { grid-template-columns: 1fr; }
-  }
-
-  .card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    overflow: hidden;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  }
-  .card-header {
-    padding: 14px 18px;
-    font-family: 'Orbitron', monospace;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .card-header.cyan   { background: var(--glow1); color: var(--accent1); border-bottom: 1px solid rgba(0,229,255,0.2); }
-  .card-header.orange { background: var(--glow2); color: var(--accent2); border-bottom: 1px solid rgba(255,107,53,0.2); }
-  .card-header.green  { background: var(--glow3); color: var(--accent3); border-bottom: 1px solid rgba(127,255,95,0.2); }
-  .card-header.gold   { background: var(--glow4); color: var(--accent4); border-bottom: 1px solid rgba(255,215,0,0.2); }
-  .card-header.purple { background: rgba(192,132,252,0.1); color: var(--accent5); border-bottom: 1px solid rgba(192,132,252,0.2); }
-  .card-header.red    { background: rgba(255,68,68,0.08); color: #ff6b6b; border-bottom: 1px solid rgba(255,68,68,0.2); }
-
-  .card-body {
-    padding: 16px 18px;
-  }
-
-  .activity-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .activity-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 12px;
-    border-radius: 3px;
-    border-left: 2px solid transparent;
-    background: rgba(255,255,255,0.02);
-    font-size: 0.88rem;
-    line-height: 1.5;
-    transition: background 0.15s;
-  }
-  .activity-list li:hover { background: rgba(255,255,255,0.05); }
-  .activity-list li.priority-high  { border-left-color: var(--accent3); }
-  .activity-list li.priority-med   { border-left-color: var(--accent4); }
-  .activity-list li.priority-low   { border-left-color: var(--text-dim); }
-  .activity-list li.priority-avoid { border-left-color: #ff4444; }
-
-  .act-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.2; }
-  .act-content { flex: 1; }
-  .act-name { font-weight: 700; color: var(--text); font-size: 0.9rem; }
-  .act-detail { color: var(--text-dim); font-size: 0.8rem; margin-top: 2px; }
-  .act-tag {
+  .header-badge {
     display: inline-block;
-    padding: 1px 6px;
-    border-radius: 2px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    margin-left: 4px;
-    vertical-align: middle;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    border: 1px solid var(--accent);
+    padding: 4px 16px;
+    margin-bottom: 16px;
+    opacity: 0.7;
   }
-  .tag-passive { background: rgba(127,255,95,0.15); color: var(--accent3); border: 1px solid rgba(127,255,95,0.3); }
-  .tag-reward  { background: rgba(255,215,0,0.12); color: var(--accent4); border: 1px solid rgba(255,215,0,0.3); }
-  .tag-risky   { background: rgba(255,68,68,0.12); color: #ff6b6b; border: 1px solid rgba(255,68,68,0.3); }
-  .tag-prem    { background: rgba(192,132,252,0.12); color: var(--accent5); border: 1px solid rgba(192,132,252,0.3); }
-
-  /* FLOW CHART VISUAL */
-  .flowchart-container {
-    overflow-x: auto;
-    padding: 10px 0;
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(22px, 4vw, 42px);
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 30px rgba(0,212,255,0.5), 0 0 60px rgba(0,212,255,0.2);
+    line-height: 1.1;
+    letter-spacing: 2px;
   }
-  .fc-row {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin-bottom: 0;
-    flex-wrap: nowrap;
-  }
-  .fc-node {
-    padding: 10px 16px;
-    border-radius: 3px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    white-space: nowrap;
-    flex-shrink: 0;
-    text-align: center;
-    letter-spacing: 0.04em;
-  }
-  .fc-diamond {
-    background: rgba(0,229,255,0.08);
-    border: 1.5px solid var(--accent1);
-    color: var(--accent1);
-    clip-path: polygon(12px 0%, calc(100% - 12px) 0%, 100% 50%, calc(100% - 12px) 100%, 12px 100%, 0% 50%);
-    padding: 10px 32px;
-  }
-  .fc-diamond.orange {
-    background: rgba(255,107,53,0.08);
-    border-color: var(--accent2);
-    color: var(--accent2);
-  }
-  .fc-diamond.purple {
-    background: rgba(192,132,252,0.08);
-    border-color: var(--accent5);
-    color: var(--accent5);
-  }
-  .fc-box {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-  }
-  .fc-box.cyan   { border-color: rgba(0,229,255,0.4); background: var(--glow1); color: var(--accent1); }
-  .fc-box.orange { border-color: rgba(255,107,53,0.4); background: var(--glow2); color: var(--accent2); }
-  .fc-box.green  { border-color: rgba(127,255,95,0.4); background: var(--glow3); color: var(--accent3); }
-  .fc-box.gold   { border-color: rgba(255,215,0,0.4); background: var(--glow4); color: var(--accent4); }
-  .fc-box.purple { border-color: rgba(192,132,252,0.4); background: rgba(192,132,252,0.08); color: var(--accent5); }
-
-  .fc-arrow {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    position: relative;
-    padding: 0 6px;
-  }
-  .fc-arrow::before {
-    content: '';
-    display: block;
-    width: 30px; height: 2px;
-    background: var(--border);
-  }
-  .fc-arrow::after {
-    content: '';
-    display: block;
-    width: 0; height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-left: 7px solid var(--border);
-    margin-left: -1px;
-  }
-  .fc-arrow span {
-    position: absolute;
-    top: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.68rem;
+  .subtitle {
+    font-size: 14px;
     color: var(--text-dim);
-    white-space: nowrap;
-    background: var(--bg);
-    padding: 1px 4px;
-    font-family: 'Orbitron', monospace;
-  }
-
-  .fc-down {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .fc-down::before {
-    content: '';
-    display: block;
-    width: 2px; height: 20px;
-    background: var(--border);
-  }
-  .fc-down::after {
-    content: '';
-    display: block;
-    width: 0; height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-top: 7px solid var(--border);
-  }
-
-  /* Big master flowchart */
-  .master-flow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0;
-    padding: 20px 0;
-  }
-  .mf-node {
-    text-align: center;
-    padding: 12px 28px;
-    border-radius: 3px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    letter-spacing: 0.05em;
-    position: relative;
-  }
-  .mf-start {
-    background: linear-gradient(135deg, var(--accent1), var(--accent2));
-    color: #000;
-    font-family: 'Orbitron', monospace;
-    font-size: 1rem;
-    border-radius: 40px;
-    box-shadow: 0 0 30px rgba(0,229,255,0.3);
-    padding: 14px 40px;
-  }
-  .mf-branch {
-    display: grid;
-    width: 100%;
-    gap: 12px;
-    justify-items: center;
-  }
-  .mf-down {
-    width: 2px; height: 30px;
-    background: linear-gradient(to bottom, var(--border), rgba(100,140,180,0.5));
-    position: relative;
-  }
-  .mf-down::after {
-    content: '';
-    position: absolute;
-    bottom: -7px;
-    left: -5px;
-    width: 0; height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 8px solid rgba(100,140,180,0.5);
-  }
-
-  .branch-container {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--surface);
-    overflow: hidden;
-  }
-  .branch-header {
-    padding: 10px 20px;
-    font-family: 'Orbitron', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    font-weight: 700;
-    background: var(--glow1);
-    color: var(--accent1);
-    border-bottom: 1px solid rgba(0,229,255,0.2);
-  }
-  .branch-header.orange { background: var(--glow2); color: var(--accent2); border-color: rgba(255,107,53,0.2); }
-  .branch-header.green  { background: var(--glow3); color: var(--accent3); border-color: rgba(127,255,95,0.2); }
-  .branch-header.gold   { background: var(--glow4); color: var(--accent4); border-color: rgba(255,215,0,0.2); }
-  .branch-header.purple { background: rgba(192,132,252,0.1); color: var(--accent5); border-color: rgba(192,132,252,0.2); }
-
-  .branch-body {
-    padding: 16px 20px;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-
-  .sub-card {
-    padding: 12px 14px;
-    border-radius: 3px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,0.02);
-  }
-  .sub-card-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .sub-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .sub-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .sub-list li {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    display: flex;
-    gap: 6px;
-    align-items: flex-start;
-    padding: 3px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .sub-list li:last-child { border-bottom: none; }
-  .sub-list li strong { color: var(--text); font-weight: 700; }
-  .sub-list li .sub-note { color: var(--accent3); font-size: 0.75rem; }
-  .sub-list li .sub-bad  { color: #ff6b6b; font-size: 0.75rem; }
-
-  /* Bonus / penalty table */
-  .modifier-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
     margin-top: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 2px;
   }
-  .modifier-table th, .modifier-table td {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    text-align: left;
-  }
-  .modifier-table th {
-    font-family: 'Orbitron', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    background: rgba(255,255,255,0.03);
-    color: var(--text-dim);
-  }
-  .modifier-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .pos { color: var(--accent3); font-weight: 700; }
-  .neg { color: #ff6b6b; font-weight: 700; }
-  .neu { color: var(--text-dim); }
 
-  /* Tab switcher */
+  .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+  /* TABS */
   .tabs {
     display: flex;
     gap: 4px;
-    margin-bottom: 0;
+    margin: 30px 0 0;
+    border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
   }
-  .tab-btn {
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-dim);
-    font-family: 'Orbitron', monospace;
-    font-size: 0.72rem;
+  .tab {
+    padding: 10px 20px;
+    font-family: 'Rajdhani', sans-serif;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.2s;
+    border: 1px solid transparent;
     border-bottom: none;
-    border-radius: 3px 3px 0 0;
+    color: var(--text-dim);
+    transition: all 0.2s;
+    background: transparent;
+    position: relative;
+    bottom: -1px;
   }
-  .tab-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
-  .tab-btn.active { background: var(--surface); color: var(--accent1); border-color: var(--accent1); }
-  .tab-panel {
-    display: none;
-    border: 1px solid var(--border);
-    border-radius: 0 4px 4px 4px;
-    padding: 20px;
-    background: var(--surface);
+  .tab:hover { color: var(--text); border-color: var(--border); }
+  .tab.active {
+    color: var(--accent);
+    border-color: var(--border);
+    border-bottom-color: var(--bg);
+    background: var(--panel);
   }
-  .tab-panel.active { display: block; }
+  .tab-content { display: none; padding: 24px 0; }
+  .tab-content.active { display: block; }
 
-  /* Scrollbar */
+  /* PANELS */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 20px;
+    position: relative;
+  }
+  .panel::before {
+    content:'';
+    position:absolute; top:0; left:0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+    border-radius: 2px 0 0 2px;
+  }
+  .panel.orange::before { background: var(--accent2); }
+  .panel.green::before { background: var(--accent3); }
+  .panel.gold::before { background: var(--accent4); }
+  .panel.purple::before { background: var(--purple); }
+  .panel.red::before { background: var(--red); }
+
+  .panel-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .panel-title.blue { color: var(--accent); }
+  .panel-title.orange { color: var(--accent2); }
+  .panel-title.green { color: var(--accent3); }
+  .panel-title.gold { color: var(--accent4); }
+  .panel-title.purple { color: var(--purple); }
+  .panel-title.red { color: var(--red); }
+
+  /* GRID LAYOUTS */
+  .grid-3 { display:grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+  .grid-2 { display:grid; grid-template-columns: repeat(2,1fr); gap: 16px; }
+  .grid-4 { display:grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  @media(max-width:900px) { .grid-3,.grid-4 { grid-template-columns:1fr 1fr; } }
+  @media(max-width:600px) { .grid-3,.grid-2,.grid-4 { grid-template-columns:1fr; } }
+
+  /* FLOWCHART */
+  .flow-container { position: relative; }
+  .flow-row { display: flex; justify-content: center; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .flow-node {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 16px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    position: relative;
+    min-width: 120px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .flow-node:hover { transform: translateY(-2px); }
+  .flow-node.root {
+    background: linear-gradient(135deg, #0a2040, #0d2d4f);
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    color: var(--accent);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    min-width: 200px;
+    padding: 16px 24px;
+  }
+  .flow-node.time { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.05); }
+  .flow-node.day { border-color: var(--accent4); color: var(--accent4); background: rgba(255,215,0,0.05); }
+  .flow-node.season { border-color: var(--accent3); color: var(--accent3); background: rgba(57,255,20,0.05); }
+  .flow-node.result { border-color: var(--accent2); color: var(--accent2); background: rgba(255,107,53,0.05); font-size: 12px; min-width: 100px; }
+  .flow-node.final {
+    border-color: var(--accent3);
+    background: rgba(57,255,20,0.08);
+    color: var(--accent3);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+  }
+  .flow-arrow {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 20px;
+    margin: 4px 0;
+    line-height: 1;
+  }
+  .flow-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    margin-top: 4px;
+  }
+
+  /* MULTIPLIER TABLES */
+  .mult-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .mult-table th {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+  }
+  .mult-table td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+  }
+  .mult-table tr:hover td { background: rgba(0,212,255,0.03); }
+  .up { color: var(--accent3); }
+  .down { color: var(--red); }
+  .neutral { color: var(--text-dim); }
+  .hot { color: var(--accent2); font-weight: 700; }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 2px 6px;
+    border-radius: 2px;
+    border: 1px solid;
+    margin: 1px;
+  }
+  .tag.blue { border-color: var(--accent); color: var(--accent); }
+  .tag.orange { border-color: var(--accent2); color: var(--accent2); }
+  .tag.green { border-color: var(--accent3); color: var(--accent3); }
+  .tag.gold { border-color: var(--accent4); color: var(--accent4); }
+  .tag.red { border-color: var(--red); color: var(--red); }
+  .tag.purple { border-color: var(--purple); color: var(--purple); }
+
+  /* ACTIVITY CARDS */
+  .activity-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 13px;
+    position: relative;
+    overflow: hidden;
+  }
+  .activity-card::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, transparent 50%, rgba(0,212,255,0.05) 50%);
+  }
+  .activity-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .activity-stat { color: var(--text-dim); font-size: 12px; line-height: 1.8; font-family: 'Share Tech Mono', monospace; }
+  .activity-stat span { color: var(--text); }
+  .cd-badge {
+    font-size: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 2px;
+    margin-left: auto;
+  }
+
+  /* SEASON CARDS */
+  .season-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+  @media(max-width:900px) { .season-grid { grid-template-columns: repeat(2,1fr); } }
+  @media(max-width:500px) { .season-grid { grid-template-columns: 1fr; } }
+  .season-card {
+    border-radius: 4px;
+    border: 1px solid;
+    padding: 16px;
+    text-align: center;
+  }
+  .season-icon { font-size: 32px; margin-bottom: 8px; }
+  .season-name { font-family: 'Orbitron', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
+  .season-mult { font-size: 12px; font-family: 'Share Tech Mono', monospace; line-height: 2; }
+  .season-mult .up { background: rgba(57,255,20,0.1); padding: 2px 6px; border-radius: 2px; }
+  .season-mult .down { background: rgba(255,71,87,0.1); padding: 2px 6px; border-radius: 2px; }
+  .season-mult .neutral { color: var(--text-dim); }
+
+  /* TIME BARS */
+  .time-bar-container { position: relative; }
+  .time-bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+  .time-bar-label { font-size: 12px; font-family: 'Share Tech Mono', monospace; width: 100px; flex-shrink: 0; }
+  .time-bar {
+    flex: 1;
+    height: 24px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .time-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+    position: relative;
+  }
+  .time-bar-text {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-family: 'Share Tech Mono', monospace;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+  .time-bar-mult { font-size: 13px; font-weight: 700; font-family: 'Share Tech Mono', monospace; width: 60px; flex-shrink: 0; text-align: right; }
+
+  /* COMBO MATRIX */
+  .matrix-cell {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 12px;
+  }
+  .matrix-cell .mult-val { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .matrix-cell .mult-desc { font-size: 10px; font-family: 'Share Tech Mono', monospace; color: var(--text-dim); }
+
+  /* BALANCING RULES */
+  .rule-card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .rule-title { font-weight: 700; color: var(--accent2); margin-bottom: 4px; font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: 1px; }
+
+  /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--accent1); }
 
-  /* Divider */
-  .divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 40px 0;
+  /* ANIMATIONS */
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+  @keyframes glow-pulse { 0%,100%{box-shadow: 0 0 10px rgba(0,212,255,0.2)} 50%{box-shadow: 0 0 20px rgba(0,212,255,0.4)} }
+  .pulse { animation: pulse 2s infinite; }
+  .glow-pulse { animation: glow-pulse 3s infinite; }
+
+  /* CURRENT STATUS WIDGET */
+  .status-widget {
+    background: var(--panel2);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+    box-shadow: var(--glow);
+  }
+  @media(max-width:600px) { .status-widget { grid-template-columns: 1fr; } }
+  .status-item { text-align: center; }
+  .status-val { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+  .status-key { font-size: 11px; font-family: 'Share Tech Mono', monospace; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+
+  /* LIVE CALCULATOR */
+  .calc-section { background: var(--panel2); border: 1px solid var(--border); padding: 20px; border-radius: 4px; }
+  select, input[type=number], input[type=range] {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    border-radius: 2px;
+    outline: none;
+    width: 100%;
+  }
+  select:focus, input:focus { border-color: var(--accent); }
+  label { font-size: 12px; font-family: 'Share Tech Mono', monospace; color: var(--text-dim); display: block; margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+  .form-group { margin-bottom: 16px; }
+  .calc-result {
+    background: var(--bg);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 16px;
+    margin-top: 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+  }
+  .calc-result .r-label { color: var(--text-dim); }
+  .calc-result .r-val { color: var(--accent); float: right; font-weight: 700; }
+  .calc-result .r-total { color: var(--accent3); font-size: 15px; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+  .mb-16 { margin-bottom: 16px; }
+  .mb-24 { margin-bottom: 24px; }
+
+  .formula-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    margin-bottom: 12px;
+    line-height: 1.8;
+  }
+  .formula-box .var { color: var(--accent2); }
+  .formula-box .op { color: var(--text-dim); }
+  .formula-box .result-var { color: var(--accent3); }
+  .formula-box .comment { color: var(--text-dim); font-size: 11px; }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
 
-  /* Pulse animation on key nodes */
-  .pulse {
-    animation: pulse-glow 2s ease-in-out infinite;
+  .warning-box {
+    background: rgba(255,71,87,0.08);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--red);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
   }
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 10px rgba(0,229,255,0.2); }
-    50% { box-shadow: 0 0 25px rgba(0,229,255,0.5); }
+  .info-box {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 13px;
+    margin-bottom: 12px;
   }
 </style>
 </head>
 <body>
-<div class="page-wrapper">
 
-  <!-- HEADER -->
-  <div class="header">
-    <h1>⚡ FLOWCHART ADAPTASI RPG BOT</h1>
-    <p>Panduan lengkap adaptasi fitur berdasarkan JAM · HARI · MUSIM</p>
-    <div class="badge-row">
-      <span class="badge cyan">JAM SIBUK</span>
-      <span class="badge orange">JAM NORMAL</span>
-      <span class="badge green">JAM SEPI</span>
-      <span class="badge gold">WEEKEND</span>
-      <span class="badge purple">MUSIM</span>
+<header>
+  <div class="header-badge">SYSTEM v2.0 // RPG ECONOMY ENGINE</div>
+  <h1>⚔️ RPG ECONOMY ADAPTATION<br><span style="color:var(--accent)">FLOWCHART SYSTEM</span></h1>
+  <div class="subtitle">// WAKTU × HARI × MUSIM → DYNAMIC REWARD SCALING //</div>
+</header>
+
+<div class="container">
+
+  <!-- LIVE STATUS -->
+  <div class="status-widget glow-pulse" id="statusWidget">
+    <div class="status-item">
+      <div class="status-val" id="currentTime" style="color:var(--accent)">--:--</div>
+      <div class="status-key">⏰ JAM SEKARANG</div>
+      <div id="timeCategory" style="font-size:11px; margin-top:4px; font-family:'Share Tech Mono',monospace; color:var(--text-dim)">...</div>
+    </div>
+    <div class="status-item">
+      <div class="status-val" id="currentDay" style="color:var(--accent4)">---</div>
+      <div class="status-key">📅 HARI INI</div>
+      <div id="dayCategory" style="font-size:11px; margin-top:4px; font-family:'Share Tech Mono',monospace; color:var(--text-dim)">...</div>
+    </div>
+    <div class="status-item">
+      <div class="status-val" id="currentSeason" style="color:var(--accent3)">---</div>
+      <div class="status-key">🌍 MUSIM AKTIF</div>
+      <div id="currentMultiplier" style="font-size:11px; margin-top:4px; font-family:'Share Tech Mono',monospace; color:var(--text-dim)">...</div>
     </div>
   </div>
 
-  <!-- LEGEND -->
-  <div class="section-title">📖 KETERANGAN WARNA</div>
-  <div class="legend" style="margin-bottom:40px">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent1)"></div> Jam Sibuk (18:00–23:00)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent2)"></div> Jam Normal (10:00–17:59)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent3)"></div> Jam Sepi (00:00–09:59)</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent4)"></div> Weekend / Hari Besar</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--accent5)"></div> Musim / Event Khusus</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div> Hindari / Resiko Tinggi</div>
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('flowchart')">🗺️ FLOWCHART</button>
+    <button class="tab" onclick="showTab('activities')">⚔️ AKTIVITAS</button>
+    <button class="tab" onclick="showTab('multipliers')">📊 MULTIPLIER</button>
+    <button class="tab" onclick="showTab('calculator')">🧮 KALKULATOR</button>
+    <button class="tab" onclick="showTab('balancing')">⚖️ BALANCING</button>
   </div>
 
-  <!-- MASTER DECISION FLOWCHART -->
-  <div class="section-title">🔀 FLOWCHART KEPUTUSAN UTAMA</div>
+  <!-- TAB 1: FLOWCHART -->
+  <div class="tab-content active" id="tab-flowchart">
+    <div class="section-title">📐 DECISION FLOWCHART — ADAPTASI EKONOMI RPG</div>
 
-  <div class="flowchart-container" style="margin-bottom:50px">
-    <!-- Simplified vertical flow -->
-    <div style="display:flex; flex-direction:column; align-items:center; gap:0; padding:10px 0; min-width:700px;">
+    <!-- Main Flowchart -->
+    <div style="background:var(--panel); border:1px solid var(--border); padding:24px; border-radius:4px; overflow-x:auto;">
 
-      <!-- START -->
-      <div class="mf-node mf-start pulse">▶ USER MAU MAIN RPG</div>
-      <div class="mf-down"></div>
+      <!-- ROOT -->
+      <div class="flow-row">
+        <div class="flow-node root glow-pulse">🎮 PLAYER ACTION<br><span style="font-size:9px;opacity:0.7">MULAI AKTIVITAS RPG</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
 
-      <!-- Decision 1: Waktu -->
-      <div class="fc-node fc-diamond" style="min-width:320px;">📅 CEK WAKTU SEKARANG</div>
-      <div class="mf-down"></div>
+      <!-- STEP 1: TIME -->
+      <div class="flow-row">
+        <div class="flow-node time" style="min-width:220px;">⏰ CEK JAM SEKARANG<br><span class="flow-label">TENTUKAN KATEGORI WAKTU</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
 
-      <!-- 3 time branches -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; width:100%; max-width:900px;">
-        <!-- SIBUK -->
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div class="fc-node fc-box cyan" style="width:100%; text-align:center;">🔴 JAM SIBUK<br><small style="font-weight:400;font-size:0.75rem;">18:00 – 23:00</small></div>
-          <div style="width:2px; height:20px; background:var(--border)"></div>
-          <div class="fc-node fc-diamond" style="width:100%; text-align:center; font-size:0.8rem;">Hari Weekend?</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%;">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="font-size:0.7rem; color:var(--accent4); font-family:'Orbitron',monospace;">YA</div>
-              <div class="fc-node fc-box gold" style="width:100%; font-size:0.75rem; text-align:center;">BONUS x2<br>Semua Aktivitas</div>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="font-size:0.7rem; color:var(--text-dim); font-family:'Orbitron',monospace;">TIDAK</div>
-              <div class="fc-node fc-box cyan" style="width:100%; font-size:0.75rem; text-align:center;">BONUS x1.5<br>Event Malam</div>
-            </div>
+      <div class="flow-row">
+        <div class="flow-node time" style="padding:8px 12px; min-width:90px; font-size:12px;">🌅 JAM SIBUK<br><span class="flow-label">06:00–11:59<br>20:00–23:59</span><br><span style="color:var(--accent3);font-size:11px;font-family:'Share Tech Mono',monospace">×1.35 MONEY<br>×1.25 EXP</span></div>
+        <div style="display:flex;align-items:center;color:var(--text-dim);font-size:11px;font-family:'Share Tech Mono',monospace;padding:0 4px;">│</div>
+        <div class="flow-node time" style="padding:8px 12px; min-width:90px; font-size:12px;">🌤️ JAM NORMAL<br><span class="flow-label">12:00–19:59</span><br><span style="color:var(--accent);font-size:11px;font-family:'Share Tech Mono',monospace">×1.00 MONEY<br>×1.00 EXP</span></div>
+        <div style="display:flex;align-items:center;color:var(--text-dim);font-size:11px;font-family:'Share Tech Mono',monospace;padding:0 4px;">│</div>
+        <div class="flow-node time" style="padding:8px 12px; min-width:90px; font-size:12px; border-color:var(--red); color:var(--red); background:rgba(255,71,87,0.05);">🌙 JAM SEPI<br><span class="flow-label">00:00–05:59</span><br><span style="color:var(--red);font-size:11px;font-family:'Share Tech Mono',monospace">×0.70 MONEY<br>×0.80 EXP</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <!-- STEP 2: DAY -->
+      <div class="flow-row">
+        <div class="flow-node day" style="min-width:220px;">📅 CEK HARI<br><span class="flow-label">WEEKDAY ATAU WEEKEND?</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <div class="flow-row">
+        <div class="flow-node day" style="padding:8px 16px; min-width:120px; font-size:12px;">📆 HARI BIASA<br><span class="flow-label">Sen–Jum</span><br><span style="color:var(--accent4);font-size:11px;font-family:'Share Tech Mono',monospace">×1.00 semua</span></div>
+        <div style="display:flex;align-items:center;color:var(--text-dim);font-size:18px;padding:0 8px;">│</div>
+        <div class="flow-node day" style="padding:8px 16px; min-width:120px; font-size:12px; border-color:var(--accent2); color:var(--accent2); background:rgba(255,107,53,0.05);">🎉 WEEKEND<br><span class="flow-label">Sab–Min</span><br><span style="color:var(--accent2);font-size:11px;font-family:'Share Tech Mono',monospace">harga SHOP ×1.1–1.45<br>drop rate +15%</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <!-- STEP 3: SEASON -->
+      <div class="flow-row">
+        <div class="flow-node season" style="min-width:220px;">🌍 CEK MUSIM<br><span class="flow-label">BERDASARKAN BULAN AKTIF</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <div class="flow-row" style="gap:8px;">
+        <div class="flow-node season" style="padding:8px 10px; min-width:100px; font-size:11px; text-align:center;">❄️ MUSIM HUJAN<br><span class="flow-label">Des/Jan/Feb</span><br><span style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--accent)">wood ×1.3<br>bibit ×0.8<br>buah ×0.9</span></div>
+        <div class="flow-node season" style="padding:8px 10px; min-width:100px; font-size:11px; text-align:center; border-color:#ff80ab; color:#ff80ab; background:rgba(255,128,171,0.05);">🌸 MUSIM SEMI<br><span class="flow-label">Mar/Apr/Mei</span><br><span style="font-size:10px;font-family:'Share Tech Mono',monospace;color:#ff80ab">wood ×1.0<br>bibit ×1.4<br>buah ×1.3</span></div>
+        <div class="flow-node season" style="padding:8px 10px; min-width:100px; font-size:11px; text-align:center; border-color:#ffae00; color:#ffae00; background:rgba(255,174,0,0.05);">☀️ MUSIM KEMARAU<br><span class="flow-label">Jun/Jul/Agu</span><br><span style="font-size:10px;font-family:'Share Tech Mono',monospace;color:#ffae00">wood ×0.9<br>bibit ×1.2<br>buah ×1.5</span></div>
+        <div class="flow-node season" style="padding:8px 10px; min-width:100px; font-size:11px; text-align:center; border-color:#cd7c2a; color:#cd7c2a; background:rgba(205,124,42,0.05);">🍂 MUSIM GUGUR<br><span class="flow-label">Sep/Okt/Nov</span><br><span style="font-size:10px;font-family:'Share Tech Mono',monospace;color:#cd7c2a">wood ×1.2<br>bibit ×1.0<br>buah ×1.1</span></div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <!-- STEP 4: COMPUTE -->
+      <div class="flow-row">
+        <div class="flow-node" style="background:rgba(168,85,247,0.1);border-color:var(--purple);color:var(--purple);min-width:260px;font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.8;">
+          🔢 HITUNG MULTIPLIER TOTAL<br>
+          <span style="color:var(--text-dim)">finalReward =</span> baseReward<br>
+          <span style="color:var(--text-dim)">× timeMult × dayMult × seasonMult</span><br>
+          <span style="color:var(--text-dim)">× gearBonus × premiumBonus</span>
+        </div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <!-- STEP 5: ANTI-EXPLOIT CHECK -->
+      <div class="flow-row">
+        <div class="flow-node" style="background:rgba(255,71,87,0.08);border-color:var(--red);color:var(--red);min-width:260px;font-size:11px;font-family:'Share Tech Mono',monospace;line-height:1.6;">
+          🛡️ ANTI-EXPLOIT CHECK<br>
+          <span style="color:var(--text-dim)">• finalReward ≤ maxRewardCap</span><br>
+          <span style="color:var(--text-dim)">• Cooldown masih aktif? → REJECT</span><br>
+          <span style="color:var(--text-dim)">• totalMult ≤ maxComboCap (3.5×)</span>
+        </div>
+      </div>
+      <div class="flow-arrow">▼</div>
+
+      <!-- OUTCOMES -->
+      <div class="flow-row" style="gap:10px;">
+        <div class="flow-node" style="background:rgba(255,71,87,0.05);border-color:var(--red);color:var(--red);font-size:11px;min-width:110px;">❌ DITOLAK<br><span class="flow-label">cooldown / cap</span></div>
+        <div class="flow-node final" style="min-width:160px;padding:12px 16px;">
+          ✅ REWARD DIBERIKAN<br>
+          <span style="color:var(--text-dim);font-size:10px;">money + exp + items<br>× final multiplier</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Formula Summary -->
+    <div class="section-title">🔢 RUMUS ADAPTASI</div>
+    <div class="formula-box">
+      <span class="comment">// FORMULA UTAMA REWARD</span><br>
+      <span class="result-var">finalMoney</span> <span class="op">=</span> <span class="var">baseMoney</span> <span class="op">×</span> <span class="var">timeMult</span> <span class="op">×</span> <span class="var">dayMult</span> <span class="op">×</span> <span class="var">seasonMult</span> <span class="op">×</span> <span class="var">gearBonus</span><br>
+      <span class="result-var">finalEXP</span> &nbsp; <span class="op">=</span> <span class="var">baseEXP</span> &nbsp; <span class="op">×</span> <span class="var">timeExpMult</span> <span class="op">×</span> <span class="var">dayMult</span><br>
+      <span class="result-var">finalDrop</span> &nbsp;<span class="op">=</span> <span class="var">baseDropRate</span> <span class="op">+</span> <span class="var">(isWeekend ? +15% : 0)</span> <span class="op">+</span> <span class="var">seasonDropBonus</span><br>
+      <span class="comment">// CAP: totalMult ≤ 3.5 | finalMoney ≤ 2× baseMoney</span>
+    </div>
+    <div class="formula-box">
+      <span class="comment">// TIME MULTIPLIER</span><br>
+      <span class="var">timeMult</span> <span class="op">=</span> hour ∈ [6–11] || [20–23] <span class="op">→</span> <span class="result-var">1.35</span> (sibuk)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hour ∈ [12–19] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">→</span> <span class="result-var">1.00</span> (normal)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hour ∈ [0–5] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="op">→</span> <span class="result-var">0.70</span> (sepi/malam)<br>
+      <span class="comment">// DAY MULTIPLIER</span><br>
+      <span class="var">dayMult</span> &nbsp;<span class="op">=</span> isWeekend <span class="op">→</span> <span class="result-var">1.10–1.45</span> (seeded random per jam)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;isWeekday <span class="op">→</span> <span class="result-var">0.85–1.15</span> (seeded random)
+    </div>
+    <div class="formula-box">
+      <span class="comment">// SEASON ITEM MULTIPLIER (harga di shop & hasil aktivitas)</span><br>
+      <span class="var">seasonMult</span><br>
+      &nbsp; ❄️ Hujan &nbsp;: wood×<span class="result-var">1.3</span>, bibit×<span class="var">0.8</span>, buah×<span class="var">0.9</span>, hunting×<span class="result-var">1.1</span><br>
+      &nbsp; 🌸 Semi &nbsp;&nbsp;: wood×<span class="result-var">1.0</span>, bibit×<span class="result-var">1.4</span>, buah×<span class="result-var">1.3</span>, fishing×<span class="result-var">1.2</span><br>
+      &nbsp; ☀️ Kemarau: wood×<span class="var">0.9</span>, bibit×<span class="result-var">1.2</span>, buah×<span class="result-var">1.5</span>, mining×<span class="var">0.9</span><br>
+      &nbsp; 🍂 Gugur &nbsp;: wood×<span class="result-var">1.2</span>, bibit×<span class="result-var">1.0</span>, buah×<span class="result-var">1.1</span>, hunting×<span class="result-var">1.2</span>
+    </div>
+
+  </div>
+
+  <!-- TAB 2: ACTIVITIES -->
+  <div class="tab-content" id="tab-activities">
+    <div class="section-title">⚔️ SEMUA AKTIVITAS RPG — BASE REWARD & ADAPTASI</div>
+
+    <!-- Passive Income -->
+    <div class="mb-16">
+      <div class="panel-title blue">💰 PASSIVE INCOME (Absen Berkala)</div>
+      <div class="grid-4">
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent)">⚡ HOURLY<div class="cd-badge">1 jam</div></div>
+          <div class="activity-stat">
+            EXP: <span>3K–18K (prems)</span><br>
+            Money: <span>800–15K</span><br>
+            Adaptasi: <span style="color:var(--accent3)">×timeMult ×dayMult</span>
           </div>
-          <div style="width:2px; height:20px; background:var(--border)"></div>
-          <div class="fc-node" style="width:100%; text-align:center; background:var(--glow1); border:1px solid rgba(0,229,255,0.3); font-size:0.8rem; color:var(--accent1);">✅ REKOMENDASI:<br>Absen · Hourly · Judi · Ngewe · Ngelonte · Ojek · Adventure · Hunter</div>
-        </div>
-
-        <!-- NORMAL -->
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div class="fc-node fc-box orange" style="width:100%; text-align:center;">🟡 JAM NORMAL<br><small style="font-weight:400;font-size:0.75rem;">10:00 – 17:59</small></div>
-          <div style="width:2px; height:20px; background:var(--border)"></div>
-          <div class="fc-node fc-diamond orange" style="width:100%; text-align:center; font-size:0.8rem;">Hari Weekend?</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%;">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="font-size:0.7rem; color:var(--accent4); font-family:'Orbitron',monospace;">YA</div>
-              <div class="fc-node fc-box gold" style="width:100%; font-size:0.75rem; text-align:center;">BONUS x1.5<br>Market Ramai</div>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="font-size:0.7rem; color:var(--text-dim); font-family:'Orbitron',monospace;">TIDAK</div>
-              <div class="fc-node fc-box orange" style="width:100%; font-size:0.75rem; text-align:center;">RATE NORMAL<br>Semua Buka</div>
-            </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
           </div>
-          <div style="width:2px; height:20px; background:var(--border)"></div>
-          <div class="fc-node" style="width:100%; text-align:center; background:var(--glow2); border:1px solid rgba(255,107,53,0.3); font-size:0.8rem; color:var(--accent2);">✅ REKOMENDASI:<br>Mulung · Nambang · Nebang · Mancing · Berkebon · Berdagang · Berburu · Ojek</div>
         </div>
-
-        <!-- SEPI -->
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-          <div class="fc-node fc-box green" style="width:100%; text-align:center;">🟢 JAM SEPI<br><small style="font-weight:400;font-size:0.75rem;">00:00 – 09:59</small></div>
-          <div style="width:2px; height:20px; background:var(--border)"></div>
-          <div class="fc-node fc-diamond" style="width:100%; text-align:center; font-size:0.8rem; border-color:var(--accent3); color:var(--accent3); background:var(--glow3);">Musim Khusus?</div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%;">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="font-size:0.7rem; color:var(--accent5); font-family:'Orbitron',monospace;">YA</div>
-              <div class="fc-node fc-box purple" style="width:100%; font-size:0.75rem; text-align:center;">BONUS Drop<br>Rate Naik</div>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="font-size:0.7rem; color:var(--text-dim); font-family:'Orbitron',monospace;">TIDAK</div>
-              <div class="fc-node fc-box green" style="width:100%; font-size:0.75rem; text-align:center;">PASSIVE INCOME<br>Lebih Efisien</div>
-            </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent4)">🎁 DAILY<div class="cd-badge">24 jam</div></div>
+          <div class="activity-stat">
+            Limit: <span>30–150</span><br>
+            Money: <span>3K–35K</span><br>
+            Bonus: <span>Potion/Iron/Crate</span><br>
+            Streak 7: <span style="color:var(--accent3)">+1 Uncommon</span><br>
+            Adaptasi: <span style="color:var(--accent3)">×dayMult</span>
           </div>
-          <div style="width:2px; height:20px; background:var(--border)"></div>
-          <div class="fc-node" style="width:100%; text-align:center; background:var(--glow3); border:1px solid rgba(127,255,95,0.3); font-size:0.8rem; color:var(--accent3);">✅ REKOMENDASI:<br>Daily · Weekly · Monthly · Yearly · AdventurePet · Nabung · Open Crate</div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag gold">hari</span>
+          </div>
         </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ===== SECTION 1: TIME BASED ===== -->
-  <div class="section-title">🕐 ADAPTASI BERDASARKAN JAM</div>
-
-  <div class="adapt-grid cols-3" style="margin-bottom:50px">
-
-    <!-- JAM SIBUK -->
-    <div class="card">
-      <div class="card-header cyan">🔴 JAM SIBUK — 18:00–23:00</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(0,229,255,0.05); border-radius:2px; border-left:2px solid var(--accent1);">
-          Jam paling ramai. Banyak member aktif. Optimal untuk aktivitas sosial & PvP. Reward rate tertinggi, tapi saingan juga banyak.
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent3)">📅 WEEKLY<div class="cd-badge">7 hari</div></div>
+          <div class="activity-stat">
+            EXP: <span>8K–60K</span><br>
+            Money: <span>15K–180K</span><br>
+            Limit: <span>20–120</span><br>
+            Bonus: <span>Uncommon/Diamond</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag gold">hari</span>
+          </div>
         </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">⏰</span>
-            <div class="act-content">
-              <div class="act-name">Hourly <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Wajib klaim tiap jam. EXP + Money. Cooldown 1 jam.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">📋</span>
-            <div class="act-content">
-              <div class="act-name">Daily <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Klaim jika belum. Bonus Streak + item crate. Cooldown 24 jam.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🛵</span>
-            <div class="act-content">
-              <div class="act-name">Ojek <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Banyak "penumpang" aktif. Money + EXP. Cooldown 5 menit — spam saat sibuk!</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">⚔️</span>
-            <div class="act-content">
-              <div class="act-name">Hunter / Berburu <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Monster spawn lebih sering. Reward x1.5 saat malam. Butuh armor+sword.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🗺️</span>
-            <div class="act-content">
-              <div class="act-name">Adventure <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Crate drops lebih berharga. Cooldown 1 jam. Butuh armor 80 HP.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🦹</span>
-            <div class="act-content">
-              <div class="act-name">Merampok / Membunuh <span class="act-tag tag-risky">RISKY</span></div>
-              <div class="act-detail">Banyak target kaya aktif. Tapi risiko gagal 35%. Lakukan setelah stamina penuh.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🎲</span>
-            <div class="act-content">
-              <div class="act-name">Judi / JudiPvP <span class="act-tag tag-risky">RISKY</span></div>
-              <div class="act-detail">Banyak lawan. Tapi hati-hati modal habis.</div>
-            </div>
-          </li>
-          <li class="priority-low">
-            <span class="act-icon">💋</span>
-            <div class="act-content">
-              <div class="act-name">Ngelonte <span class="act-tag tag-prem">PREMIUM</span></div>
-              <div class="act-detail">Reward besar. Cooldown 12 jam. Lakukan sebelum tidur. Money 150k–500k.</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- JAM NORMAL -->
-    <div class="card">
-      <div class="card-header orange">🟡 JAM NORMAL — 10:00–17:59</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(255,107,53,0.05); border-radius:2px; border-left:2px solid var(--accent2);">
-          Jam produktif. Fokus ke resource gathering & crafting. Aktivitas yang butuh stamina banyak — cocok karena stamina baru diisi pagi.
-        </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">⏰</span>
-            <div class="act-content">
-              <div class="act-name">Hourly <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Tetap wajib. Jangan skip walau cuma EXP+Money kecil.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">⛏️</span>
-            <div class="act-content">
-              <div class="act-name">Nambang <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Kumpulkan Iron/Gold/Diamond. Butuh stamina 40. Cooldown 30 menit.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🪓</span>
-            <div class="act-content">
-              <div class="act-name">Nebang <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Wood + String untuk craft. Stamina 10. Cooldown 1 jam.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🎣</span>
-            <div class="act-content">
-              <div class="act-name">Mancing <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Ikan untuk dimasak/dijual. Butuh fishing rod. Cooldown 30 menit.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🗑️</span>
-            <div class="act-content">
-              <div class="act-name">Mulung <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Botol + Kardus + Kaleng. Kumpulkan siang untuk berdagang malam.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🌱</span>
-            <div class="act-content">
-              <div class="act-name">Berkebon <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Panen buah. Butuh pickaxe + 500 bibit tiap jenis. Cooldown 30 menit.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🏹</span>
-            <div class="act-content">
-              <div class="act-name">Berburu <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Hewan untuk dijual di pasar. Butuh armor+sword+health 30+stamina 25.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🛒</span>
-            <div class="act-content">
-              <div class="act-name">Berdagang <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Kerjasama dengan member lain. Butuh kardus dari mulung.</div>
-            </div>
-          </li>
-          <li class="priority-low">
-            <span class="act-icon">🔨</span>
-            <div class="act-content">
-              <div class="act-name">Craft / Upgrade <span class="act-tag tag-passive">SUPPORT</span></div>
-              <div class="act-detail">Gunakan material yang terkumpul. Upgrade gear untuk multiplier lebih besar.</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- JAM SEPI -->
-    <div class="card">
-      <div class="card-header green">🟢 JAM SEPI — 00:00–09:59</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(127,255,95,0.05); border-radius:2px; border-left:2px solid var(--accent3);">
-          Jam paling sepi. Optimalkan passive income & klaim reward. Hindari PvP. Fokus ke hal-hal yang tidak butuh aktivitas lain.
-        </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">📅</span>
-            <div class="act-content">
-              <div class="act-name">Daily <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Klaim setiap hari. Streak bonus +Uncommon Crate tiap 7 hari.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🗓️</span>
-            <div class="act-content">
-              <div class="act-name">Weekly / Monthly / Yearly <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Cek apakah sudah waktunya klaim. Reward massive terutama Yearly (Legendary Crate).</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🐉</span>
-            <div class="act-content">
-              <div class="act-name">AdventurePet <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Pet kerja otomatis. Cooldown 1 jam. Hasilkan Money+Potion+Diamond. Feed dulu!</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">📦</span>
-            <div class="act-content">
-              <div class="act-name">Open Crate <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Buka semua crate yang terkumpul. Common→Uncommon→Mythic→Legendary→Pet.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🏦</span>
-            <div class="act-content">
-              <div class="act-name">Nabung ke ATM <span class="act-tag tag-passive">SUPPORT</span></div>
-              <div class="act-detail">Simpan money agar tidak kena rampok waktu offline. Keamanan utama.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">⏰</span>
-            <div class="act-content">
-              <div class="act-name">Hourly <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Klaim walau subuh. EXP tetap jalan terus walau reward lebih kecil jam sepi.</div>
-            </div>
-          </li>
-          <li class="priority-low">
-            <span class="act-icon">🎣</span>
-            <div class="act-content">
-              <div class="act-name">Mancing / Nambang (solo) <span class="act-tag tag-reward">OK</span></div>
-              <div class="act-detail">Tidak ada saingan. Hasil sama, tapi tidak ada drama. Cocok buat santai.</div>
-            </div>
-          </li>
-          <li class="priority-avoid">
-            <span class="act-icon">🚫</span>
-            <div class="act-content">
-              <div class="act-name">Merampok / Membunuh — HINDARI</div>
-              <div class="act-detail">Target sedikit, risiko dapat denda tinggi. Simpan energy untuk jam sibuk.</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== SECTION 2: HARI ===== -->
-  <div class="section-title gold">📆 ADAPTASI BERDASARKAN HARI</div>
-
-  <div class="adapt-grid cols-2" style="margin-bottom:50px">
-
-    <!-- WEEKEND -->
-    <div class="card">
-      <div class="card-header gold">🎉 WEEKEND (Sabtu & Minggu)</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; padding:10px; background:rgba(255,215,0,0.05); border-radius:2px; border-left:2px solid var(--accent4);">
-          <strong style="color:var(--accent4);">REKOMENDASI BONUS IMPLEMENTASI:</strong><br>
-          Weekend = semua multiplier naik. Market ramai. Event sosial aktif. Member banyak online. Ideal untuk semua aktivitas yang membutuhkan partisipasi orang banyak.
-        </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">🎁</span>
-            <div class="act-content">
-              <div class="act-name">Giveaway <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Weekend = waktu terbaik mulai giveaway. Peserta paling banyak. Host bisa start event.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🛒</span>
-            <div class="act-content">
-              <div class="act-name">Berdagang <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Pasar weekend ramai → potensi laba lebih tinggi. Stok kardus dari mulung seharian.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">⚔️</span>
-            <div class="act-content">
-              <div class="act-name">Hunter / Adventure <span class="act-tag tag-reward">REWARD</span></div>
-              <div class="act-detail">Implementasi: tambah bonus drop rate 25% di weekend. Monster HP lebih besar → reward lebih besar.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🐾</span>
-            <div class="act-content">
-              <div class="act-name">AdventurePet <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Weekend event: pet hasilkan 2x diamond. Pastikan pet terisi stamina tiap jam.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🎰</span>
-            <div class="act-content">
-              <div class="act-name">JudiPvP <span class="act-tag tag-risky">PVP</span></div>
-              <div class="act-detail">Weekend = lebih banyak lawan PvP. Jackpot pool lebih besar. Berani pasang lebih besar.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">📦</span>
-            <div class="act-content">
-              <div class="act-name">Open Crate Weekend <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Implementasi: zonk rate turun 50% di weekend. Lebih worth buka banyak crate.</div>
-            </div>
-          </li>
-        </ul>
-
-        <!-- Mini bonus table -->
-        <div style="margin-top:16px">
-          <div style="font-family:'Orbitron',monospace; font-size:0.72rem; color:var(--accent4); margin-bottom:8px; letter-spacing:0.08em;">📊 REKOMENDASI MULTIPLIER WEEKEND</div>
-          <table class="modifier-table">
-            <tr><th>Aktivitas</th><th>Weekday</th><th>Weekend</th></tr>
-            <tr><td>Money dari kerja</td><td class="neu">x1.0</td><td class="pos">x1.5</td></tr>
-            <tr><td>EXP semua aktivitas</td><td class="neu">x1.0</td><td class="pos">x1.3</td></tr>
-            <tr><td>Drop rate crate</td><td class="neu">Normal</td><td class="pos">+25%</td></tr>
-            <tr><td>Zonk chance crate</td><td class="neu">Normal</td><td class="pos">-50%</td></tr>
-            <tr><td>Pet adventure reward</td><td class="neu">x1.0</td><td class="pos">x2.0</td></tr>
-            <tr><td>Cooldown (ide)</td><td class="neu">Normal</td><td class="pos">-20% lebih cepat</td></tr>
-          </table>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--purple)">📆 MONTHLY<div class="cd-badge">30 hari</div></div>
+          <div class="activity-stat">
+            EXP: <span>15K–150K</span><br>
+            Money: <span>30K–500K</span><br>
+            Bonus: <span>Mythic/Diamond</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag purple">tetap</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- WEEKDAY -->
-    <div class="card">
-      <div class="card-header orange">📅 WEEKDAY (Senin–Jumat)</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:14px; padding:10px; background:rgba(255,107,53,0.05); border-radius:2px; border-left:2px solid var(--accent2);">
-          <strong style="color:var(--accent2);">STRATEGI WEEKDAY:</strong><br>
-          Member sebagian besar online malam hari (jam sibuk). Siang lebih sepi. Fokus pada resource farming dan persiapan untuk weekend.
-        </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">⛏️</span>
-            <div class="act-content">
-              <div class="act-name">Nambang + Nebang <span class="act-tag tag-reward">FARMING</span></div>
-              <div class="act-detail">Kumpulkan material sebanyak mungkin di weekday untuk craft weekend.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🗑️</span>
-            <div class="act-content">
-              <div class="act-name">Mulung tiap hari <span class="act-tag tag-reward">FARMING</span></div>
-              <div class="act-detail">Kumpulkan kardus, botol, kaleng. Jual atau gunakan untuk berdagang weekend.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🏦</span>
-            <div class="act-content">
-              <div class="act-name">Nabung rutin <span class="act-tag tag-passive">SUPPORT</span></div>
-              <div class="act-detail">Weekday: nabung hasil kerja. Jangan biarkan money di tangan terlalu banyak.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🔨</span>
-            <div class="act-content">
-              <div class="act-name">Craft & Upgrade Gear <span class="act-tag tag-passive">SUPPORT</span></div>
-              <div class="act-detail">Gunakan waktu weekday untuk upgrade sword/armor/pickaxe/fishingrod ke tier lebih tinggi.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">📅</span>
-            <div class="act-content">
-              <div class="act-name">Absen Streak <span class="act-tag tag-passive">PASSIVE</span></div>
-              <div class="act-detail">Jangan putus streak daily. Tiap 7 hari dapat Uncommon Crate. Weekday = hari steak kritis.</div>
-            </div>
-          </li>
-          <li class="priority-low">
-            <span class="act-icon">🌱</span>
-            <div class="act-content">
-              <div class="act-name">Berkebon (persiapan) <span class="act-tag tag-reward">FARMING</span></div>
-              <div class="act-detail">Beli bibit di weekday (harga market lebih murah). Kebun siap panen weekend.</div>
-            </div>
-          </li>
-        </ul>
+    <div class="divider"></div>
 
-        <div style="margin-top:16px">
-          <div style="font-family:'Orbitron',monospace; font-size:0.72rem; color:var(--accent2); margin-bottom:8px; letter-spacing:0.08em;">📊 PRIORITAS PER HARI WEEKDAY</div>
-          <table class="modifier-table">
-            <tr><th>Hari</th><th>Fokus Utama</th><th>Event Spesial</th></tr>
-            <tr><td>Senin</td><td>Weekly claim + Reset streak</td><td class="pos">Weekly reward</td></tr>
-            <tr><td>Selasa</td><td>Nambang + Nebang</td><td class="neu">Normal</td></tr>
-            <tr><td>Rabu</td><td>Craft upgrade gear</td><td class="neu">Normal</td></tr>
-            <tr><td>Kamis</td><td>Mulung + kumpulkan kardus</td><td class="neu">Normal</td></tr>
-            <tr><td>Jumat</td><td>Persiapan weekend</td><td class="pos">Pre-weekend boost</td></tr>
-          </table>
+    <!-- Gathering Activities -->
+    <div class="mb-16">
+      <div class="panel-title green">🏕️ GATHERING ACTIVITIES</div>
+      <div class="grid-4">
+        <div class="activity-card">
+          <div class="activity-name" style="color:#cd7c2a">⛏️ NAMBANG<div class="cd-badge">30 min</div></div>
+          <div class="activity-stat">
+            Rock: <span>10–210</span><br>
+            Coal: <span>1–21</span><br>
+            Iron: <span>5–35</span><br>
+            Gold: <span>35% chance</span><br>
+            Diamond: <span>20% chance</span><br>
+            Money: <span>3K–18K</span><br>
+            EXP: <span>2K–10K</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent3)">🪵 NEBANG<div class="cd-badge">60 min</div></div>
+          <div class="activity-stat">
+            Wood: <span>100–1600</span><br>
+            String: <span>5–85</span><br>
+            Rock bonus: <span>30% chance</span><br>
+            Money: <span>1K–9K</span><br>
+            EXP: <span>1K–6K</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag green">musim</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--text-dim)">🗑️ MULUNG<div class="cd-badge">30 min</div></div>
+          <div class="activity-stat">
+            Botol: <span>50–850</span><br>
+            Kaleng: <span>30–630</span><br>
+            Kardus: <span>40–740</span><br>
+            Trash bonus: <span>40% chance</span><br>
+            Diamond rare: <span>5% chance</span><br>
+            Money: <span>500–5.5K</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:#3fc4e0">🎣 MANCING<div class="cd-badge">30 min</div></div>
+          <div class="activity-stat">
+            Ikan/Lele: <span>variatif</span><br>
+            Paus/Kepiting: <span>rare</span><br>
+            Rod mult: <span>tier 1–4</span><br>
+            Gagal: <span>10% chance</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag green">musim</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent3)">🌿 BERKEBON<div class="cd-battle">30 min</div></div>
+          <div class="activity-stat">
+            Pisang/Mangga: <span>35–940</span><br>
+            Anggur/Jeruk: <span>30–960</span><br>
+            Apel: <span>35–685</span><br>
+            Bibit butuh: <span>500 tiap jenis</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag green">musim</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent2)">🏹 BERBURU<div class="cd-badge">60 min</div></div>
+          <div class="activity-stat">
+            12 jenis hewan × sword mult<br>
+            Money: <span>10K–70K × mult</span><br>
+            EXP: <span>3K–18K × mult</span><br>
+            Gagal: <span>15% chance</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag green">musim</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent)">🗺️ ADVENTURE<div class="cd-badge">60 min</div></div>
+          <div class="activity-stat">
+            EXP: <span>5K–30K × armor</span><br>
+            Money: <span>20K–220K × armor</span><br>
+            Items: <span>wood/rock/gold/crate</span><br>
+            Gagal: <span>20% chance</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--purple)">⚔️ HUNTER<div class="cd-badge">30 min</div></div>
+          <div class="activity-stat">
+            Coins: <span>5K–505K × area × gear</span><br>
+            EXP: <span>2K–22K × mult</span><br>
+            Area mult: <span>variatif</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Services & Jobs -->
+    <div class="mb-16">
+      <div class="panel-title orange">🚗 JASA & PEKERJAAN</div>
+      <div class="grid-4">
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent2)">🛵 OJEK<div class="cd-badge">5 min</div></div>
+          <div class="activity-stat">
+            Base: <span>12K–45K</span><br>
+            Bonus jarak: <span>km × 400–900</span><br>
+            Tip: <span>25% → 2K–15K</span><br>
+            EXP: <span>3K–18K</span><br>
+            Gagal: <span>20% chance</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:#ff80ab">💅 NGELONTE<div class="cd-badge">12 jam</div></div>
+          <div class="activity-stat">
+            Money: <span>150K–500K</span><br>
+            EXP: <span>15K–60K</span><br>
+            Rare bonus: <span>Diamond/Potion</span><br>
+            Gagal: <span>25% chance</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent4)">🛒 BERDAGANG<div class="cd-badge">30 min</div></div>
+          <div class="activity-stat">
+            Modal: <span>5K–13K × 2 pemain</span><br>
+            Hasil: <span>20K–100K/org</span><br>
+            EXP: <span>500–5.5K</span><br>
+            Pakai kardus<br>
+            Gagal: <span>30% chance</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span><span class="tag gold">hari</span><span class="tag green">musim</span>
+          </div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-name" style="color:var(--accent)">🐾 ADVENTURE PET<div class="cd-badge">per pet</div></div>
+          <div class="activity-stat">
+            Money: <span>0–50K × petLevel</span><br>
+            Potion: <span>0–4</span><br>
+            Diamond: <span>0–1</span><br>
+            Pet EXP: <span>100–500</span>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:4px;flex-wrap:wrap;">
+            <span class="tag blue">waktu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Risk Activities -->
+    <div>
+      <div class="panel-title red">⚠️ AKTIVITAS RISIKO TINGGI</div>
+      <div class="grid-4">
+        <div class="activity-card" style="border-color:rgba(255,71,87,0.3)">
+          <div class="activity-name" style="color:var(--red)">🥷 MALING<div class="cd-badge">30 min</div></div>
+          <div class="activity-stat">
+            Money: <span>8K–88K</span><br>
+            Kardus: <span>200–1.7K</span><br>
+            Gagal: <span>30% → denda</span>
+          </div>
+          <div style="margin-top:8px;"><span class="tag red">high risk</span><span class="tag blue">waktu</span></div>
+        </div>
+        <div class="activity-card" style="border-color:rgba(255,71,87,0.3)">
+          <div class="activity-name" style="color:var(--red)">🔫 MERAMPOK<div class="cd-badge">60 min</div></div>
+          <div class="activity-stat">
+            Dari target: <span>5K–150K</span><br>
+            Gagal: <span>35% → denda</span><br>
+            Target min: <span>10K money</span>
+          </div>
+          <div style="margin-top:8px;"><span class="tag red">high risk</span><span class="tag gold">hari</span></div>
+        </div>
+        <div class="activity-card" style="border-color:rgba(255,71,87,0.3)">
+          <div class="activity-name" style="color:var(--red)">⚔️ MEMBUNUH<div class="cd-badge">60 min</div></div>
+          <div class="activity-stat">
+            Dari target: <span>10K–200K</span><br>
+            EXP: <span>2K–12K</span><br>
+            Gagal: <span>35% → denda</span>
+          </div>
+          <div style="margin-top:8px;"><span class="tag red">high risk</span><span class="tag gold">hari</span></div>
+        </div>
+        <div class="activity-card" style="border-color:rgba(168,85,247,0.3)">
+          <div class="activity-name" style="color:var(--purple)">🎲 JUDI/PVP<div class="cd-badge">cooldown</div></div>
+          <div class="activity-stat">
+            Win: <span>×2 taruhan</span><br>
+            Lose: <span>-taruhan</span><br>
+            Spaceman: <span>multiplier</span>
+          </div>
+          <div style="margin-top:8px;"><span class="tag purple">zero-sum</span></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== SECTION 3: MUSIM ===== -->
-  <div class="section-title purple">🌦️ ADAPTASI BERDASARKAN MUSIM / EVENT</div>
+  <!-- TAB 3: MULTIPLIERS -->
+  <div class="tab-content" id="tab-multipliers">
+    <div class="section-title">📊 TABEL MULTIPLIER LENGKAP</div>
 
-  <div class="adapt-grid cols-2" style="margin-bottom:50px">
-
-    <!-- Musim Panas / Kemarau -->
-    <div class="card">
-      <div class="card-header cyan">☀️ MUSIM PANAS / KEMARAU</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(0,229,255,0.05); border-radius:2px; border-left:2px solid var(--accent1);">
-          School holiday + cuaca panas = member online lebih lama. Traffic paling tinggi. Peak season untuk semua aktivitas.
+    <!-- Time multipliers with bars -->
+    <div class="panel blue mb-24">
+      <div class="panel-title blue">⏰ TIME MULTIPLIER</div>
+      <div class="time-bar-container">
+        <div class="time-bar-row">
+          <div class="time-bar-label">🌙 00–05</div>
+          <div class="time-bar">
+            <div class="time-bar-fill" style="width:70%;background:linear-gradient(90deg,#ff4757,#ff6b7a);"></div>
+            <div class="time-bar-text">JAM SEPI</div>
+          </div>
+          <div class="time-bar-mult" style="color:var(--red)">×0.70</div>
         </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">🎣</span>
-            <div class="act-content">
-              <div class="act-name">Mancing — BOOST <span class="act-tag tag-passive">SEASONAL</span></div>
-              <div class="act-detail">Musim panas: ikan lebih banyak. +50% hasil tangkapan. Ikan langka (paus) lebih sering muncul.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🏹</span>
-            <div class="act-content">
-              <div class="act-name">Berburu — BOOST <span class="act-tag tag-reward">SEASONAL</span></div>
-              <div class="act-detail">Hewan banyak di hutan saat kemarau. +30% jumlah hasil buruan per trip.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🛵</span>
-            <div class="act-content">
-              <div class="act-name">Ojek — BOOST <span class="act-tag tag-reward">SEASONAL</span></div>
-              <div class="act-detail">Penumpang banyak. Implementasi: skenario musim panas (piknik, pantai, liburan). Tip lebih sering.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">⛏️</span>
-            <div class="act-content">
-              <div class="act-name">Nambang — NORMAL</div>
-              <div class="act-detail">Tidak terpengaruh musim. Tetap jalankan sesuai cooldown.</div>
-            </div>
-          </li>
-        </ul>
+        <div class="time-bar-row">
+          <div class="time-bar-label">🌅 06–11</div>
+          <div class="time-bar">
+            <div class="time-bar-fill" style="width:100%;background:linear-gradient(90deg,#00d4ff,#00b8d9);"></div>
+            <div class="time-bar-text">JAM SIBUK</div>
+          </div>
+          <div class="time-bar-mult" style="color:var(--accent3)">×1.35</div>
+        </div>
+        <div class="time-bar-row">
+          <div class="time-bar-label">🌤️ 12–19</div>
+          <div class="time-bar">
+            <div class="time-bar-fill" style="width:80%;background:linear-gradient(90deg,#94a3b8,#6b7280);"></div>
+            <div class="time-bar-text">JAM NORMAL</div>
+          </div>
+          <div class="time-bar-mult" style="color:var(--text)">×1.00</div>
+        </div>
+        <div class="time-bar-row">
+          <div class="time-bar-label">🌙 20–23</div>
+          <div class="time-bar">
+            <div class="time-bar-fill" style="width:100%;background:linear-gradient(90deg,#00d4ff,#00b8d9);"></div>
+            <div class="time-bar-text">JAM SIBUK</div>
+          </div>
+          <div class="time-bar-mult" style="color:var(--accent3)">×1.35</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;font-family:'Share Tech Mono',monospace;color:var(--text-dim);">
+        * EXP multiplier lebih rendah dari Money: ×0.80 (sepi), ×1.00 (normal), ×1.25 (sibuk)
       </div>
     </div>
 
-    <!-- Musim Hujan -->
-    <div class="card">
-      <div class="card-header orange">🌧️ MUSIM HUJAN</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(255,107,53,0.05); border-radius:2px; border-left:2px solid var(--accent2);">
-          Orang lebih banyak di rumah = online lebih lama. Aktivitas indoor meningkat. Beberapa outdoor activity kena penalty.
+    <!-- Season Cards -->
+    <div class="mb-24">
+      <div class="section-title">🌍 SEASON MULTIPLIER (harga shop & hasil aktivitas)</div>
+      <div class="season-grid">
+        <div class="season-card" style="border-color:#4fc3f7;background:rgba(79,195,247,0.05);">
+          <div class="season-icon">❄️</div>
+          <div class="season-name" style="color:#4fc3f7">MUSIM HUJAN</div>
+          <div style="font-size:11px;font-family:'Share Tech Mono',monospace;color:#4fc3f7;margin-bottom:8px;">Des · Jan · Feb</div>
+          <div class="season-mult">
+            <div><span class="up">🪵 Wood ×1.3 ↑</span></div>
+            <div><span class="down">🌱 Bibit ×0.8 ↓</span></div>
+            <div><span class="down">🍎 Buah ×0.9 ↓</span></div>
+            <div><span class="up">🏹 Berburu ×1.1 ↑</span></div>
+            <div><span class="neutral">⛏️ Mining ×1.0</span></div>
+            <div><span class="up">🎣 Mancing ×1.1 ↑</span></div>
+          </div>
         </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">🐉</span>
-            <div class="act-content">
-              <div class="act-name">AdventurePet — BOOST <span class="act-tag tag-passive">SEASONAL</span></div>
-              <div class="act-detail">Musim hujan: pet suka di dalam. Bonus EXP pet +40%. Lebih sering naik level.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">📦</span>
-            <div class="act-content">
-              <div class="act-name">Open Crate — BOOST <span class="act-tag tag-reward">SEASONAL</span></div>
-              <div class="act-detail">Musim hujan = "hujan hadiah". Zonk rate -30%. Lebih worth buka crate.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🔨</span>
-            <div class="act-content">
-              <div class="act-name">Craft & Upgrade — BOOST <span class="act-tag tag-passive">SEASONAL</span></div>
-              <div class="act-detail">Durability hasil craft +20% di musim hujan. Material lebih awet.</div>
-            </div>
-          </li>
-          <li class="priority-low">
-            <span class="act-icon">🗑️</span>
-            <div class="act-content">
-              <div class="act-name">Mulung — PENALTY <span class="act-tag tag-risky">SEASONAL</span></div>
-              <div class="act-detail">Hujan: kardus basah. Implementasi: hasil mulung -20% di musim hujan. Gagal chance +5%.</div>
-            </div>
-          </li>
-          <li class="priority-avoid">
-            <span class="act-icon">🚫</span>
-            <div class="act-content">
-              <div class="act-name">Ojek — PENALTY</div>
-              <div class="act-detail">Hujan deras = orderan lebih banyak gagal. Fail rate +10%. Tapi skenario hujan lebih dramatis.</div>
-            </div>
-          </li>
-        </ul>
+        <div class="season-card" style="border-color:#ff80ab;background:rgba(255,128,171,0.05);">
+          <div class="season-icon">🌸</div>
+          <div class="season-name" style="color:#ff80ab">MUSIM SEMI</div>
+          <div style="font-size:11px;font-family:'Share Tech Mono',monospace;color:#ff80ab;margin-bottom:8px;">Mar · Apr · Mei</div>
+          <div class="season-mult">
+            <div><span class="neutral">🪵 Wood ×1.0</span></div>
+            <div><span class="up">🌱 Bibit ×1.4 ↑↑</span></div>
+            <div><span class="up">🍎 Buah ×1.3 ↑↑</span></div>
+            <div><span class="neutral">🏹 Berburu ×1.0</span></div>
+            <div><span class="neutral">⛏️ Mining ×1.0</span></div>
+            <div><span class="up">🎣 Mancing ×1.2 ↑</span></div>
+          </div>
+        </div>
+        <div class="season-card" style="border-color:#ffae00;background:rgba(255,174,0,0.05);">
+          <div class="season-icon">☀️</div>
+          <div class="season-name" style="color:#ffae00">MUSIM KEMARAU</div>
+          <div style="font-size:11px;font-family:'Share Tech Mono',monospace;color:#ffae00;margin-bottom:8px;">Jun · Jul · Agu</div>
+          <div class="season-mult">
+            <div><span class="down">🪵 Wood ×0.9 ↓</span></div>
+            <div><span class="up">🌱 Bibit ×1.2 ↑</span></div>
+            <div><span class="up">🍎 Buah ×1.5 ↑↑</span></div>
+            <div><span class="up">🏹 Berburu ×1.2 ↑</span></div>
+            <div><span class="down">⛏️ Mining ×0.9 ↓</span></div>
+            <div><span class="neutral">🎣 Mancing ×0.9</span></div>
+          </div>
+        </div>
+        <div class="season-card" style="border-color:#cd7c2a;background:rgba(205,124,42,0.05);">
+          <div class="season-icon">🍂</div>
+          <div class="season-name" style="color:#cd7c2a">MUSIM GUGUR</div>
+          <div style="font-size:11px;font-family:'Share Tech Mono',monospace;color:#cd7c2a;margin-bottom:8px;">Sep · Okt · Nov</div>
+          <div class="season-mult">
+            <div><span class="up">🪵 Wood ×1.2 ↑</span></div>
+            <div><span class="neutral">🌱 Bibit ×1.0</span></div>
+            <div><span class="up">🍎 Buah ×1.1 ↑</span></div>
+            <div><span class="up">🏹 Berburu ×1.2 ↑</span></div>
+            <div><span class="up">⛏️ Mining ×1.1 ↑</span></div>
+            <div><span class="neutral">🎣 Mancing ×1.0</span></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Event Ramadan / Hari Besar -->
-    <div class="card">
-      <div class="card-header gold">🌙 RAMADAN / HARI RAYA</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(255,215,0,0.05); border-radius:2px; border-left:2px solid var(--accent4);">
-          Event tahunan terbesar. Traffic peak. Semua reward dinaikkan. Tambahkan skenario khusus Ramadan di setiap command.
-        </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">🎊</span>
-            <div class="act-content">
-              <div class="act-name">Daily Ramadan Special <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Daily bonus x3. Tambahkan reward khusus: Ketupat, Hampers, THR item.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🕌</span>
-            <div class="act-content">
-              <div class="act-name">Absen Sahur (03:00–05:00) <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Jam sepi jadi jam bonus. Klaim hourly saat sahur = bonus EXP 2x khusus Ramadan.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🎁</span>
-            <div class="act-content">
-              <div class="act-name">Giveaway THR <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Host giveaway dengan reward lebih besar. Komunitas lebih aktif berbagi.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🛒</span>
-            <div class="act-content">
-              <div class="act-name">Berdagang Lebaran <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Skenario khusus: jual kue lebaran, parsel, pakaian baru. Profit x2.</div>
-            </div>
-          </li>
-        </ul>
+    <!-- Combo Matrix -->
+    <div class="mb-24">
+      <div class="section-title">🔀 MATRIX KOMBINASI (Total Final Multiplier)</div>
+      <div class="info-box">
+        <span style="color:var(--accent)">ℹ️</span> Tabel menunjukkan total money multiplier: <strong>timeMult × dayMult × seasonMult (buah sbg contoh)</strong>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="mult-table">
+          <thead>
+            <tr>
+              <th>Kondisi</th>
+              <th>Jam Sepi (×0.70)</th>
+              <th>Jam Normal (×1.00)</th>
+              <th>Jam Sibuk (×1.35)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Weekday + ❄️ Hujan</strong></td>
+              <td class="down">×0.63</td>
+              <td class="neutral">×0.90</td>
+              <td class="up">×1.22</td>
+            </tr>
+            <tr>
+              <td><strong>Weekday + 🌸 Semi (buah)</strong></td>
+              <td class="down">×0.91</td>
+              <td class="neutral">×1.30</td>
+              <td class="up">×1.76</td>
+            </tr>
+            <tr>
+              <td><strong>Weekday + ☀️ Kemarau (buah)</strong></td>
+              <td>×1.05</td>
+              <td class="neutral">×1.50</td>
+              <td class="up hot">×2.03</td>
+            </tr>
+            <tr>
+              <td><strong>🎉 Weekend + ❄️ Hujan</strong></td>
+              <td class="down">×0.77</td>
+              <td class="neutral">×1.10</td>
+              <td class="up">×1.49</td>
+            </tr>
+            <tr>
+              <td><strong>🎉 Weekend + 🌸 Semi (buah)</strong></td>
+              <td>×1.04</td>
+              <td class="up">×1.43</td>
+              <td class="up hot">×2.03</td>
+            </tr>
+            <tr>
+              <td><strong>🎉 Weekend + ☀️ Kemarau (buah)</strong></td>
+              <td class="up">×1.16</td>
+              <td class="up hot">×1.65</td>
+              <td class="up hot">×2.24 ⚠️CAP</td>
+            </tr>
+            <tr>
+              <td><strong>🎉 Weekend + 🍂 Gugur</strong></td>
+              <td>×0.77</td>
+              <td class="up">×1.21</td>
+              <td class="up">×1.63</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:8px;font-size:11px;font-family:'Share Tech Mono',monospace;color:var(--red);">
+        ⚠️ Kondisi ≥ 2.0× = CAP aktif: finalReward dibatasi maksimum 2× baseReward untuk mencegah inflasi
       </div>
     </div>
 
-    <!-- Event Tahun Baru -->
-    <div class="card">
-      <div class="card-header purple">🎆 TAHUN BARU / ANNIVERSARY</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px; padding:8px 10px; background:rgba(192,132,252,0.05); border-radius:2px; border-left:2px solid var(--accent5);">
-          Momen perayaan. Reward tahunan paling besar. Yearly claim terbaik dilakukan hari ini. Semua bonus aktif bersamaan.
+    <!-- Gear Multiplier -->
+    <div>
+      <div class="section-title">⚙️ GEAR MULTIPLIER (Stack dengan kondisi waktu/musim)</div>
+      <table class="mult-table">
+        <thead>
+          <tr><th>Gear</th><th>Tier 1</th><th>Tier 2</th><th>Tier 3</th><th>Tier 4</th><th>Tier 5 (MAX)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>⚔️ Sword</strong></td><td class="neutral">×1.0</td><td>×1.5</td><td>×2.0</td><td>×3.0</td><td class="up hot">×4.0</td></tr>
+          <tr><td><strong>🥼 Armor</strong></td><td class="neutral">+15%</td><td>+30%</td><td>+45%</td><td>+60%</td><td class="up hot">+75%</td></tr>
+          <tr><td><strong>⛏️ Pickaxe</strong></td><td class="neutral">+0%</td><td>+15%</td><td>+30%</td><td>+50%</td><td class="up hot">+70%</td></tr>
+          <tr><td><strong>🎣 Fishing Rod</strong></td><td class="neutral">×1.0</td><td>×1.5</td><td>×2.0</td><td>×3.0</td><td class="up hot">×4.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: CALCULATOR -->
+  <div class="tab-content" id="tab-calculator">
+    <div class="section-title">🧮 KALKULATOR REWARD LIVE</div>
+    <div class="grid-2">
+      <div class="calc-section">
+        <div class="form-group">
+          <label>⚔️ PILIH AKTIVITAS</label>
+          <select id="calcActivity" onchange="calcReward()">
+            <option value="hourly">⚡ Hourly (cd: 1 jam)</option>
+            <option value="daily">🎁 Daily (cd: 24 jam)</option>
+            <option value="ojek">🛵 Ojek (cd: 5 menit)</option>
+            <option value="nambang">⛏️ Nambang (cd: 30 menit)</option>
+            <option value="nebang">🪵 Nebang (cd: 60 menit)</option>
+            <option value="mulung">🗑️ Mulung (cd: 30 menit)</option>
+            <option value="mancing">🎣 Mancing (cd: 30 menit)</option>
+            <option value="berburu">🏹 Berburu (cd: 60 menit)</option>
+            <option value="adventure">🗺️ Adventure (cd: 60 menit)</option>
+            <option value="hunter">⚔️ Hunter (cd: 30 menit)</option>
+            <option value="ngelonte">💅 Ngelonte (cd: 12 jam)</option>
+            <option value="berdagang">🛒 Berdagang (cd: 30 menit)</option>
+          </select>
         </div>
-        <ul class="activity-list">
-          <li class="priority-high">
-            <span class="act-icon">🎊</span>
-            <div class="act-content">
-              <div class="act-name">Yearly Claim <span class="act-tag tag-passive">MASSIVE</span></div>
-              <div class="act-detail">Reward: EXP 50k–500k + Money 80k–1.5jt + Limit 150–900 + Legendary Crate chance!</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🐾</span>
-            <div class="act-content">
-              <div class="act-name">Open Pet Crate <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Tahun baru: pet crate chance naik 5% → 15%. Waktu terbaik buka pet crate.</div>
-            </div>
-          </li>
-          <li class="priority-high">
-            <span class="act-icon">🏹</span>
-            <div class="act-content">
-              <div class="act-name">Hunter Boss Event <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Implementasi: area 13 (Dragon) reward x5 di malam tahun baru. Epic battle.</div>
-            </div>
-          </li>
-          <li class="priority-med">
-            <span class="act-icon">🔨</span>
-            <div class="act-content">
-              <div class="act-name">Free Craft Event <span class="act-tag tag-reward">EVENT</span></div>
-              <div class="act-detail">Implementasi: material craft diskon 50% di tahun baru. Upgrade gear lebih murah.</div>
-            </div>
-          </li>
-        </ul>
+        <div class="form-group">
+          <label>⏰ JAM (0–23)</label>
+          <input type="number" id="calcHour" min="0" max="23" value="8" onchange="calcReward()">
+        </div>
+        <div class="form-group">
+          <label>📅 JENIS HARI</label>
+          <select id="calcDay" onchange="calcReward()">
+            <option value="weekday">📆 Hari Biasa (Sen–Jum)</option>
+            <option value="weekend">🎉 Weekend (Sab–Min)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>🌍 MUSIM</label>
+          <select id="calcSeason" onchange="calcReward()">
+            <option value="hujan">❄️ Musim Hujan (Des/Jan/Feb)</option>
+            <option value="semi">🌸 Musim Semi (Mar/Apr/Mei)</option>
+            <option value="kemarau">☀️ Musim Kemarau (Jun/Jul/Agu)</option>
+            <option value="gugur">🍂 Musim Gugur (Sep/Okt/Nov)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>⚙️ GEAR TIER (0–5)</label>
+          <input type="number" id="calcGear" min="0" max="5" value="1" onchange="calcReward()">
+        </div>
+        <div class="form-group">
+          <label>👑 STATUS PREMIUM</label>
+          <select id="calcPremium" onchange="calcReward()">
+            <option value="free">🆓 Free User</option>
+            <option value="premium">👑 Premium User</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <div class="calc-result" id="calcOutput">
+          <div style="text-align:center;color:var(--text-dim);font-size:12px;">Isi form di kiri untuk menghitung...</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ===== SECTION 4: PASSIVE INCOME PRIORITY ===== -->
-  <div class="section-title green">💰 PRIORITAS PASSIVE INCOME & REWARDS</div>
+  <!-- TAB 5: BALANCING -->
+  <div class="tab-content" id="tab-balancing">
+    <div class="section-title">⚖️ LOGIKA BALANCING & ANTI-EXPLOIT</div>
 
-  <div style="margin-bottom:50px">
-    <div class="branch-container">
-      <div class="branch-header green">🏆 URUTAN PRIORITAS FITUR REWARD / PASSIVE INCOME</div>
-      <div class="branch-body" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
-
-        <div class="sub-card">
-          <div class="sub-card-title">
-            <div class="sub-dot" style="background:#ff4444"></div>
-            <span style="color:#ff6b6b">TIER S — WAJIB SETIAP SESSION</span>
-          </div>
-          <ul class="sub-list">
-            <li><span>⏰</span><div><strong>Hourly</strong> — EXP+Money tiap 1 jam. Jangan skip. <span class="sub-note">Cooldown: 1 jam</span></div></li>
-            <li><span>📋</span><div><strong>Daily</strong> — Limit+Money+bonus item. Streak = Uncommon Crate. <span class="sub-note">Cooldown: 24 jam</span></div></li>
-            <li><span>🐉</span><div><strong>AdventurePet</strong> — Pet hasilkan Money+Potion+Diamond pasif. <span class="sub-note">Cooldown: 1 jam</span></div></li>
-          </ul>
-        </div>
-
-        <div class="sub-card">
-          <div class="sub-card-title">
-            <div class="sub-dot" style="background:var(--accent2)"></div>
-            <span style="color:var(--accent2)">TIER A — PRIORITAS TINGGI</span>
-          </div>
-          <ul class="sub-list">
-            <li><span>🗓️</span><div><strong>Weekly</strong> — EXP+Money+Limit+bonus item besar. <span class="sub-note">Cooldown: 7 hari</span></div></li>
-            <li><span>📅</span><div><strong>Monthly</strong> — Reward massive + chance Mythic Crate. <span class="sub-note">Cooldown: 30 hari</span></div></li>
-            <li><span>📦</span><div><strong>Open Crate</strong> — Konversi crate ke resource berharga. <span class="sub-note">Buka sesuai stok</span></div></li>
-            <li><span>🛵</span><div><strong>Ojek</strong> — Money cepat. Cooldown 5 menit. <span class="sub-note">Spam saat jam sibuk!</span></div></li>
-          </ul>
-        </div>
-
-        <div class="sub-card">
-          <div class="sub-card-title">
-            <div class="sub-dot" style="background:var(--accent4)"></div>
-            <span style="color:var(--accent4)">TIER B — FARMING PENTING</span>
-          </div>
-          <ul class="sub-list">
-            <li><span>⛏️</span><div><strong>Nambang</strong> — Iron/Gold/Diamond untuk craft. <span class="sub-note">Cooldown: 30 mnt</span></div></li>
-            <li><span>🪓</span><div><strong>Nebang</strong> — Wood+String, resource dasar. <span class="sub-note">Cooldown: 1 jam</span></div></li>
-            <li><span>🎣</span><div><strong>Mancing</strong> — Ikan untuk jual di pasar. <span class="sub-note">Cooldown: 30 mnt</span></div></li>
-            <li><span>🗑️</span><div><strong>Mulung</strong> — Kardus+Botol+Kaleng, rare drop Diamond. <span class="sub-note">Cooldown: 30 mnt</span></div></li>
-          </ul>
-        </div>
-
-        <div class="sub-card">
-          <div class="sub-card-title">
-            <div class="sub-dot" style="background:var(--accent3)"></div>
-            <span style="color:var(--accent3)">TIER C — AKTIVITAS PENDUKUNG</span>
-          </div>
-          <ul class="sub-list">
-            <li><span>🌱</span><div><strong>Berkebon</strong> — Buah untuk dimasak/jual. <span class="sub-note">Butuh 500 bibit</span></div></li>
-            <li><span>🏹</span><div><strong>Berburu</strong> — Hewan untuk pasar+EXP. <span class="sub-note">Butuh armor+sword</span></div></li>
-            <li><span>⚔️</span><div><strong>Hunter</strong> — Money terbesar per trip. <span class="sub-note">Butuh gear lengkap</span></div></li>
-            <li><span>🗺️</span><div><strong>Adventure</strong> — Crate+resource+money. <span class="sub-note">Butuh armor+health 80</span></div></li>
-          </ul>
-        </div>
-
-        <div class="sub-card">
-          <div class="sub-card-title">
-            <div class="sub-dot" style="background:var(--accent1)"></div>
-            <span style="color:var(--accent1)">TIER D — YEARLY (SEKALI SETAHUN)</span>
-          </div>
-          <ul class="sub-list">
-            <li><span>🎊</span><div><strong>Yearly</strong> — Reward TERBESAR. Money 80k–1.5jt. <span class="sub-note">Cooldown: 1 tahun</span></div></li>
-            <li><span>🟡</span><div><strong>Bonus Yearly</strong> — Legendary Crate (12%), Mythic x2 (18%), Diamond 3–5 (20%). <span class="sub-note">Jangan skip!</span></div></li>
-          </ul>
-        </div>
-
-        <div class="sub-card">
-          <div class="sub-card-title">
-            <div class="sub-dot" style="background:#ff4444"></div>
-            <span style="color:#ff6b6b">TIER RISKY — HIGH RISK HIGH REWARD</span>
-          </div>
-          <ul class="sub-list">
-            <li><span>🦹</span><div><strong>Merampok</strong> — Gasak uang player lain. Fail 35%. <span class="sub-bad">Bisa kena balik!</span></div></li>
-            <li><span>🗡️</span><div><strong>Membunuh</strong> — Risk/reward tertinggi. Fail 35%. <span class="sub-bad">Kehilangan Money+Health</span></div></li>
-            <li><span>🤫</span><div><strong>Maling</strong> — Lokasi random. Fail 30%. <span class="sub-note">Dapat kardus banyak</span></div></li>
-            <li><span>💋</span><div><strong>Ngelonte</strong> — Money 150k–500k. Fail 25%. <span class="sub-note">Cooldown: 12 jam</span></div></li>
-          </ul>
-        </div>
-
-      </div>
+    <div class="warning-box">
+      <span>⚠️</span>
+      <div><strong>ANTI-INFLASI:</strong> Tanpa balancing yang ketat, kombinasi jam sibuk + weekend + musim peak bisa menghasilkan reward 3–5× normal, menyebabkan hiperinflasi ekonomi RPG dalam hitungan hari.</div>
     </div>
-  </div>
 
-  <!-- IMPLEMENTASI KODE -->
-  <div class="section-title purple">⚙️ REKOMENDASI IMPLEMENTASI KODE</div>
+    <div class="grid-2">
+      <div>
+        <div class="section-title">🛡️ PRINSIP BALANCING</div>
 
-  <div class="adapt-grid cols-2" style="margin-bottom:50px">
-    <div class="card">
-      <div class="card-header purple">🕐 Deteksi Jam Otomatis</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); line-height:1.7; font-family:'Rajdhani',sans-serif;">
-          Tambahkan helper function di awal setiap handler:
+        <div class="rule-card">
+          <div class="rule-title">1. MULTIPLIER CAP (Batas Maksimum)</div>
+          Semua multiplier dikombinasikan dengan batas keras: <strong>totalMult ≤ 3.5×</strong>. Jika kombinasi melebihi ini, reward di-cap di 2× base. Mencegah exploit jam sibuk + weekend + musim peak.
         </div>
-        <pre style="background:rgba(0,0,0,0.4); border:1px solid var(--border); padding:14px; border-radius:3px; font-size:0.78rem; color:var(--accent1); overflow-x:auto; margin-top:10px; line-height:1.6;">
-function getTimeZone() {
-  const jam = new Date().getHours()
-  if (jam >= 18 || jam < 0)  return 'SIBUK'
-  if (jam >= 10 && jam < 18) return 'NORMAL'
-  return 'SEPI' // 00:00–09:59
-}
+        <div class="rule-card">
+          <div class="rule-title">2. SEEDED RANDOM (Stabilitas Harga)</div>
+          Harga shop digenerate dengan seeded random berbasis waktu (<code>Math.sin(seed+offset)*10000</code>). Ini memastikan harga <strong>konsisten selama 1 jam</strong> penuh, tidak berubah setiap detik, mencegah price manipulation.
+        </div>
+        <div class="rule-card">
+          <div class="rule-title">3. COOLDOWN IMMUTABLE</div>
+          Cooldown tidak bisa di-bypass dengan cara apapun. Berburu (60 min), Nambang (30 min), Ojek (5 min) — durasi dikunci ketat. Mencegah flood spam untuk income tidak terbatas.
+        </div>
+        <div class="rule-card">
+          <div class="rule-title">4. FAIL CHANCE (Distribusi Risiko)</div>
+          Setiap aktivitas punya chance gagal (10–35%). Gagal = <strong>tidak ada reward + kehilangan resource</strong>. Balances high-reward activities agar tidak terlalu mudah dieksploitasi.
+        </div>
+        <div class="rule-card">
+          <div class="rule-title">5. ZERO-SUM PVP</div>
+          Aktivitas PVP (merampok, membunuh, judi) bersifat zero-sum: uang tidak diciptakan, hanya dipindahkan. Ini <strong>tidak mempengaruhi total money supply</strong> dalam ekonomi.
+        </div>
+      </div>
+      <div>
+        <div class="section-title">📐 IMPLEMENTASI ADAPTASI</div>
+        <div class="formula-box">
+          <span class="comment">// IMPLEMENTASI WAKTU (wajib ditambahkan)</span><br>
+          <span class="var">function</span> <span class="result-var">getTimeMult</span>() {<br>
+          &nbsp; <span class="var">const</span> h = <span class="op">new</span> Date().getHours()<br>
+          &nbsp; <span class="var">if</span> (h &gt;= 6 && h &lt; 12 || h &gt;= 20) <span class="var">return</span> <span class="result-var">1.35</span><br>
+          &nbsp; <span class="var">if</span> (h &gt;= 12 && h &lt; 20) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="var">return</span> <span class="result-var">1.00</span><br>
+          &nbsp; <span class="var">return</span> <span class="result-var">0.70</span> <span class="comment">// jam sepi 00–05</span><br>
+          }
+        </div>
+        <div class="formula-box">
+          <span class="comment">// IMPLEMENTASI HARI</span><br>
+          <span class="var">function</span> <span class="result-var">getDayMult</span>() {<br>
+          &nbsp; <span class="var">const</span> day = <span class="op">new</span> Date().getDay()<br>
+          &nbsp; <span class="var">const</span> isWeekend = day===0 || day===6<br>
+          &nbsp; <span class="comment">// Sudah ada di rpg-shop.js!</span><br>
+          &nbsp; <span class="var">return</span> isWeekend ? <span class="result-var">seededRand(1.10,1.45)</span> : <span class="result-var">seededRand(0.85,1.15)</span><br>
+          }
+        </div>
+        <div class="formula-box">
+          <span class="comment">// PATCH UNTUK rpg-hourly.js, rpg-berburu.js, dll:</span><br>
+          <span class="var">const</span> timeMult = getTimeMult()<br>
+          <span class="var">const</span> dayMult = getDayMult()<br>
+          <span class="var">const</span> capMult = Math.min(timeMult * dayMult, <span class="result-var">2.0</span>)<br>
+          <br>
+          <span class="comment">// Apply ke reward:</span><br>
+          <span class="var">let</span> money = isPrems<br>
+          &nbsp; ? rand(4000,15000) * capMult<br>
+          &nbsp; : rand(800,7000) * capMult<br>
+          <span class="var">let</span> exp = isPrems<br>
+          &nbsp; ? rand(8000,18000) * (capMult*<span class="result-var">0.85</span>)<br>
+          &nbsp; : rand(3000,9000) * (capMult*<span class="result-var">0.85</span>)
+        </div>
+        <div class="formula-box">
+          <span class="comment">// BERKEBON — tambahkan seasonMult:</span><br>
+          <span class="var">const</span> season = getSeasonInfo() <span class="comment">// sudah ada!</span><br>
+          <span class="var">const</span> buahMult = season.mult.buah<br>
+          <span class="var">let</span> pisang = Math.floor((rand(50,850)) * buahMult * dayMult)<br>
+          <span class="comment">// Hasilnya: musim kemarau buah panen lebih banyak ×1.5</span>
+        </div>
 
-function isWeekend() {
-  const hari = new Date().getDay()
-  return hari === 0 || hari === 6
-}
-
-function getMoneyMultiplier() {
-  let mult = 1
-  if (getTimeZone() === 'SIBUK')  mult *= 1.5
-  if (getTimeZone() === 'SEPI')   mult *= 0.8
-  if (isWeekend())                mult *= 1.3
-  return mult
-}
-        </pre>
+        <div class="section-title" style="margin-top:16px;">🔄 ALUR DATA ADAPTASI</div>
+        <div style="background:var(--bg);border:1px solid var(--border);padding:14px;border-radius:4px;font-size:12px;font-family:'Share Tech Mono',monospace;line-height:2;color:var(--text-dim);">
+          Player klik command<br>
+          → <span style="color:var(--accent)">getTimeMult()</span> — cek jam sekarang<br>
+          → <span style="color:var(--accent4)">getDayMult()</span> — cek weekend/weekday<br>
+          → <span style="color:var(--accent3)">getSeasonInfo()</span> — cek bulan aktif<br>
+          → <span style="color:var(--purple)">capMult</span> = Math.min(kombinasi, 2.0)<br>
+          → baseReward × capMult → <span style="color:var(--accent2)">finalReward</span><br>
+          → Simpan ke user data<br>
+          → Set cooldown timestamp
+        </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header purple">📅 Deteksi Musim & Event</div>
-      <div class="card-body">
-        <div style="font-size:0.78rem; color:var(--text-dim); line-height:1.7;">
-          Sistem event berbasis tanggal:
+    <div class="divider"></div>
+    <div class="section-title">📋 RINGKASAN DESAIN BALANCING</div>
+    <div class="grid-3">
+      <div class="panel green">
+        <div class="panel-title green">✅ YANG SUDAH ADA</div>
+        <div style="font-size:13px;line-height:2;color:var(--text-dim);">
+          • Dynamic pricing shop (seeded random)<br>
+          • Weekend multiplier (1.10–1.45×)<br>
+          • Season mult untuk wood/bibit/buah<br>
+          • Gear tier multiplier<br>
+          • Cooldown system per aktivitas<br>
+          • Fail chance setiap aktivitas<br>
+          • Premium vs Free tier
         </div>
-        <pre style="background:rgba(0,0,0,0.4); border:1px solid var(--border); padding:14px; border-radius:3px; font-size:0.78rem; color:var(--accent5); overflow-x:auto; margin-top:10px; line-height:1.6;">
-function getCurrentEvent() {
-  const now = new Date()
-  const bulan = now.getMonth() + 1
-  const tgl = now.getDate()
-
-  // Ramadan (perkiraan, atau gunakan API)
-  if (bulan === 3 || bulan === 4) return 'RAMADAN'
-  
-  // Lebaran
-  if (bulan === 4 && tgl <= 7)   return 'LEBARAN'
-
-  // Tahun Baru
-  if (bulan === 1 && tgl <= 3)   return 'TAHUNBARU'
-
-  // Kemerdekaan
-  if (bulan === 8 && tgl === 17) return 'MERDEKA'
-
-  // Musim Kemarau (April–September)
-  if (bulan >= 4 && bulan <= 9)  return 'KEMARAU'
-
-  // Musim Hujan (Oktober–Maret)
-  return 'HUJAN'
-}
-
-function getEventMultiplier(event) {
-  const mult = {
-    RAMADAN: 2.0, LEBARAN: 2.5,
-    TAHUNBARU: 2.0, MERDEKA: 1.8,
-    KEMARAU: 1.3, HUJAN: 1.1
-  }
-  return mult[event] || 1.0
-}
-        </pre>
+      </div>
+      <div class="panel orange">
+        <div class="panel-title orange">🔧 YANG PERLU DITAMBAHKAN</div>
+        <div style="font-size:13px;line-height:2;color:var(--text-dim);">
+          • Time multiplier di SEMUA aktivitas<br>
+          • Season mult untuk hunting/mancing<br>
+          • Reward cap (maxComboCap = 2.0×)<br>
+          • EXP time mult terpisah (×0.85)<br>
+          • Season drop bonus untuk crate<br>
+          • Weekend passive income boost<br>
+          • Notifikasi kondisi aktif ke user
+        </div>
+      </div>
+      <div class="panel red">
+        <div class="panel-title red">🚫 YANG HARUS DICEGAH</div>
+        <div style="font-size:13px;line-height:2;color:var(--text-dim);">
+          • Stack mult tanpa batas (inflasi)<br>
+          • Bypass cooldown via exploit<br>
+          • Bot-farming saat jam sepi<br>
+          • Money creation dari PVP<br>
+          • Duplicate reward (timing exploit)<br>
+          • Infinite berkebon tanpa bibit<br>
+          • Over-stacking gear + season + time
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- SUMMARY TABLE -->
-  <div class="section-title">📊 RINGKASAN ADAPTASI LENGKAP</div>
-  <div style="overflow-x:auto; margin-bottom:50px">
-    <table class="modifier-table" style="min-width:800px">
-      <tr>
-        <th>Fitur</th>
-        <th>Jam Sibuk 18–23</th>
-        <th>Jam Normal 10–18</th>
-        <th>Jam Sepi 00–10</th>
-        <th>Weekend</th>
-        <th>Musim Event</th>
-      </tr>
-      <tr><td><strong>Hourly</strong></td><td class="pos">⬆️ Wajib klaim</td><td class="pos">⬆️ Wajib klaim</td><td class="pos">✅ Klaim walau sepi</td><td class="pos">+30% bonus</td><td class="pos">+event bonus</td></tr>
-      <tr><td><strong>Daily</strong></td><td class="pos">✅ Klaim di sini</td><td class="neu">Normal</td><td class="pos">✅ Klaim subuh ok</td><td class="pos">+50% bonus</td><td class="pos">x2 event</td></tr>
-      <tr><td><strong>Weekly/Monthly</strong></td><td class="neu">Normal</td><td class="neu">Normal</td><td class="pos">✅ Klaim idle</td><td class="pos">+25% bonus</td><td class="pos">+event bonus</td></tr>
-      <tr><td><strong>Yearly</strong></td><td class="neu">Normal</td><td class="neu">Normal</td><td class="neu">Normal</td><td class="neu">Normal</td><td class="pos">Tahun Baru: x2</td></tr>
-      <tr><td><strong>Ojek</strong></td><td class="pos">⬆️ SPAM! 5 menit</td><td class="pos">Normal, jalan</td><td class="neg">Sepi, skip</td><td class="pos">Penumpang x1.5</td><td class="neu">Skenario seasonal</td></tr>
-      <tr><td><strong>Mancing</strong></td><td class="neu">OK</td><td class="pos">⬆️ Prime time</td><td class="pos">Santai, ok</td><td class="pos">+25% tangkapan</td><td class="pos">Kemarau +50%</td></tr>
-      <tr><td><strong>Nambang/Nebang</strong></td><td class="neg">Stamp kecil</td><td class="pos">⬆️ Prime farming</td><td class="pos">OK, sepi</td><td class="pos">+20% drop</td><td class="neu">Normal</td></tr>
-      <tr><td><strong>Mulung</strong></td><td class="neu">OK</td><td class="pos">⬆️ Farming</td><td class="pos">OK solo</td><td class="pos">+20% hasil</td><td class="neg">Hujan: -20%</td></tr>
-      <tr><td><strong>Berburu/Hunter</strong></td><td class="pos">⬆️ Monster banyak</td><td class="pos">Normal</td><td class="neg">Sepi, tidak worth</td><td class="pos">Drop rate +25%</td><td class="pos">Kemarau: +30%</td></tr>
-      <tr><td><strong>Adventure</strong></td><td class="pos">⬆️ Crate lebih bagus</td><td class="pos">Normal</td><td class="neg">Hindari</td><td class="pos">Crate double</td><td class="pos">Event: +rare%</td></tr>
-      <tr><td><strong>Berkebon</strong></td><td class="neu">OK</td><td class="pos">⬆️ Beli bibit</td><td class="pos">Panen santai</td><td class="pos">Market ramai</td><td class="neg">Hujan: jaga pickaxe</td></tr>
-      <tr><td><strong>Berdagang</strong></td><td class="pos">⬆️ Ramai pembeli</td><td class="pos">Normal</td><td class="neg">Sepi, skip</td><td class="pos">⬆️ Market peak</td><td class="pos">Event: skenario khusus</td></tr>
-      <tr><td><strong>Merampok/Bunuh</strong></td><td class="pos">Banyak target kaya</td><td class="neu">Normal</td><td class="neg">⚠️ Hindari</td><td class="pos">Target banyak</td><td class="neu">Normal</td></tr>
-      <tr><td><strong>Maling</strong></td><td class="pos">Pasar malam ramai</td><td class="pos">Normal</td><td class="neg">Sepi, skip</td><td class="pos">Fail rate -5%</td><td class="neu">Normal</td></tr>
-      <tr><td><strong>Ngelonte</strong></td><td class="pos">⬆️ Malam = prime</td><td class="neg">Kurang worth</td><td class="pos">Subuh ok (12 jam)</td><td class="pos">+money bonus</td><td class="pos">Event: skenario spesial</td></tr>
-      <tr><td><strong>AdventurePet</strong></td><td class="pos">⬆️ Klaim tiap jam</td><td class="pos">Klaim tiap jam</td><td class="pos">⬆️ Idle optimal</td><td class="pos">Reward x2</td><td class="pos">Hujan: EXP +40%</td></tr>
-      <tr><td><strong>Open Crate</strong></td><td class="pos">Malam = seru</td><td class="neu">Normal</td><td class="pos">⬆️ Idle, buka semua</td><td class="pos">Zonk -50%</td><td class="pos">Hujan: -30% zonk</td></tr>
-      <tr><td><strong>Giveaway</strong></td><td class="pos">⬆️ Peserta banyak</td><td class="neu">Normal</td><td class="neg">Peserta sedikit</td><td class="pos">⬆️ Peak event</td><td class="pos">Event: THR bonus</td></tr>
-      <tr><td><strong>Craft/Upgrade</strong></td><td class="neg">Sibuk, skip dulu</td><td class="pos">⬆️ Waktu terbaik</td><td class="pos">Idle craft ok</td><td class="pos">Diskon material</td><td class="pos">Tahun Baru: -50% material</td></tr>
-      <tr><td><strong>Nabung/Tarik</strong></td><td class="pos">Nabung hasil malam</td><td class="neu">Normal</td><td class="pos">⬆️ Nabung sebelum offline</td><td class="neu">Normal</td><td class="neu">Normal</td></tr>
-    </table>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="divider"></div>
-  <div style="text-align:center; color:var(--text-dim); font-size:0.8rem; font-family:'Orbitron',monospace; letter-spacing:0.1em; padding:20px 0;">
-    ⚡ FLOWCHART ADAPTASI RPG BOT · DIBUAT BERDASARKAN ANALISIS KODE ARSIP ·
-    <span style="color:var(--accent1)">53 FILE DIBACA</span> ·
-    <span style="color:var(--accent2)">RPG + PET SYSTEM</span>
   </div>
 
 </div>
 
 <script>
-  // Add subtle hover glow effect to cards
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      card.style.boxShadow = '0 8px 40px rgba(0,0,0,0.6)';
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.boxShadow = '';
-    });
-  });
+// ==== TABS ====
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
 
-  // Animate table rows on load
-  const rows = document.querySelectorAll('.modifier-table tr');
-  rows.forEach((row, i) => {
-    row.style.opacity = '0';
-    row.style.transform = 'translateX(-10px)';
-    setTimeout(() => {
-      row.style.transition = 'all 0.3s ease';
-      row.style.opacity = '1';
-      row.style.transform = 'translateX(0)';
-    }, i * 30);
-  });
+// ==== LIVE STATUS ====
+function getSeasonInfo(month) {
+  if ([12,1,2].includes(month)) return { name: '❄️ Hujan', mult: { wood:1.3, bibit:0.8, buah:0.9 } };
+  if ([3,4,5].includes(month)) return { name: '🌸 Semi', mult: { wood:1.0, bibit:1.4, buah:1.3 } };
+  if ([6,7,8].includes(month)) return { name: '☀️ Kemarau', mult: { wood:0.9, bibit:1.2, buah:1.5 } };
+  return { name: '🍂 Gugur', mult: { wood:1.2, bibit:1.0, buah:1.1 } };
+}
+
+function getTimeCat(h) {
+  if (h >= 6 && h < 12) return { label: '🌅 JAM SIBUK', mult: 1.35, color: '#39ff14' };
+  if (h >= 20) return { label: '🌙 JAM SIBUK', mult: 1.35, color: '#39ff14' };
+  if (h >= 12 && h < 20) return { label: '🌤️ JAM NORMAL', mult: 1.00, color: '#94a3b8' };
+  return { label: '🌙 JAM SEPI', mult: 0.70, color: '#ff4757' };
+}
+
+function updateStatus() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const day = now.getDay();
+  const isWeekend = day === 0 || day === 6;
+  const month = now.getMonth() + 1;
+  const season = getSeasonInfo(month);
+  const tc = getTimeCat(h);
+
+  document.getElementById('currentTime').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  document.getElementById('currentTime').style.color = tc.color;
+  document.getElementById('timeCategory').textContent = `${tc.label} (×${tc.mult})`;
+
+  document.getElementById('currentDay').textContent = days[day];
+  document.getElementById('currentDay').style.color = isWeekend ? '#ff6b35' : '#ffd700';
+  document.getElementById('dayCategory').textContent = isWeekend ? '🎉 WEEKEND (harga shop ↑)' : '📆 Hari Biasa (normal)';
+
+  document.getElementById('currentSeason').textContent = season.name;
+  document.getElementById('currentMultiplier').textContent = `wood×${season.mult.wood} bibit×${season.mult.bibit} buah×${season.mult.buah}`;
+}
+
+updateStatus();
+setInterval(updateStatus, 10000);
+
+// ==== CALCULATOR ====
+const BASE_REWARDS = {
+  hourly:    { moneyMin:800, moneyMax:15000, expMin:3000, expMax:18000 },
+  daily:     { moneyMin:3000, moneyMax:35000, limitMin:30, limitMax:150 },
+  ojek:      { moneyMin:12000, moneyMax:45000, expMin:3000, expMax:18000 },
+  nambang:   { moneyMin:3000, moneyMax:18000, expMin:2000, expMax:10000 },
+  nebang:    { moneyMin:1000, moneyMax:9000, expMin:1000, expMax:6000 },
+  mulung:    { moneyMin:500, moneyMax:5500, expMin:500, expMax:3500 },
+  mancing:   { moneyMin:2000, moneyMax:12000, expMin:1000, expMax:5000 },
+  berburu:   { moneyMin:10000, moneyMax:70000, expMin:3000, expMax:18000 },
+  adventure: { moneyMin:20000, moneyMax:220000, expMin:5000, expMax:30000 },
+  hunter:    { moneyMin:5000, moneyMax:505000, expMin:2000, expMax:22000 },
+  ngelonte:  { moneyMin:150000, moneyMax:500000, expMin:15000, expMax:60000 },
+  berdagang: { moneyMin:20000, moneyMax:100000, expMin:500, expMax:5500 },
+};
+
+function calcReward() {
+  const act = document.getElementById('calcActivity').value;
+  const h = parseInt(document.getElementById('calcHour').value) || 0;
+  const isWeekend = document.getElementById('calcDay').value === 'weekend';
+  const season = document.getElementById('calcSeason').value;
+  const gear = parseInt(document.getElementById('calcGear').value) || 1;
+  const isPrem = document.getElementById('calcPremium').value === 'premium';
+
+  const b = BASE_REWARDS[act];
+  const tc = getTimeCat(h);
+  const dayMult = isWeekend ? 1.275 : 1.0; // avg of range
+
+  // Season mult untuk money activities
+  let seasonMult = 1.0;
+  if (act === 'nebang') {
+    seasonMult = season === 'hujan' ? 1.3 : season === 'kemarau' ? 0.9 : season === 'gugur' ? 1.2 : 1.0;
+  } else if (act === 'berburu') {
+    seasonMult = season === 'hujan' ? 1.1 : season === 'kemarau' ? 1.2 : season === 'gugur' ? 1.2 : 1.0;
+  } else if (act === 'mancing') {
+    seasonMult = season === 'semi' ? 1.2 : season === 'hujan' ? 1.1 : 1.0;
+  }
+
+  const gearMults = [1.0, 1.0, 1.5, 2.0, 3.0, 4.0];
+  const gearBonus = gearMults[Math.min(gear, 5)];
+  const premBonus = isPrem ? 1.8 : 1.0;
+
+  let rawMult = tc.mult * dayMult * seasonMult;
+  const cappedMult = Math.min(rawMult, 2.0);
+  const finalMult = cappedMult * gearBonus * premBonus;
+
+  const fmtN = (n) => Math.floor(n).toLocaleString('id-ID');
+  const moneyLow  = fmtN(b.moneyMin * finalMult);
+  const moneyHigh = fmtN(b.moneyMax * finalMult);
+  const expLow    = b.expMin  ? fmtN(b.expMin  * cappedMult * premBonus) : null;
+  const expHigh   = b.expMax  ? fmtN(b.expMax  * cappedMult * premBonus) : null;
+
+  const capNote = rawMult > 2.0 ? `<div style="color:var(--red);margin-top:4px;font-size:11px;">⚠️ CAP aktif: raw ×${rawMult.toFixed(2)} → dibatasi ×2.00</div>` : '';
+
+  document.getElementById('calcOutput').innerHTML = `
+    <div style="color:var(--accent);font-family:'Orbitron',monospace;font-size:12px;margin-bottom:12px;letter-spacing:1px;">📊 ESTIMASI REWARD</div>
+    <div><span class="r-label">⚔️ Aktivitas</span><span class="r-val" style="color:var(--text)">${act.toUpperCase()}</span></div>
+    <div><span class="r-label">⏰ Time Mult</span><span class="r-val" style="color:${tc.color}">×${tc.mult} (${tc.label})</span></div>
+    <div><span class="r-label">📅 Day Mult</span><span class="r-val" style="color:${isWeekend?'#ff6b35':'#94a3b8'}">×${dayMult.toFixed(2)} (${isWeekend?'Weekend':'Weekday'})</span></div>
+    <div><span class="r-label">🌍 Season Mult</span><span class="r-val" style="color:var(--accent3)">×${seasonMult.toFixed(1)}</span></div>
+    <div><span class="r-label">⚙️ Gear Bonus</span><span class="r-val" style="color:var(--accent4)">×${gearBonus.toFixed(1)} (Tier ${gear})</span></div>
+    <div><span class="r-label">👑 Premium</span><span class="r-val" style="color:${isPrem?'#ffd700':'#94a3b8'}">×${premBonus.toFixed(1)} (${isPrem?'Premium':'Free'})</span></div>
+    <hr style="border-color:var(--border);margin:8px 0;">
+    <div><span class="r-label">🔢 Raw Mult</span><span class="r-val" style="color:var(--purple)">×${rawMult.toFixed(2)}</span></div>
+    <div><span class="r-label">🛡️ Capped Mult</span><span class="r-val" style="color:var(--text)">×${cappedMult.toFixed(2)}</span></div>
+    ${capNote}
+    <div><span class="r-label">✨ Final Mult</span><span class="r-val r-total">×${finalMult.toFixed(2)}</span></div>
+    <hr style="border-color:var(--border);margin:8px 0;">
+    <div><span class="r-label">💰 Est. Money</span><span class="r-val r-total">Rp ${moneyLow} – ${moneyHigh}</span></div>
+    ${expLow ? `<div><span class="r-label">✨ Est. EXP</span><span class="r-val" style="color:var(--accent4)">${expLow} – ${expHigh}</span></div>` : ''}
+  `;
+}
+
+calcReward();
 </script>
+
 </body>
 </html>
