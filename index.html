@@ -3,1276 +3,1048 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RPG System Analysis — Laporan Mendalam</title>
+<title>RPG System Flowchart — Analisis Lengkap</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Space+Mono:wght@400;700&family=Noto+Sans:wght@300;400;600&display=swap');
 
   :root {
-    --bg: #0a0c10;
-    --surface: #0f1218;
-    --card: #141820;
-    --border: #1e2432;
-    --accent: #f0a500;
-    --accent2: #e05c2a;
-    --green: #2ed573;
-    --red: #ff4757;
-    --blue: #1e90ff;
-    --purple: #9c59e8;
-    --cyan: #00d2d3;
-    --text: #e8ecf2;
-    --muted: #7a8394;
-    --dim: #3a4255;
+    --bg: #080c14;
+    --panel: #0e1620;
+    --panel2: #111b28;
+    --border: #1e3050;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6b;
+    --accent4: #ffcc00;
+    --red: #ff3b5c;
+    --purple: #a855f7;
+    --text: #c8d8e8;
+    --text-muted: #607080;
+    --glow: 0 0 20px rgba(0,212,255,0.3);
   }
 
-  * { margin:0; padding:0; box-sizing:border-box; }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Space Mono', monospace;
-    line-height: 1.7;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
   }
 
+  /* ── HEADER ── */
   .header {
-    background: linear-gradient(135deg, #0a0c10 0%, #111827 50%, #0a0c10 100%);
-    border-bottom: 2px solid var(--accent);
-    padding: 3rem 2rem;
-    text-align: center;
+    background: linear-gradient(135deg, #080c14 0%, #0d1a2e 50%, #080c14 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 40px 28px;
     position: relative;
     overflow: hidden;
   }
   .header::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      45deg, transparent, transparent 60px,
-      rgba(240,165,0,0.03) 60px, rgba(240,165,0,0.03) 61px
-    );
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
   }
   .header h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 800;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
     color: var(--accent);
-    letter-spacing: -1px;
-    position: relative;
+    letter-spacing: 2px;
+    text-shadow: var(--glow);
   }
   .header p {
-    color: var(--muted);
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    position: relative;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    margin-top: 6px;
+    letter-spacing: 1px;
   }
-
-  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
-
-  /* NAV */
-  .nav {
-    display: flex; flex-wrap: wrap; gap: 0.5rem;
-    background: var(--surface); border: 1px solid var(--border);
-    padding: 1rem; border-radius: 8px; margin-bottom: 2rem;
+  .badge-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 2px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
   }
-  .nav a {
-    color: var(--muted); text-decoration: none; font-size: 0.75rem;
-    padding: 0.3rem 0.7rem; border: 1px solid var(--dim); border-radius: 4px;
+  .badge-blue  { background: rgba(0,212,255,0.15); border: 1px solid rgba(0,212,255,0.4); color: var(--accent); }
+  .badge-red   { background: rgba(255,59,92,0.15);  border: 1px solid rgba(255,59,92,0.4);  color: var(--red); }
+  .badge-green { background: rgba(127,255,107,0.15);border: 1px solid rgba(127,255,107,0.4);color: var(--accent3); }
+  .badge-orange{ background: rgba(255,107,53,0.15); border: 1px solid rgba(255,107,53,0.4); color: var(--accent2); }
+  .badge-yellow{ background: rgba(255,204,0,0.15);  border: 1px solid rgba(255,204,0,0.4);  color: var(--accent4); }
+  .badge-purple{ background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.4); color: var(--purple); }
+
+  /* ── NAV TABS ── */
+  .tabs {
+    display: flex;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    overflow-x: auto;
+    gap: 4px;
+  }
+  .tab {
+    padding: 14px 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
     transition: all 0.2s;
   }
-  .nav a:hover { color: var(--accent); border-color: var(--accent); }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* SECTION */
-  .section {
-    margin-bottom: 3rem;
-    background: var(--card);
+  /* ── CONTENT PANELS ── */
+  .content { padding: 30px 40px; max-width: 1600px; }
+  .panel-section { display: none; }
+  .panel-section.active { display: block; }
+
+  /* ── FLOWCHART CANVAS ── */
+  .flow-wrap {
+    background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
+    border-radius: 4px;
+    padding: 30px;
+    overflow-x: auto;
+    margin-bottom: 24px;
   }
-  .section-header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 1rem 1.5rem;
-    display: flex; align-items: center; gap: 0.8rem;
-  }
-  .section-header .icon { font-size: 1.3rem; }
-  .section-header h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.1rem; font-weight: 700;
-    color: var(--accent);
-  }
-  .section-body { padding: 1.5rem; }
 
-  /* FEATURE CARD */
-  .feature-grid {
+  /* ── NODE STYLES ── */
+  .flow-grid { display: flex; gap: 40px; justify-content: flex-start; flex-wrap: nowrap; }
+  .flow-col { display: flex; flex-direction: column; gap: 16px; min-width: 200px; }
+  .col-header {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 8px 14px;
+    border-radius: 2px;
+    text-align: center;
+  }
+  .ch-blue { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.35); color: var(--accent); }
+  .ch-green { background: rgba(127,255,107,0.12); border: 1px solid rgba(127,255,107,0.35); color: var(--accent3); }
+  .ch-orange { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.35); color: var(--accent2); }
+  .ch-red { background: rgba(255,59,92,0.12); border: 1px solid rgba(255,59,92,0.35); color: var(--red); }
+  .ch-yellow { background: rgba(255,204,0,0.12); border: 1px solid rgba(255,204,0,0.35); color: var(--accent4); }
+  .ch-purple { background: rgba(168,85,247,0.12); border: 1px solid rgba(168,85,247,0.35); color: var(--purple); }
+  .ch-muted { background: rgba(100,130,160,0.12); border: 1px solid rgba(100,130,160,0.35); color: var(--text-muted); }
+
+  .node {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .node:hover { border-color: var(--accent); box-shadow: var(--glow); transform: translateY(-1px); }
+  .node .n-cmd { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; }
+  .node .n-desc { color: var(--text-muted); font-size: 11px; margin-top: 3px; }
+  .node .n-badge { display: inline-block; margin-top: 4px; }
+
+  .node-blue  { border-left: 3px solid var(--accent); }
+  .node-green { border-left: 3px solid var(--accent3); }
+  .node-orange{ border-left: 3px solid var(--accent2); }
+  .node-red   { border-left: 3px solid var(--red); }
+  .node-yellow{ border-left: 3px solid var(--accent4); }
+  .node-purple{ border-left: 3px solid var(--purple); }
+  .node-muted { border-left: 3px solid var(--text-muted); }
+
+  /* ── ARROW/CONNECTOR ── */
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 18px;
+    margin: 4px 0;
+  }
+
+  /* ── ECONOMY FLOW ── */
+  .econ-flow {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1rem;
+    grid-template-columns: 1fr 60px 1fr 60px 1fr;
+    gap: 0;
+    align-items: start;
+    margin-bottom: 24px;
   }
-  .feature-card {
-    background: var(--surface);
+  .econ-col { display: flex; flex-direction: column; gap: 8px; }
+  .econ-arrow { display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--accent); padding-top: 60px; }
+  .econ-item {
+    background: var(--panel2);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.2rem;
-    border-left: 3px solid var(--dim);
-    transition: border-color 0.2s;
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .feature-card:hover { border-left-color: var(--accent); }
-  .feature-card.critical { border-left-color: var(--red); }
-  .feature-card.warning { border-left-color: var(--accent2); }
-  .feature-card.good { border-left-color: var(--green); }
-  .feature-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem; font-weight: 700;
-    margin-bottom: 0.6rem; color: var(--text);
-  }
-  .feature-card p { font-size: 0.78rem; color: var(--muted); }
-  .feature-card .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.6rem; }
-  .tag {
-    font-size: 0.65rem; padding: 0.2rem 0.5rem;
-    border-radius: 3px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .tag.green { background: rgba(46,213,115,0.15); color: var(--green); }
-  .tag.red { background: rgba(255,71,87,0.15); color: var(--red); }
-  .tag.orange { background: rgba(240,165,0,0.15); color: var(--accent); }
-  .tag.blue { background: rgba(30,144,255,0.15); color: var(--blue); }
-  .tag.purple { background: rgba(156,89,232,0.15); color: var(--purple); }
-  .tag.cyan { background: rgba(0,210,211,0.15); color: var(--cyan); }
+  .econ-item .ei-name { font-family: 'Space Mono', monospace; font-size: 11px; }
+  .econ-item .ei-val { font-size: 11px; font-weight: 600; color: var(--accent3); }
+  .econ-item .ei-val.bad { color: var(--red); }
+  .econ-item .ei-val.warn { color: var(--accent4); }
 
-  /* TABLE */
-  table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-  th {
-    background: var(--surface); color: var(--accent);
-    padding: 0.6rem 0.8rem; text-align: left;
-    font-family: 'Syne', sans-serif; font-size: 0.75rem;
-    text-transform: uppercase; letter-spacing: 0.5px;
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: var(--panel2); padding: 10px 14px; text-align: left; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+  td { padding: 9px 14px; border-bottom: 1px solid rgba(30,48,80,0.6); vertical-align: top; }
+  tr:hover td { background: rgba(0,212,255,0.04); }
+  .mono { font-family: 'Space Mono', monospace; font-size: 11px; }
+  .status-ok { color: var(--accent3); font-weight: 600; }
+  .status-warn { color: var(--accent4); font-weight: 600; }
+  .status-bad { color: var(--red); font-weight: 600; }
+  .status-info { color: var(--accent); font-weight: 600; }
+
+  /* ── CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px;
+    position: relative;
+  }
+  .card-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 15px; margin-bottom: 10px; }
+  .card-body { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+  .card-body strong { color: var(--text); }
+
+  .alert {
+    border: 1px solid;
+    border-radius: 3px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .alert-red   { background: rgba(255,59,92,0.08);  border-color: rgba(255,59,92,0.35);  color: var(--text); }
+  .alert-yellow{ background: rgba(255,204,0,0.08);  border-color: rgba(255,204,0,0.35);  color: var(--text); }
+  .alert-blue  { background: rgba(0,212,255,0.08);  border-color: rgba(0,212,255,0.35);  color: var(--text); }
+  .alert-green { background: rgba(127,255,107,0.08);border-color: rgba(127,255,107,0.35);color: var(--text); }
+  .alert-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
   }
-  td { padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(30,36,50,0.8); }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,0.02); }
-
-  /* FLOWCHART */
-  .flow-wrap { overflow-x: auto; padding-bottom: 1rem; }
-  .flow-diagram {
-    min-width: 900px;
-    padding: 1.5rem;
+  .sub-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    margin: 20px 0 10px;
   }
 
-  /* SVG NODE STYLES via JS */
-  .flow-node { cursor: pointer; }
-  .flow-node rect { stroke-width: 1.5; rx: 6; }
-  .flow-node text { font-family: 'Space Mono', monospace; font-size: 11px; fill: #e8ecf2; }
-
-  /* STAT BARS */
-  .stat-row {
-    display: flex; align-items: center; gap: 1rem;
-    padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+  /* ── PROGRESS BARS ── */
+  .prog-bar {
+    height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 6px;
   }
-  .stat-row:last-child { border-bottom: none; }
-  .stat-label { width: 160px; font-size: 0.78rem; color: var(--muted); flex-shrink: 0; }
-  .stat-bar-wrap { flex: 1; background: var(--dim); border-radius: 2px; height: 6px; }
-  .stat-bar { height: 100%; border-radius: 2px; transition: width 1s; }
-  .stat-value { width: 60px; text-align: right; font-size: 0.78rem; color: var(--text); }
+  .prog-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
 
-  /* EXPLOIT BOX */
-  .exploit-box {
-    background: rgba(255,71,87,0.08);
-    border: 1px solid rgba(255,71,87,0.3);
-    border-radius: 8px; padding: 1rem 1.2rem;
-    margin-bottom: 1rem;
-  }
-  .exploit-box h4 { color: var(--red); font-family: 'Syne', sans-serif; font-size: 0.9rem; margin-bottom: 0.4rem; }
-  .exploit-box p { font-size: 0.78rem; color: var(--muted); }
-
-  .warn-box {
-    background: rgba(240,165,0,0.08);
-    border: 1px solid rgba(240,165,0,0.3);
-    border-radius: 8px; padding: 1rem 1.2rem;
-    margin-bottom: 1rem;
-  }
-  .warn-box h4 { color: var(--accent); font-family: 'Syne', sans-serif; font-size: 0.9rem; margin-bottom: 0.4rem; }
-  .warn-box p { font-size: 0.78rem; color: var(--muted); }
-
-  .good-box {
-    background: rgba(46,213,115,0.08);
-    border: 1px solid rgba(46,213,115,0.3);
-    border-radius: 8px; padding: 1rem 1.2rem;
-    margin-bottom: 1rem;
-  }
-  .good-box h4 { color: var(--green); font-family: 'Syne', sans-serif; font-size: 0.9rem; margin-bottom: 0.4rem; }
-  .good-box p { font-size: 0.78rem; color: var(--muted); }
-
-  /* CODE */
-  code {
-    background: rgba(255,255,255,0.06);
-    color: var(--cyan);
-    padding: 0.1rem 0.35rem;
-    border-radius: 3px; font-size: 0.8em;
-  }
-  pre {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 6px; padding: 1rem; font-size: 0.78rem;
-    color: var(--green); overflow-x: auto; margin-top: 0.5rem;
+  /* ── TOOLTIP ── */
+  .tooltip-trigger { cursor: help; text-decoration: underline dotted; }
+  .tooltip-trigger:hover .tooltip-text { display: block; }
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    bottom: 100%; left: 0;
+    background: #1a2535;
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 11px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: var(--glow);
   }
 
-  ul.list { padding-left: 1.2rem; }
-  ul.list li { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
-  ul.list li strong { color: var(--text); }
-
-  .badge {
-    display: inline-block; font-size: 0.65rem; padding: 0.15rem 0.45rem;
-    border-radius: 3px; font-weight: 700; text-transform: uppercase; margin-left: 0.3rem;
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header, .tabs, .content { padding-left: 16px; padding-right: 16px; }
+    .flow-grid { flex-wrap: wrap; }
+    .econ-flow { grid-template-columns: 1fr; }
+    .econ-arrow { display: none; }
   }
-  .badge.op { background: var(--red); color: #fff; }
-  .badge.ok { background: var(--green); color: #000; }
-  .badge.fix { background: var(--accent); color: #000; }
-
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
-
-  .mono { font-family: 'Space Mono', monospace; }
-
-  /* CONNECTOR ARROWS SVG */
-  .flow-svg { width: 100%; min-width: 1100px; }
-
-  .pill-num {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--accent); color: #000;
-    font-size: 0.7rem; font-weight: 700; margin-right: 0.5rem;
-  }
-  h3.sub { font-family: 'Syne', sans-serif; font-size: 1rem; color: var(--cyan); margin: 1rem 0 0.5rem; }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>⚔️ RPG SYSTEM — ANALISIS MENDALAM</h1>
-  <p>Dokumen analisis lengkap: 57 file | 3 PET + 54 RPG modules | lib/rpg-time-system.js</p>
-  <p style="margin-top:0.5rem; color: var(--accent)">Mencakup: Fitur • Koneksi • Ekonomi • Balance • Exploit • Rekomendasi</p>
+  <h1>⚔️ RPG SYSTEM FLOWCHART</h1>
+  <p>ANALISIS MENYELURUH — WHATSAPP BOT RPG | 54 FITUR | 2 LIB | 3 SUBSISTEM</p>
+  <div class="badge-row">
+    <span class="badge badge-blue">54 FITUR</span>
+    <span class="badge badge-red">3 EXPLOIT KRITIS</span>
+    <span class="badge badge-yellow">5 IMBALANCE MAYOR</span>
+    <span class="badge badge-green">TIME SYSTEM TERINTEGRASI</span>
+    <span class="badge badge-purple">EKONOMI DINAMIS</span>
+    <span class="badge badge-orange">DURABILITY SYSTEM</span>
+  </div>
 </div>
 
-<div class="container">
+<div class="tabs">
+  <div class="tab active" onclick="showTab('flowchart')">🗺️ FLOWCHART UTAMA</div>
+  <div class="tab" onclick="showTab('economy')">💰 FLOW EKONOMI</div>
+  <div class="tab" onclick="showTab('features')">📋 ANALISIS FITUR</div>
+  <div class="tab" onclick="showTab('bugs')">🐛 BUG & EXPLOIT</div>
+  <div class="tab" onclick="showTab('recommendations')">💡 REKOMENDASI</div>
+  <div class="tab" onclick="showTab('balance')">⚖️ BALANCE REPORT</div>
+</div>
 
-<nav class="nav">
-  <a href="#daftar-fitur">Daftar Fitur</a>
-  <a href="#time-system">Time System</a>
-  <a href="#resource-loop">Resource Loop</a>
-  <a href="#income">Sumber Income</a>
-  <a href="#sink">Money Sink</a>
-  <a href="#gear">Gear System</a>
-  <a href="#pet">Pet System</a>
-  <a href="#crime">Crime System</a>
-  <a href="#gambling">Gambling</a>
-  <a href="#bank">Bank & Transfer</a>
-  <a href="#flowchart">Flowchart</a>
-  <a href="#imbalance">Imbalance</a>
-  <a href="#exploit">Exploit</a>
-  <a href="#rekomendasi">Rekomendasi</a>
-</nav>
+<div class="content">
 
-<!-- =============================== SECTION 1: DAFTAR FITUR =============================== -->
-<div class="section" id="daftar-fitur">
-  <div class="section-header">
-    <span class="icon">📋</span>
-    <h2>DAFTAR LENGKAP FITUR (57 File)</h2>
-  </div>
-  <div class="section-body">
-    <div class="feature-grid">
+<!-- ══════════════════ FLOWCHART ══════════════════ -->
+<div id="tab-flowchart" class="panel-section active">
+  <div class="section-title">🗺️ FLOWCHART ALUR UTAMA GAMEPLAY</div>
 
-      <div class="feature-card good">
-        <h3>🕐 rpg-time-system.js <span class="badge ok">CORE</span></h3>
-        <p>Sistem terpusat: jam (timeMult), hari (dayMult), musim (seasonMult). Formula: finalReward = baseReward × timeMult × dayMult × seasonMult × gearBonus. CAP anti-inflasi ×2.0. Dipakai oleh hampir seluruh modul RPG.</p>
-        <div class="tags"><span class="tag green">Core Engine</span><span class="tag blue">Anti-Inflation Cap</span></div>
+  <div class="flow-wrap">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);margin-bottom:20px;letter-spacing:1px;">
+      ALUR GAMEPLAY LENGKAP — Klik node untuk info detail
+    </div>
+    <div class="flow-grid">
+
+      <!-- COL 1: ENTRY -->
+      <div class="flow-col">
+        <div class="col-header ch-muted">① ENTRY</div>
+        <div class="node node-muted" onclick="showDetail('register')">
+          <div class="n-cmd">📱 .register</div>
+          <div class="n-desc">Daftarkan akun</div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="node node-blue" onclick="showDetail('daily')">
+          <div class="n-cmd">🎁 .daily</div>
+          <div class="n-desc">Klaim hadiah harian</div>
+          <div class="n-badge"><span class="badge badge-blue">24 JAM</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('hourly')">
+          <div class="n-cmd">⚡ .hourly</div>
+          <div class="n-desc">Hadiah per jam</div>
+          <div class="n-badge"><span class="badge badge-blue">1 JAM</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('weekly')">
+          <div class="n-cmd">📅 .weekly/.monthly</div>
+          <div class="n-desc">Hadiah berkala besar</div>
+        </div>
       </div>
 
-      <div class="feature-card">
-        <h3>📅 Absen (daily/hourly/weekly/monthly/yearly)</h3>
-        <p>5 tingkatan absen dengan cooldown berbeda (1 jam / 24 jam / 7 hari / 30 hari / 1 tahun). Daily & hourly menggunakan time system. Monthly & yearly <strong>tidak menggunakan time system</strong> → tidak ada bonus musim/jam.</p>
-        <div class="tags"><span class="tag green">Free Income</span><span class="tag orange">Inconsistency</span></div>
+      <!-- COL 2: RESOURCE GATHERING -->
+      <div class="flow-col" style="min-width:210px;">
+        <div class="col-header ch-green">② GATHERING</div>
+        <div class="node node-green" onclick="showDetail('mulung')">
+          <div class="n-cmd">🗑️ .mulung</div>
+          <div class="n-desc">Botol/Kaleng/Kardus</div>
+          <div class="n-badge"><span class="badge badge-green">30 MNT | No Tool</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('nambang')">
+          <div class="n-cmd">⛏️ .nambang</div>
+          <div class="n-desc">Rock/Coal/Iron/Gold/Diamond</div>
+          <div class="n-badge"><span class="badge badge-yellow">Butuh Pickaxe</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('nebang')">
+          <div class="n-cmd">🪓 .nebang</div>
+          <div class="n-desc">Wood/String</div>
+          <div class="n-badge"><span class="badge badge-green">60 MNT | Axe Opsional</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('mancing')">
+          <div class="n-cmd">🎣 .mancing</div>
+          <div class="n-desc">7 jenis ikan (cap 80)</div>
+          <div class="n-badge"><span class="badge badge-red">⚠️ OP — Paus</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('berburu')">
+          <div class="n-cmd">🏹 .berburu</div>
+          <div class="n-desc">12 jenis hewan (cap 60)</div>
+          <div class="n-badge"><span class="badge badge-yellow">Sword+Armor</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('berkebon')">
+          <div class="n-cmd">🌱 .berkebon</div>
+          <div class="n-desc">5 jenis buah (bibit 100/jenis)</div>
+          <div class="n-badge"><span class="badge badge-yellow">Butuh Pickaxe</span></div>
+        </div>
       </div>
 
-      <div class="feature-card">
-        <h3>🪓 nebang (Menebang Pohon)</h3>
-        <p>Cooldown 60 menit. Stamina min 10. Menghasilkan wood, string, bonus rock. Chance gagal 20% base. Tidak butuh alat (tidak perlu pickaxe/axe). Season: hujan ×1.3, kemarau ×0.9, gugur ×1.2.</p>
-        <div class="tags"><span class="tag blue">Wood Source</span><span class="tag orange">No Tool Required</span></div>
+      <!-- COL 3: COMBAT/ADVENTURE -->
+      <div class="flow-col">
+        <div class="col-header ch-orange">③ COMBAT</div>
+        <div class="node node-orange" onclick="showDetail('hunter')">
+          <div class="n-cmd">⚔️ .hunter</div>
+          <div class="n-desc">13 area, 39 monster</div>
+          <div class="n-badge"><span class="badge badge-red">⚠️ OP — Cap Bug</span></div>
+        </div>
+        <div class="node node-orange" onclick="showDetail('adventure')">
+          <div class="n-cmd">🗺️ .adventure</div>
+          <div class="n-desc">Multi-loot expedition</div>
+          <div class="n-badge"><span class="badge badge-orange">60 MNT | Armor Req</span></div>
+        </div>
+        <div class="node node-red" onclick="showDetail('maling')">
+          <div class="n-cmd">🤫 .maling</div>
+          <div class="n-desc">Mencuri di tempat umum</div>
+          <div class="n-badge"><span class="badge badge-orange">CRIME</span></div>
+        </div>
+        <div class="node node-red" onclick="showDetail('merampok')">
+          <div class="n-cmd">🔪 .merampok</div>
+          <div class="n-desc">Rampok player target</div>
+          <div class="n-badge"><span class="badge badge-orange">CRIME PvP</span></div>
+        </div>
+        <div class="node node-red" onclick="showDetail('membunuh')">
+          <div class="n-cmd">💀 .membunuh</div>
+          <div class="n-desc">Serang+jarah player</div>
+          <div class="n-badge"><span class="badge badge-orange">CRIME PvP</span></div>
+        </div>
+        <div class="node node-muted" onclick="showDetail('ngelonte')">
+          <div class="n-cmd">💋 .ngelonte/.ngewe</div>
+          <div class="n-desc">Income tinggi, cooldown panjang</div>
+          <div class="n-badge"><span class="badge badge-purple">12 JAM</span></div>
+        </div>
       </div>
 
-      <div class="feature-card">
-        <h3>⛏️ nambang (Menambang)</h3>
-        <p>Cooldown 30 menit. Stamina min 40. WAJIB Pickaxe. Menghasilkan rock, coal, iron, gold, diamond. Pickaxe durability berkurang bahkan saat gagal. Season: kemarau ×0.9. Drop gold 35% + dropBonus.</p>
-        <div class="tags"><span class="tag blue">Mineral Source</span><span class="tag red">Durability Drain on Fail</span></div>
+      <!-- COL 4: CRAFTING -->
+      <div class="flow-col">
+        <div class="col-header ch-yellow">④ CRAFTING</div>
+        <div class="node node-yellow" onclick="showDetail('craft')">
+          <div class="n-cmd">🔨 .craft</div>
+          <div class="n-desc">5 tool × 5 tier</div>
+          <div class="n-badge"><span class="badge badge-yellow">Sword/Pick/Rod/Armor/Axe</span></div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="node node-yellow" onclick="showDetail('repair')">
+          <div class="n-cmd">🔧 .repair</div>
+          <div class="n-desc">Money + Material sink</div>
+          <div class="n-badge"><span class="badge badge-green">Diskon Jam Sibuk</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('cook')">
+          <div class="n-cmd">🍳 .cook</div>
+          <div class="n-desc">25 resep masakan</div>
+          <div class="n-badge"><span class="badge badge-orange">Coal Sink</span></div>
+        </div>
+        <div class="node node-green" onclick="showDetail('eat')">
+          <div class="n-cmd">🍽️ .eat</div>
+          <div class="n-desc">Isi stamina (max 300)</div>
+          <div class="n-badge"><span class="badge badge-blue">Tier 1-3 + Buah</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('heal')">
+          <div class="n-cmd">🧪 .heal</div>
+          <div class="n-desc">Isi health (max 200)</div>
+          <div class="n-badge"><span class="badge badge-orange">Potion Sink</span></div>
+        </div>
       </div>
 
-      <div class="feature-card">
-        <h3>🎣 mancing (Memancing)</h3>
-        <p>Cooldown 30 menit. Stamina min 20. WAJIB Fishing Rod. Menghasilkan 7 jenis ikan. Fishing rod multiplier: tier 1=1× sampai tier 5=4×. CAP item per run: tier×8 per jenis, total 80 ekor. Season: semi ×1.2, kemarau ×0.8.</p>
-        <div class="tags"><span class="tag blue">Fish Source</span><span class="tag green">Item Cap Implemented</span></div>
+      <!-- COL 5: ECONOMY -->
+      <div class="flow-col">
+        <div class="col-header ch-blue">⑤ EKONOMI</div>
+        <div class="node node-blue" onclick="showDetail('shop')">
+          <div class="n-cmd">🏪 .shop</div>
+          <div class="n-desc">Beli/jual item dinamis</div>
+          <div class="n-badge"><span class="badge badge-blue">Harga Per Jam</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('pasar')">
+          <div class="n-cmd">🛒 .pasar</div>
+          <div class="n-desc">Jual hewan/ikan dinamis</div>
+          <div class="n-badge"><span class="badge badge-blue">Weekend +50%</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('transfer')">
+          <div class="n-cmd">💸 .transfer</div>
+          <div class="n-desc">Transfer item + pajak</div>
+          <div class="n-badge"><span class="badge badge-yellow">Pajak 2-40%</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('tomoney')">
+          <div class="n-cmd">💱 .tomoney</div>
+          <div class="n-desc">EXP → Money (pajak)</div>
+          <div class="n-badge"><span class="badge badge-orange">Cap 500k/hari</span></div>
+        </div>
+        <div class="node node-blue" onclick="showDetail('nabung')">
+          <div class="n-cmd">🏦 .nabung / .tarik</div>
+          <div class="n-desc">ATM banking system</div>
+        </div>
+        <div class="node node-red" onclick="showDetail('judipvp')">
+          <div class="n-cmd">🎲 .judipvp</div>
+          <div class="n-desc">PvP gambling</div>
+          <div class="n-badge"><span class="badge badge-red">⚠️ Tax Bypass!</span></div>
+        </div>
       </div>
 
-      <div class="feature-card">
-        <h3>🏹 berburu (Berburu Hewan)</h3>
-        <p>Cooldown 60 menit. Stamina min 25, health min 30. WAJIB Sword + Armor. Menghasilkan 12 jenis hewan. Sword×Armor multiplier cap 5.0. CAP total hewan 60/run. Season: gugur ×1.2, hujan ×1.1.</p>
-        <div class="tags"><span class="tag blue">Animal Source</span><span class="tag green">Gear + Cap System</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🌱 berkebon (Berkebun)</h3>
-        <p>Cooldown 30 menit. Stamina min 30. WAJIB Pickaxe. Konsumsi 100 bibit per jenis. Drain bibit meski gagal. Scale panen 0.2–1.0 tergantung jenis bibit. Season semi: +30% bibit kembali. Hujan +8% chance gagal.</p>
-        <div class="tags"><span class="tag blue">Fruit Source</span><span class="tag orange">Bibit Always Consumed</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🗑️ mulung (Memulung)</h3>
-        <p>Cooldown 30 menit. Stamina min 20. Menghasilkan botol, kaleng, kardus, trash. Rare drop diamond/gold (0.5% base + dropBonus). Tidak perlu alat. Season kemarau ×1.2. Paling mudah diakses pemula.</p>
-        <div class="tags"><span class="tag blue">Scrap Source</span><span class="tag green">Beginner Friendly</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🗺️ adventure</h3>
-        <p>Cooldown 60 menit. Health min 80, stamina min 35. WAJIB Armor. Menghasilkan semua jenis item sekaligus: trash, diamond, crate, wood, rock, gold, iron, string, money, exp. Armor multiplier 1×–4×.</p>
-        <div class="tags"><span class="tag purple">Multi-Reward</span><span class="tag blue">High Requirements</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>⚔️ hunter (Berburu Monster)</h3>
-        <p>Cooldown 30 menit. Stamina min 30. WAJIB Sword + Armor. 13 area monster (goblin–dragon), makin tinggi area = reward lebih besar. gearBonus = 1 + (sword×0.2) + (armor×0.15). CAP baseCoins 200.000 anti-inflasi.</p>
-        <div class="tags"><span class="tag purple">Monster Hunt</span><span class="tag green">Area Scaling</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🐾 adventurepet</h3>
-        <p>Cooldown 60 menit. Butuh 5 pet stamina min 20 + total 80. Base uang di-cap: 10.000 + (level × 3.000). XP level-up exponential (1000 × lvl^1.8). Max 5 pet, per run bisa dapat diamond, potion, money.</p>
-        <div class="tags"><span class="tag purple">Pet Income</span><span class="tag green">Anti-Inflation Capped</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🛵 ojekk (Ojek Online)</h3>
-        <p>Cooldown 20 menit. Drain health + stamina. Reward 1.500–6.000 base × time multiplier. Skenario random. Tidak butuh alat/gear. Paling cepat cooldown di antara income aktif.</p>
-        <div class="tags"><span class="tag blue">Quick Income</span><span class="tag green">No Gear Required</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>💋 ngelonte</h3>
-        <p>Cooldown 12 JAM. Stamina drain tinggi (40–65). Health drain 20–45. Base 30k–150k. Chance gagal 25%. Malam ×1.35 bonus. Musim semi ×1.2. High risk–high reward.</p>
-        <div class="tags"><span class="tag orange">High Risk</span><span class="tag purple">High Reward</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🤝 berdagang</h3>
-        <p>Butuh target (mention user). Modal min 1.000 money. Reward 5k–30k base. Target dapat 20% bonus. Anti-loop: cooldown mutual 30 menit. Chance gagal 20%. Modal tidak kembali jika gagal.</p>
-        <div class="tags"><span class="tag blue">Social Income</span><span class="tag green">Anti-Loop</span></div>
-      </div>
-
-      <div class="feature-card critical">
-        <h3>🤫 maling (Mencuri)</h3>
-        <p>Cooldown 30 menit. Chance gagal 30% base. Siang ramai +8% chance gagal, malam sepi –5%. Health min 25. Reward 5k–40k. Pagi jam 06–11 SANGAT berbahaya. TIDAK ada punishment ke target (NPC theft).</p>
-        <div class="tags"><span class="tag orange">Crime</span><span class="tag red">No Victim</span></div>
-      </div>
-
-      <div class="feature-card critical">
-        <h3>🔪 merampok (Merampok Target)</h3>
-        <p>Target user real. Ambil 10–40% uang target. Target kehilangan money + health. Cooldown 60 menit. Chance gagal 35% base. Target harus punya min 10.000 money. Bisa drain kesehatan target.</p>
-        <div class="tags"><span class="tag red">PvP Crime</span><span class="tag orange">Target Money Loss</span></div>
-      </div>
-
-      <div class="feature-card critical">
-        <h3>⚔️ membunuh (Menyerang Target)</h3>
-        <p>Target user real. Ambil 15–50% uang target. Drain health target 40–90. WAJIB sword. Cooldown 60 menit. Chance gagal 30%. Pagi +15% chance gagal. Sword multiplier untuk reward.</p>
-        <div class="tags"><span class="tag red">PvP Combat</span><span class="tag red">High Damage</span></div>
-      </div>
-
-      <div class="feature-card warning">
-        <h3>🎲 judi</h3>
-        <p>Bot roll 0–100, player roll 0–75. Bot SELALU memiliki range lebih tinggi. House edge sangat besar (≈37.5%). Cooldown 5 detik. Tidak ada limit jumlah taruhan per hari. Bisa all-in.</p>
-        <div class="tags"><span class="tag red">Rigged Odds</span><span class="tag orange">No Daily Cap</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🎲 judipvp (PvP Gambling)</h3>
-        <p>Spin 1–100 masing-masing. Fair (sama-sama 1–100). Timeout 1 menit jika tidak direspons. Transfer langsung dari user kalah ke user menang. Tidak ada house cut.</p>
-        <div class="tags"><span class="tag green">Fair Odds</span><span class="tag blue">P2P</span></div>
-      </div>
-
-      <div class="feature-card warning">
-        <h3>🚀 spaceman</h3>
-        <p>Max bet 500k. Multiplier naik 0.1 tiap 1.5 detik. Crash probability: 5% + (mult×0.1) + (bet/100k×0.1). Cashout manual. Bisa menang hingga 5× bet. TIDAK pakai time system — standalone.</p>
-        <div class="tags"><span class="tag orange">High Stakes</span><span class="tag red">No Time Integration</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🔨 craft (Crafting System)</h3>
-        <p>4 alat: sword, pickaxe, fishingrod, armor. 5 tier masing-masing. Tier 1 craft baru, tier 2–5 upgrade. Resep: wood → iron → diamond → gold semakin mahal. Recycle: 100 trash = 10 string.</p>
-        <div class="tags"><span class="tag blue">Progression</span><span class="tag green">Material Sink</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>📦 open (Buka Crate)</h3>
-        <p>5 jenis crate: common, uncommon, mythic, legendary, pet. Zonk chance: 20%/12%/6%/3%/0%. Reward pre-generated array saat load. Pet crate: 2% chance dapat pet baru, sisanya konversi 1000 money.</p>
-        <div class="tags"><span class="tag purple">Loot Box</span><span class="tag orange">Pre-Generated Rewards</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🍳 cook + 🍽️ eat</h3>
-        <p>Cook: 25+ resep, bahan utama (hewan/ikan) + bumbu + coal. Eat: 3 tier stamina recovery (+30~50 / +50~70 / +70~90). Buah: +6~13. MAX stamina 300. Tier premium butuh hewan langka (paus, kepiting).</p>
-        <div class="tags"><span class="tag green">Stamina Recovery</span><span class="tag blue">Material Sink</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>💰 Transfer (tf)</h3>
-        <p>Transfer 60+ jenis item antar user. Pajak dinamis 0%–50% (tier mewah–receh). Pajak naik saat weekend +25%, jam sibuk, dan musim boost. Anti tax-dodge: 3x dalam 1 jam = lock. Simulasi pajak tersedia.</p>
-        <div class="tags"><span class="tag blue">P2P Trade</span><span class="tag green">Tax System</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🏦 Bank / Nabung / Tarik</h3>
-        <p>Money ↔ Bank (ATM). Tidak ada bunga bank. Transfer money antara wallet dan bank. MAX tarik/nabung 99.999.999. Bank tidak bisa langsung ditransfer ke user lain (harus tarik dulu).</p>
-        <div class="tags"><span class="tag green">Safe Storage</span><span class="tag orange">No Interest</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🏪 Shop (Toko)</span></h3>
-        <p>Harga dinamis per jam (seeded random). Weekend naik 1.10–1.45×. Musim aktif mempengaruhi wood/bibit/buah. 40+ item. Bumbu masak hanya bisa dibeli (tidak bisa dijual). Sell harga jauh lebih rendah dari beli.</p>
-        <div class="tags"><span class="tag blue">Marketplace</span><span class="tag green">Dynamic Pricing</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🐾 Pet System (feed/levelup/adventurepet)</h3>
-        <p>5 pet: naga, phonix, griffin, kyubi, centaur. Stamina maks 100. Feed: 1 makanan = +20 stamina. XP exponential untuk level up. Level max 10. Makanan pet dibeli di shop (5000/unit).</p>
-        <div class="tags"><span class="tag purple">Companion</span><span class="tag blue">Passive Income Source</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>🧪 health (Heal)</h3>
-        <p>Potion heal 40–60 HP random per unit. MAX health 200. Potion dari shop (1000/unit), daily, crate. Banyak aktivitas yang drain health (berburu, hunter, membunuh, merampok, ngelonte, ojek).</p>
-        <div class="tags"><span class="tag blue">HP Recovery</span><span class="tag orange">Potion Sink</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>⚙️ durability.js (Handler Before)</h3>
-        <p>Handler before yang berjalan setiap message. Jika durability < 1 maka TURUNKAN tier 1 level (tidak langsung hilang), set durability 30. Berbeda dengan logika di nambang/mancing yang set tier = 0. INKONSISTENSI.</p>
-        <div class="tags"><span class="tag red">Inconsistency</span><span class="tag orange">Different Logic</span></div>
-      </div>
-
-      <div class="feature-card">
-        <h3>💸 Transfer + Pajak</h3>
-        <p>Pajak diamond/gold tertinggi (7–25%). Hewan/ikan 5–22%. Weekend +25%, musim boost +20%, jam sibuk ×1.3. Anti tax-dodge lock 30–60 menit. Pajak hilang begitu saja (tidak masuk kas/sink).</p>
-        <div class="tags"><span class="tag green">Anti-Economy Exploit</span><span class="tag orange">Tax Disappears</span></div>
+      <!-- COL 6: PET -->
+      <div class="flow-col">
+        <div class="col-header ch-purple">⑥ PET</div>
+        <div class="node node-purple" onclick="showDetail('open')">
+          <div class="n-cmd">📦 .open pet</div>
+          <div class="n-desc">2% chance dapat pet</div>
+          <div class="n-badge"><span class="badge badge-purple">Gacha</span></div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="node node-purple" onclick="showDetail('feed')">
+          <div class="n-cmd">🥫 .feed</div>
+          <div class="n-desc">Isi stamina pet</div>
+          <div class="n-badge"><span class="badge badge-orange">5000/makanan</span></div>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="node node-purple" onclick="showDetail('adventurepet')">
+          <div class="n-cmd">🐾 .adventurepet</div>
+          <div class="n-desc">Pet bekerja → money/item</div>
+          <div class="n-badge"><span class="badge badge-blue">1 JAM</span></div>
+        </div>
+        <div class="node node-purple" onclick="showDetail('leveluppet')">
+          <div class="n-cmd">⭐ .leveluppet</div>
+          <div class="n-desc">Level up pet (exp exponential)</div>
+          <div class="n-badge"><span class="badge badge-green">Max Lv 10</span></div>
+        </div>
       </div>
 
     </div>
   </div>
+
+  <!-- LEGEND -->
+  <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:24px;">
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+      <div style="width:14px;height:14px;border-left:3px solid var(--accent);background:var(--panel2);"></div> Entry/Info
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+      <div style="width:14px;height:14px;border-left:3px solid var(--accent3);background:var(--panel2);"></div> Gathering
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+      <div style="width:14px;height:14px;border-left:3px solid var(--accent2);background:var(--panel2);"></div> Combat
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+      <div style="width:14px;height:14px;border-left:3px solid var(--accent4);background:var(--panel2);"></div> Crafting
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+      <div style="width:14px;height:14px;border-left:3px solid var(--red);background:var(--panel2);"></div> Crime/Exploit Risk
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);">
+      <div style="width:14px;height:14px;border-left:3px solid var(--purple);background:var(--panel2);"></div> Pet System
+    </div>
+  </div>
+
+  <!-- DETAIL POPUP -->
+  <div id="detail-panel" style="display:none;background:var(--panel2);border:1px solid var(--accent);border-radius:4px;padding:20px;margin-bottom:24px;">
+    <div id="detail-content"></div>
+    <button onclick="document.getElementById('detail-panel').style.display='none'" style="margin-top:14px;padding:6px 16px;background:transparent;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;font-family:'Space Mono',monospace;font-size:11px;">TUTUP ✕</button>
+  </div>
+
+  <!-- TIME SYSTEM -->
+  <div class="section-title" style="margin-top:24px;">⏰ TIME SYSTEM — Multiplier Formula</div>
+  <div class="flow-wrap">
+    <div style="font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--accent4);text-align:center;padding:16px 0;letter-spacing:2px;">
+      finalReward = baseReward × timeMult × dayMult × seasonMult × gearBonus [CAP ×2.0]
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px;">
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:14px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent);margin-bottom:10px;">🕐 JAM (timeMult)</div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">06-11 Pagi</span><span class="ei-val">×1.35 ⭐</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">12-19 Siang</span><span class="ei-val">×1.00</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">20-23 Malam</span><span class="ei-val">×1.35 ⭐</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">00-05 Subuh</span><span class="ei-val bad">×0.70 ↓</span></div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:14px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent3);margin-bottom:10px;">📅 HARI (dayMult)</div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Sabtu-Minggu</span><span class="ei-val">×1.10–1.45</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Senin-Jumat</span><span class="ei-val">×0.85–1.15</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Senin Extra</span><span class="ei-val bad">Stamina +5 ↓</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Jumat Extra</span><span class="ei-val">Gagal -3% ⬆</span></div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:14px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent2);margin-bottom:10px;">🌍 MUSIM (seasonMult)</div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">🌸 Semi Mar-Mei</span><span class="ei-val">Bibit ×1.4</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">☀️ Kemarau Jun-Agu</span><span class="ei-val">Buah ×1.5</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">🍂 Gugur Sep-Nov</span><span class="ei-val">Hunt ×1.2</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">❄️ Hujan Des-Feb</span><span class="ei-val warn">Adventure ×0.85</span></div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:3px;padding:14px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent4);margin-bottom:10px;">⚙️ GEAR (gearBonus)</div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Sword Tier 5</span><span class="ei-val">×4.0</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Armor Tier 5</span><span class="ei-val">×1.75 (+0.15/tier)</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Hunting Cap</span><span class="ei-val warn">×5.0 (ada bug)</span></div>
+        <div class="econ-item" style="margin:4px 0;"><span class="ei-name">Axe Tier 5</span><span class="ei-val">×2.0 kayu</span></div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- =============================== SECTION 2: TIME SYSTEM =============================== -->
-<div class="section" id="time-system">
-  <div class="section-header">
-    <span class="icon">🕐</span>
-    <h2>ANALISIS: RPG TIME SYSTEM (Core Engine)</h2>
-  </div>
-  <div class="section-body">
-    <div class="two-col">
+<!-- ══════════════════ ECONOMY ══════════════════ -->
+<div id="tab-economy" class="panel-section">
+  <div class="section-title">💰 FLOW EKONOMI RPG</div>
+
+  <div class="sub-title">INCOME vs SINK per Jam (Estimasi Aktif)</div>
+  <div class="flow-wrap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
       <div>
-        <h3 class="sub">Multiplier per Waktu</h3>
-        <div class="stat-row"><div class="stat-label">Pagi [06–11] — timeMult</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:67.5%; background:var(--accent)"></div></div><div class="stat-value">×1.35</div></div>
-        <div class="stat-row"><div class="stat-label">Malam [20–23] — timeMult</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:67.5%; background:var(--accent2)"></div></div><div class="stat-value">×1.35</div></div>
-        <div class="stat-row"><div class="stat-label">Siang [12–19] — timeMult</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:50%; background:var(--blue)"></div></div><div class="stat-value">×1.00</div></div>
-        <div class="stat-row"><div class="stat-label">Dini Hari [00–05] — timeMult</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:35%; background:var(--dim)"></div></div><div class="stat-value">×0.70</div></div>
-        <div class="stat-row"><div class="stat-label">Weekend — dayMult</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:72.5%; background:var(--green)"></div></div><div class="stat-value">×1.10–1.45</div></div>
-        <div class="stat-row"><div class="stat-label">Weekday — dayMult</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:50%; background:var(--muted)"></div></div><div class="stat-value">×0.85–1.15</div></div>
-        <div class="stat-row"><div class="stat-label">Anti-Inflation CAP</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:100%; background:var(--red)"></div></div><div class="stat-value">×2.0 max</div></div>
-      </div>
-      <div>
-        <h3 class="sub">Multiplier per Musim (Contoh: Hunting)</h3>
-        <div class="stat-row"><div class="stat-label">Hujan — hunting</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:55%; background:var(--blue)"></div></div><div class="stat-value">×1.1</div></div>
-        <div class="stat-row"><div class="stat-label">Semi — bibit</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:70%; background:var(--green)"></div></div><div class="stat-value">×1.4</div></div>
-        <div class="stat-row"><div class="stat-label">Kemarau — buah</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:75%; background:var(--accent)"></div></div><div class="stat-value">×1.5</div></div>
-        <div class="stat-row"><div class="stat-label">Gugur — hunting</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:60%; background:var(--accent2)"></div></div><div class="stat-value">×1.2</div></div>
-        <div class="stat-row"><div class="stat-label">Hujan — fishing</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:50%; background:var(--cyan)"></div></div><div class="stat-value">×1.0</div></div>
-        <div class="stat-row"><div class="stat-label">Kemarau — fishing</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:40%; background:var(--red)"></div></div><div class="stat-value">×0.8</div></div>
-        <div class="stat-row"><div class="stat-label">Hujan — wood</div><div class="stat-bar-wrap"><div class="stat-bar" style="width:65%; background:var(--blue)"></div></div><div class="stat-value">×1.3</div></div>
-      </div>
-    </div>
-
-    <div class="warn-box" style="margin-top:1rem">
-      <h4>⚠️ Inkonsistensi: Shop, Transfer, Pasar Implementasi Sendiri</h4>
-      <p>rpg-shop.js, rpg-transfer.js, dan rpg-pasar.js mengimplementasikan fungsi jam/hari/musim <strong>SENDIRI</strong> tanpa mengimport dari rpg-time-system.js. Ini menyebabkan logika bisa berbeda jika ada perubahan. Transfer menggunakan jam 7,8,9,12,13,18,19,20,21 sebagai "sibuk" — berbeda dari time-system yang menggunakan range [06–11] dan [20–23]. Shop menggunakan seeded random berbeda dari time-system.</p>
-    </div>
-
-    <div class="warn-box">
-      <h4>⚠️ Monthly & Yearly Tidak Pakai Time System</h4>
-      <p>rpg-absen-monthly.js dan rpg-absen-yearly.js tidak mengimport dari rpg-time-system.js sama sekali. Reward flat tanpa multiplier jam/musim. Inkonsistensi dengan hourly, daily, dan weekly yang memanfaatkan time system.</p>
-    </div>
-  </div>
-</div>
-
-<!-- =============================== SECTION 3: RESOURCE LOOP =============================== -->
-<div class="section" id="resource-loop">
-  <div class="section-header">
-    <span class="icon">🔄</span>
-    <h2>RESOURCE LOOP & KETERHUBUNGAN ANTAR FITUR</h2>
-  </div>
-  <div class="section-body">
-    <h3 class="sub">Loop Utama Resource</h3>
-    <div class="flow-wrap">
-      <svg class="flow-svg" viewBox="0 0 1100 420" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#7a8394"/>
-          </marker>
-          <marker id="arr-acc" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#f0a500"/>
-          </marker>
-          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#ff4757"/>
-          </marker>
-          <marker id="arr-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <path d="M0,0 L0,6 L8,3 z" fill="#2ed573"/>
-          </marker>
-        </defs>
-
-        <!-- ROW 1: GATHERING -->
-        <!-- nebang -->
-        <rect x="20" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="75" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">🪓 nebang</text>
-        <text x="75" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">wood, string, rock</text>
-
-        <!-- nambang -->
-        <rect x="150" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="205" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">⛏️ nambang</text>
-        <text x="205" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">rock,iron,coal,gold,diamond</text>
-
-        <!-- berkebon -->
-        <rect x="280" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="335" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">🌱 berkebon</text>
-        <text x="335" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">buah (5 jenis)</text>
-
-        <!-- mancing -->
-        <rect x="410" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="465" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">🎣 mancing</text>
-        <text x="465" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">ikan (7 jenis)</text>
-
-        <!-- berburu -->
-        <rect x="540" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="595" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">🏹 berburu</text>
-        <text x="595" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">hewan (12 jenis)</text>
-
-        <!-- mulung -->
-        <rect x="670" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#2ed573" stroke-width="1.5"/>
-        <text x="725" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">🗑️ mulung</text>
-        <text x="725" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">botol,kaleng,kardus,trash</text>
-
-        <!-- adventure -->
-        <rect x="800" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#9c59e8" stroke-width="1.5"/>
-        <text x="855" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#9c59e8">🗺️ adventure</text>
-        <text x="855" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">all items + crates</text>
-
-        <!-- hunter -->
-        <rect x="930" y="30" width="110" height="44" rx="6" fill="#1e2432" stroke="#9c59e8" stroke-width="1.5"/>
-        <text x="985" y="54" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#9c59e8">⚔️ hunter</text>
-        <text x="985" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">money + exp</text>
-
-        <!-- ROW 2: PROCESSING -->
-        <!-- CRAFT -->
-        <rect x="70" y="150" width="110" height="44" rx="6" fill="#1e2432" stroke="#1e90ff" stroke-width="1.5"/>
-        <text x="125" y="174" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#1e90ff">🔨 craft</text>
-        <text x="125" y="186" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">sword/pickaxe/rod/armor</text>
-
-        <!-- COOK -->
-        <rect x="310" y="150" width="110" height="44" rx="6" fill="#1e2432" stroke="#1e90ff" stroke-width="1.5"/>
-        <text x="365" y="174" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#1e90ff">🍳 cook</text>
-        <text x="365" y="186" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">25+ resep masakan</text>
-
-        <!-- SHOP SELL -->
-        <rect x="550" y="150" width="120" height="44" rx="6" fill="#1e2432" stroke="#f0a500" stroke-width="1.5"/>
-        <text x="610" y="174" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#f0a500">🏪 shop/pasar</text>
-        <text x="610" y="186" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">jual → money</text>
-
-        <!-- CRATE -->
-        <rect x="790" y="150" width="110" height="44" rx="6" fill="#1e2432" stroke="#f0a500" stroke-width="1.5"/>
-        <text x="845" y="174" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#f0a500">📦 open crate</text>
-        <text x="845" y="186" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">random reward</text>
-
-        <!-- ROW 3: CONSUMPTION -->
-        <!-- EAT -->
-        <rect x="150" y="270" width="110" height="44" rx="6" fill="#1e2432" stroke="#00d2d3" stroke-width="1.5"/>
-        <text x="205" y="294" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#00d2d3">🍽️ eat</text>
-        <text x="205" y="306" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">stamina recovery</text>
-
-        <!-- GEAR ACTIVITIES -->
-        <rect x="400" y="270" width="160" height="44" rx="6" fill="#1e2432" stroke="#00d2d3" stroke-width="1.5"/>
-        <text x="480" y="294" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#00d2d3">🛡️ gear activities</text>
-        <text x="480" y="306" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">hunting/berburu/hunter</text>
-
-        <!-- HEAL -->
-        <rect x="700" y="270" width="110" height="44" rx="6" fill="#1e2432" stroke="#00d2d3" stroke-width="1.5"/>
-        <text x="755" y="294" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#00d2d3">🧪 heal</text>
-        <text x="755" y="306" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">health recovery</text>
-
-        <!-- ROW 4: STATS -->
-        <rect x="200" y="370" width="170" height="36" rx="6" fill="#0f1218" stroke="#3a4255" stroke-width="1"/>
-        <text x="285" y="390" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#7a8394">📊 STAMINA (max 300)</text>
-        <text x="285" y="402" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#3a4255">dibutuhkan semua aktivitas</text>
-
-        <rect x="500" y="370" width="170" height="36" rx="6" fill="#0f1218" stroke="#3a4255" stroke-width="1"/>
-        <text x="585" y="390" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#7a8394">❤️ HEALTH (max 200)</text>
-        <text x="585" y="402" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#3a4255">dibutuhkan berburu/adventure</text>
-
-        <rect x="800" y="370" width="120" height="36" rx="6" fill="#0f1218" stroke="#3a4255" stroke-width="1"/>
-        <text x="860" y="390" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#7a8394">💰 MONEY</text>
-        <text x="860" y="402" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#3a4255">currency utama</text>
-
-        <!-- ARROWS ROW1 → ROW2 (craft uses wood/iron/diamond) -->
-        <line x1="75" y1="74" x2="105" y2="148" stroke="#2ed573" stroke-width="1" marker-end="url(#arr-green)" opacity="0.6"/>
-        <line x1="205" y1="74" x2="145" y2="148" stroke="#2ed573" stroke-width="1" marker-end="url(#arr-green)" opacity="0.6"/>
-        <!-- berburu/mancing → cook -->
-        <line x1="465" y1="74" x2="380" y2="148" stroke="#2ed573" stroke-width="1" marker-end="url(#arr-green)" opacity="0.6"/>
-        <line x1="595" y1="74" x2="400" y2="148" stroke="#2ed573" stroke-width="1" marker-end="url(#arr-green)" opacity="0.6"/>
-        <!-- semua → pasar/shop sell -->
-        <line x1="465" y1="74" x2="580" y2="148" stroke="#f0a500" stroke-width="1" marker-end="url(#arr-acc)" opacity="0.5" stroke-dasharray="4,3"/>
-        <line x1="595" y1="74" x2="610" y2="148" stroke="#f0a500" stroke-width="1" marker-end="url(#arr-acc)" opacity="0.5" stroke-dasharray="4,3"/>
-        <!-- adventure → crate -->
-        <line x1="855" y1="74" x2="845" y2="148" stroke="#9c59e8" stroke-width="1" marker-end="url(#arr)" opacity="0.6"/>
-        <!-- absen/daily → crate -->
-        <text x="20" y="140" font-family="Space Mono" font-size="8" fill="#7a8394">absen daily/weekly</text>
-        <line x1="75" y1="142" x2="820" y2="162" stroke="#7a8394" stroke-width="1" marker-end="url(#arr)" opacity="0.4" stroke-dasharray="3,3"/>
-
-        <!-- ROW2 → ROW3 (cook → eat) -->
-        <line x1="365" y1="194" x2="240" y2="268" stroke="#1e90ff" stroke-width="1.5" marker-end="url(#arr)"/>
-        <!-- craft → gear activities -->
-        <line x1="125" y1="194" x2="400" y2="268" stroke="#1e90ff" stroke-width="1.5" marker-end="url(#arr)"/>
-        <!-- crate → heal (potion) -->
-        <line x1="845" y1="194" x2="780" y2="268" stroke="#f0a500" stroke-width="1.5" marker-end="url(#arr-acc)"/>
-        <!-- shop sell → money -->
-        <line x1="640" y1="194" x2="810" y2="368" stroke="#f0a500" stroke-width="1" marker-end="url(#arr-acc)" opacity="0.5" stroke-dasharray="4,3"/>
-
-        <!-- ROW3 → STATS -->
-        <line x1="205" y1="314" x2="265" y2="368" stroke="#00d2d3" stroke-width="1.5" marker-end="url(#arr)"/>
-        <line x1="480" y1="314" x2="545" y2="368" stroke="#00d2d3" stroke-width="1.5" marker-end="url(#arr)"/>
-        <line x1="755" y1="314" x2="650" y2="368" stroke="#00d2d3" stroke-width="1.5" marker-end="url(#arr)"/>
-
-        <!-- gear activities → money -->
-        <line x1="560" y1="292" x2="800" y2="380" stroke="#7a8394" stroke-width="1" marker-end="url(#arr)" opacity="0.5" stroke-dasharray="4,3"/>
-
-        <!-- Labels -->
-        <text x="550" y="20" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#7a8394">— — → Uang/Exp</text>
-        <rect x="640" y="12" width="8" height="2" fill="#2ed573"/>
-        <text x="655" y="20" font-family="Space Mono" font-size="9" fill="#7a8394">→ Item Flow</text>
-        <rect x="780" y="12" width="8" height="2" fill="#1e90ff"/>
-        <text x="795" y="20" font-family="Space Mono" font-size="9" fill="#7a8394">→ Proses</text>
-        <rect x="890" y="12" width="8" height="2" fill="#f0a500"/>
-        <text x="905" y="20" font-family="Space Mono" font-size="9" fill="#7a8394">→ Jual/Money</text>
-      </svg>
-    </div>
-
-    <h3 class="sub">Mapping Koneksi Antar Fitur</h3>
-    <table>
-      <tr><th>Fitur</th><th>Membutuhkan</th><th>Menghasilkan</th><th>Bergantung Pada</th></tr>
-      <tr><td>nebang</td><td>stamina 10</td><td>wood, string, rock</td><td>—</td></tr>
-      <tr><td>nambang</td><td>pickaxe, stamina 40</td><td>rock, coal, iron, gold, diamond</td><td>craft → pickaxe</td></tr>
-      <tr><td>berkebon</td><td>pickaxe, bibit 100+, stamina 30</td><td>buah (5 jenis)</td><td>shop → bibit, craft → pickaxe</td></tr>
-      <tr><td>mancing</td><td>fishingrod, stamina 20</td><td>7 jenis ikan</td><td>craft → fishingrod</td></tr>
-      <tr><td>berburu</td><td>sword, armor, stamina 25, health 30</td><td>12 jenis hewan</td><td>craft → sword + armor</td></tr>
-      <tr><td>adventure</td><td>armor, health 80, stamina 35</td><td>semua jenis item + crate</td><td>craft → armor, heal → health</td></tr>
-      <tr><td>hunter</td><td>sword, armor, stamina 30</td><td>money + exp</td><td>craft → sword + armor</td></tr>
-      <tr><td>craft</td><td>wood, rock, iron, diamond, gold, string</td><td>tools (4 jenis, 5 tier)</td><td>nebang, nambang → bahan</td></tr>
-      <tr><td>cook</td><td>hewan/ikan + bumbu + coal</td><td>25+ masakan</td><td>berburu, mancing → bahan; shop → bumbu</td></tr>
-      <tr><td>eat</td><td>makanan/buah</td><td>+stamina (6~90)</td><td>cook → makanan, berkebon → buah</td></tr>
-      <tr><td>heal</td><td>potion</td><td>+health (40~60)</td><td>shop buy potion, daily, crate</td></tr>
-      <tr><td>adventurepet</td><td>pet stamina min 20 total 80</td><td>money, diamond, potion</td><td>feed → pet stamina, open → pet</td></tr>
-      <tr><td>feed (pet)</td><td>makanannaga/phonix/dll</td><td>+20 pet stamina</td><td>shop buy makananpet</td></tr>
-      <tr><td>transfer</td><td>stok item + money (pajak)</td><td>pindah item ke user lain</td><td>semua item gathering</td></tr>
-    </table>
-  </div>
-</div>
-
-<!-- =============================== SECTION 4: EKONOMI =============================== -->
-<div class="section" id="income">
-  <div class="section-header">
-    <span class="icon">💰</span>
-    <h2>ANALISIS EKONOMI: SUMBER INCOME (Money In)</h2>
-  </div>
-  <div class="section-body">
-    <table>
-      <tr><th>Sumber</th><th>Base Range</th><th>Cooldown</th><th>Multiplier Max</th><th>Perkiraan/Jam</th><th>Status</th></tr>
-      <tr><td>hourly</td><td>800–7.000 (free) / 4k–15k (prem)</td><td>1 jam</td><td>×2.0</td><td>14k–30k</td><td><span class="tag green">Stabil</span></td></tr>
-      <tr><td>ojekk</td><td>1.500–6.000</td><td>20 menit</td><td>×2.0</td><td>9k–18k (3×/jam)</td><td><span class="tag green">Efisien</span></td></tr>
-      <tr><td>mulung</td><td>500–5.500 + item sell</td><td>30 menit</td><td>×2.0</td><td>~20k</td><td><span class="tag green">Beginner</span></td></tr>
-      <tr><td>nebang</td><td>1k–9k + wood (sell ~30/unit)</td><td>60 menit</td><td>×2.0</td><td>~25k (wood sell)</td><td><span class="tag green">Baik</span></td></tr>
-      <tr><td>nambang</td><td>3k–18k + mineral sell</td><td>30 menit</td><td>×2.0</td><td>~60k (dengan diamond)</td><td><span class="tag orange">High Variance</span></td></tr>
-      <tr><td>mancing</td><td>500×ikan × rod tier</td><td>30 menit</td><td>×2.0</td><td>~200k (rod 5, pasar)</td><td><span class="tag red">Sangat OP</span></td></tr>
-      <tr><td>berburu</td><td>10k–70k + hewan sell (9k/ekor)</td><td>60 menit</td><td>×2.0</td><td>~300k+ (sword 5)</td><td><span class="tag red">OP</span></td></tr>
-      <tr><td>hunter</td><td>5k–200k (area 13 + gear)</td><td>30 menit</td><td>×2.0</td><td>~400k (max gear)</td><td><span class="tag red">OP Late Game</span></td></tr>
-      <tr><td>ngelonte</td><td>30k–150k</td><td>12 jam</td><td>×2.0</td><td>~180k (perkali)</td><td><span class="tag orange">Medium</span></td></tr>
-      <tr><td>adventure</td><td>10k–70k + semua item</td><td>60 menit</td><td>×2.0</td><td>~150k (armor 5)</td><td><span class="tag orange">Multi-Reward</span></td></tr>
-      <tr><td>adventurepet</td><td>0–200k (5 pet max)</td><td>60 menit</td><td>×2.0</td><td>~200k (5 pet Lv10)</td><td><span class="tag orange">Passive</span></td></tr>
-      <tr><td>daily</td><td>3k–18k (free) / 8k–35k (prem)</td><td>24 jam</td><td>×dayMult</td><td>~30k/hari</td><td><span class="tag green">Baseline</span></td></tr>
-      <tr><td>weekly</td><td>15k–80k (free)</td><td>7 hari</td><td>×dayMult</td><td>~60k/minggu</td><td><span class="tag green">Baseline</span></td></tr>
-      <tr><td>maling</td><td>5k–40k crime</td><td>30 menit</td><td>×2.0</td><td>~40k (risiko tinggi)</td><td><span class="tag orange">Crime</span></td></tr>
-      <tr><td>merampok</td><td>10–40% uang target</td><td>60 menit</td><td>×2.0</td><td>Varies heavily</td><td><span class="tag red">PvP Drain</span></td></tr>
-    </table>
-  </div>
-</div>
-
-<div class="section" id="sink">
-  <div class="section-header">
-    <span class="icon">📤</span>
-    <h2>ANALISIS EKONOMI: MONEY SINK (Money Out)</h2>
-  </div>
-  <div class="section-body">
-    <table>
-      <tr><th>Sink</th><th>Biaya</th><th>Efektivitas Sink</th><th>Catatan</th></tr>
-      <tr><td>shop buy potion</td><td>~1.000/unit (dynamic)</td><td>Medium</td><td>Wajib untuk heal; recurring cost</td></tr>
-      <tr><td>shop buy bibit</td><td>5/unit (sangat murah)</td><td>Rendah</td><td>100 bibit = 500 money saja</td></tr>
-      <tr><td>shop buy limit</td><td>~500/unit</td><td>Rendah</td><td>Limit banyak dari gratis</td></tr>
-      <tr><td>shop buy pet food</td><td>5.000/unit</td><td>Medium</td><td>Recurring jika sering adventurepet</td></tr>
-      <tr><td>shop buy bumbu</td><td>100–400/unit</td><td>Rendah</td><td>Volume rendah</td></tr>
-      <tr><td>shop buy coal</td><td>~1.500/unit</td><td>Medium</td><td>Wajib untuk cook; recurring</td></tr>
-      <tr><td>berdagang modal</td><td>1.000/transaksi</td><td>Sangat Rendah</td><td>Hampir tidak terasa</td></tr>
-      <tr><td>judi (kalah)</td><td>Variable (all-in possible)</td><td>Tinggi</td><td>House edge ~37.5%, sink efektif</td></tr>
-      <tr><td>spaceman (kalah)</td><td>Variable (max 500k)</td><td>Tinggi</td><td>Dapat hilangkan banyak money</td></tr>
-      <tr><td>transfer pajak</td><td>0%–50% dari jumlah</td><td>Medium</td><td>Pajak hilang (tidak ke siapapun)</td></tr>
-      <tr><td>craft (bahan hilang)</td><td>Bahan material</td><td>Medium</td><td>Bahan tidak bisa dikembalikan</td></tr>
-    </table>
-
-    <div class="exploit-box" style="margin-top:1rem">
-      <h4>🚨 MASALAH BESAR: Sink Tidak Cukup vs Income</h4>
-      <p>Income potensial player end-game (berburu + hunter + mancing) bisa mencapai 600k–1M+/jam dengan gear max. Sedangkan biaya terbesar hanya potion (~1k/unit, butuh ~10/sesi = 10k) dan pet food (5k/unit). Total pengeluaran rutin mungkin hanya 50k–100k/hari, sementara income bisa 2–5M+/hari. Ini berpotensi <strong>hyperinflasi currency</strong> bagi player aktif.</p>
-    </div>
-  </div>
-</div>
-
-<!-- =============================== SECTION 5: GEAR SYSTEM =============================== -->
-<div class="section" id="gear">
-  <div class="section-header">
-    <span class="icon">⚔️</span>
-    <h2>ANALISIS: GEAR SYSTEM & DURABILITY</h2>
-  </div>
-  <div class="section-body">
-    <div class="two-col">
-      <div>
-        <h3 class="sub">Tier & Multiplier</h3>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent3);margin-bottom:12px;font-size:14px;">📥 INCOME SOURCES</div>
         <table>
-          <tr><th>Tier</th><th>Sword Mult</th><th>Rod Mult</th><th>Armor Bonus</th><th>Durability</th></tr>
-          <tr><td>1 (Wooden/Leather)</td><td>×1.0</td><td>×1.0</td><td>+15%</td><td>100</td></tr>
-          <tr><td>2 (Stone/Iron)</td><td>×1.5</td><td>×1.5</td><td>+30%</td><td>200</td></tr>
-          <tr><td>3 (Iron/Gold)</td><td>×2.0</td><td>×2.0</td><td>+45%</td><td>400</td></tr>
-          <tr><td>4 (Diamond)</td><td>×3.0</td><td>×3.0</td><td>+60%</td><td>700</td></tr>
-          <tr><td>5 (Netherite)</td><td>×4.0</td><td>×4.0</td><td>+75%</td><td>700</td></tr>
+          <thead><tr><th>Aktivitas</th><th>Cooldown</th><th>Income/Run</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">daily</td><td>24 jam</td><td>3k–35k</td><td class="status-ok">OK</td></tr>
+            <tr><td class="mono">hourly</td><td>1 jam</td><td>800–15k</td><td class="status-ok">OK</td></tr>
+            <tr><td class="mono">mulung</td><td>30 mnt</td><td>500–5.5k</td><td class="status-warn">RENDAH</td></tr>
+            <tr><td class="mono">nambang</td><td>30 mnt</td><td>3k–15k</td><td class="status-ok">OK</td></tr>
+            <tr><td class="mono">nebang</td><td>60 mnt</td><td>1k–8k</td><td class="status-warn">RENDAH</td></tr>
+            <tr><td class="mono">ojek</td><td>20 mnt</td><td>1.5k–6k</td><td class="status-bad">SANGAT RENDAH</td></tr>
+            <tr><td class="mono">berdagang</td><td>30 mnt</td><td>5k–30k</td><td class="status-warn">RENDAH</td></tr>
+            <tr><td class="mono">mancing+jual</td><td>30 mnt</td><td>0–420k</td><td class="status-bad">⚠️ OP</td></tr>
+            <tr><td class="mono">berburu+jual</td><td>60 mnt</td><td>10k–60k</td><td class="status-ok">OK</td></tr>
+            <tr><td class="mono">hunter</td><td>30 mnt</td><td>est. 742k+</td><td class="status-bad">⚠️ KRITIS</td></tr>
+            <tr><td class="mono">adventure</td><td>60 mnt</td><td>10k–60k</td><td class="status-ok">OK</td></tr>
+            <tr><td class="mono">ngelonte</td><td>12 jam</td><td>30k–150k</td><td class="status-ok">OK</td></tr>
+            <tr><td class="mono">adventurepet</td><td>60 mnt</td><td>0–200k</td><td class="status-warn">PERLU MONITOR</td></tr>
+          </tbody>
         </table>
       </div>
       <div>
-        <h3 class="sub">Bahan Craft per Tier</h3>
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--red);margin-bottom:12px;font-size:14px;">📤 MONEY SINKS</div>
         <table>
-          <tr><th>Tool</th><th>Tier 1→2</th><th>Tier 4→5 (Max)</th></tr>
-          <tr><td>Sword</td><td>10W+15Fe</td><td>10Di+5Go</td></tr>
-          <tr><td>Pickaxe</td><td>10W+5R+5Fe+20Str</td><td>10Di+5Go+50Str</td></tr>
-          <tr><td>Fishing Rod</td><td>10W+2Fe+20Str</td><td>10Di+3Go+50Str</td></tr>
-          <tr><td>Armor</td><td>30Fe+2Di</td><td>20Di+15Go</td></tr>
+          <thead><tr><th>Sink</th><th>Estimasi Cost</th><th>Frekuensi</th></tr></thead>
+          <tbody>
+            <tr><td>Coal (masak)</td><td>1.500/unit</td><td>Per memasak</td></tr>
+            <tr><td>Bumbu masak</td><td>100-400/unit</td><td>Per memasak</td></tr>
+            <tr><td>Repair tier 5</td><td>50k-150k</td><td>Per tool aus</td></tr>
+            <tr><td>Craft tier 5</td><td>Material besar</td><td>Sekali</td></tr>
+            <tr><td>Potion heal</td><td>~1k/unit</td><td>Per battle</td></tr>
+            <tr><td>Bibit berkebon</td><td>500/100 bibit</td><td>Per run</td></tr>
+            <tr><td>Feed pet</td><td>125k/sesi 5 pet</td><td>Per adventurepet</td></tr>
+            <tr><td>Transfer pajak</td><td>2-40% nilai</td><td>Per transfer</td></tr>
+            <tr><td>tomoney pajak</td><td>5-20% money</td><td>Per konversi</td></tr>
+            <tr><td>Shop buy limit</td><td>500/limit</td><td>Jika habis</td></tr>
+            <tr><td class="status-bad">MISSING: Pajak Properti</td><td colspan="2">❌ Belum ada!</td></tr>
+          </tbody>
         </table>
-        <p style="font-size:0.75rem; color:var(--muted); margin-top:0.5rem">W=Wood, Fe=Iron, R=Rock, Di=Diamond, Go=Gold, Str=String</p>
-      </div>
-    </div>
 
-    <div class="warn-box" style="margin-top:1rem">
-      <h4>⚠️ Inkonsistensi Durability: rpg-durability.js vs Game Logic</h4>
-      <p>Handler <code>rpg-durability.js</code> (before handler): jika durability &lt; 1 → <strong>turunkan tier 1 level</strong> dan set durability 30. Tapi di <code>nambang.js</code>, <code>mancing.js</code>, <code>berburu.js</code>, <code>hunter.js</code>: jika durability ≤ 0 → <strong>tier langsung jadi 0 (hilang)</strong>. Dua mekanisme yang saling bertabrakan — tergantung timing handler yang berjalan pertama.</p>
-    </div>
-
-    <div class="warn-box">
-      <h4>⚠️ Armor Tier 4 vs Tier 5 — Durability Sama!</h4>
-      <p>Armor tier 4 (Diamond, butuh 10Di+5Go) dan tier 5 (Netherite, butuh 20Di+15Go) memiliki durability yang SAMA yaitu 700. Tidak ada insentif durability untuk upgrade ke tier 5 armor. Hanya bonus armor (+75% vs +60%). Resep tier 5 armor juga jauh lebih mahal tanpa reward sepadan.</p>
-    </div>
-  </div>
-</div>
-
-<!-- =============================== SECTION 6: PET SYSTEM =============================== -->
-<div class="section" id="pet">
-  <div class="section-header">
-    <span class="icon">🐾</span>
-    <h2>ANALISIS: PET SYSTEM</h2>
-  </div>
-  <div class="section-body">
-    <div class="two-col">
-      <div>
-        <h3 class="sub">Pet Stamina & Feed</h3>
-        <ul class="list">
-          <li><strong>Max stamina per pet:</strong> 100</li>
-          <li><strong>1 makanan = +20 stamina</strong> (butuh 5 makanan = full)</li>
-          <li><strong>Biaya feed full:</strong> 5 × 5.000 = 25.000 money (jika beli di shop)</li>
-          <li><strong>Adventure drain stamina:</strong> 15–24/pet per run</li>
-          <li><strong>Rata-rata run:</strong> butuh feed setiap ~5 adventure</li>
-          <li><strong>Biaya operasional per hari</strong> (5 pet, 24 run): ~100k–150k</li>
-        </ul>
-
-        <h3 class="sub" style="margin-top:1rem">XP Level-Up (Exponential)</h3>
-        <table>
-          <tr><th>Level</th><th>XP Needed</th></tr>
-          <tr><td>Lv 1 → 2</td><td>1.000</td></tr>
-          <tr><td>Lv 3 → 4</td><td>6.063</td></tr>
-          <tr><td>Lv 5 → 6</td><td>17.411</td></tr>
-          <tr><td>Lv 7 → 8</td><td>37.869</td></tr>
-          <tr><td>Lv 9 → 10</td><td>68.000 (approx)</td></tr>
-        </table>
-      </div>
-      <div>
-        <h3 class="sub">Income per Adventure Pet (Lv10, 5 Pet)</h3>
-        <ul class="list">
-          <li><strong>Base uang cap Lv10:</strong> 40.000/pet, rata-rata 20.000/pet</li>
-          <li><strong>5 pet:</strong> rata-rata ~100.000/run (sebelum multiplier)</li>
-          <li><strong>Dengan ×2.0 CAP:</strong> max ~200.000/run</li>
-          <li><strong>Cooldown 1 jam:</strong> max ~200k/jam</li>
-          <li><strong>Operasional:</strong> ~25k/run (pet food)</li>
-          <li><strong>Net:</strong> ~175k/jam — tergolong wajar</li>
-        </ul>
-
-        <div class="good-box" style="margin-top:1rem">
-          <h4>✅ Pet System Sudah Dibalance dengan Baik</h4>
-          <p>Base uang per pet di-cap dengan formula yang baik. XP exponential membuat grind level tinggi memakan waktu lama. Biaya feed pet cukup tinggi sebagai money sink. Sistem sudah jauh lebih baik dari versi awal yang bisa menghasilkan 2.5M+/run.</p>
-        </div>
-
-        <div class="warn-box">
-          <h4>⚠️ Dua Sistem XP Bertabrakan</h4>
-          <p><code>leveluppet.js</code> menggunakan formula <code>1000 × level^1.8</code>. <code>adventure-pet.js</code> juga menggunakan formula yang sama setelah fix. Namun jika user lama sudah punya <code>nagaexp</code> yang terlalu besar dari sistem lama (linear), level-up bisa loncat beberapa level sekaligus dalam satu kali <code>adventurepet</code>.</p>
+        <div style="margin-top:16px;padding:14px;background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.3);border-radius:3px;">
+          <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--red);margin-bottom:8px;">⚠️ KESIMPULAN EKONOMI</div>
+          <div style="font-size:12px;line-height:1.7;color:var(--text-muted);">
+            Income > Sink terutama di end-game. Player dengan hunter gear tier 5 bisa earn ~1.4M/jam sedangkan sink terbesar (repair) hanya ~150k. 
+            <strong style="color:var(--red);">Rasio inflasi: 9:1</strong> → hiperinflasi jangka panjang.
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- =============================== SECTION 7: CRIME =============================== -->
-<div class="section" id="crime">
-  <div class="section-header">
-    <span class="icon">🔪</span>
-    <h2>ANALISIS: CRIME SYSTEM (maling / merampok / membunuh)</h2>
-  </div>
-  <div class="section-body">
-    <div class="two-col">
-      <div>
-        <h3 class="sub">Maling (Non-PvP)</h3>
-        <ul class="list">
-          <li>Tidak ada korban langsung (mencuri dari NPC)</li>
-          <li>Reward 5k–40k (×time mult)</li>
-          <li>Chance gagal 30% base, pagi +8%, malam sepi –5%</li>
-          <li>Cooldown 30 menit — sama dengan mulung</li>
-          <li>Tidak ada beda reward yang signifikan vs mulung yang lebih aman</li>
-        </ul>
-        <h3 class="sub" style="margin-top:0.8rem">Merampok + Membunuh (PvP)</h3>
-        <ul class="list">
-          <li>Target user real kehilangan money + health</li>
-          <li>Merampok: ambil 10–40% money target</li>
-          <li>Membunuh: ambil 15–50% money target + sword multiplier</li>
-          <li>Target tidak bisa membela diri secara mekanis</li>
-          <li>Health target minimum: 10 HP (tidak bisa KO total)</li>
-        </ul>
+  <div class="sub-title">FLOW ITEM & RESOURCE</div>
+  <div class="flow-wrap">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);margin-bottom:16px;">
+      CHAIN PRODUKSI ITEM — dari gathering ke konsumsi akhir
+    </div>
+    <div style="display:flex;gap:20px;overflow-x:auto;padding-bottom:16px;">
+      <!-- Wood chain -->
+      <div style="min-width:160px;">
+        <div class="col-header ch-green" style="margin-bottom:8px;">🪵 WOOD CHAIN</div>
+        <div class="node node-green" style="margin:4px 0;"><div class="n-cmd">nebang</div><div class="n-desc">100-1600 wood/run</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-yellow" style="margin:4px 0;"><div class="n-cmd">craft (wood)</div><div class="n-desc">Tier 1-2 tools</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-blue" style="margin:4px 0;"><div class="n-cmd">shop sell wood</div><div class="n-desc">Rp 30/unit (dyn)</div></div>
       </div>
-      <div>
-        <div class="exploit-box">
-          <h4>🚨 EXPLOIT: Farming Money dari Target Kaya</h4>
-          <p>Jika satu player menyimpan banyak uang di <code>money</code> (bukan bank), player lain bisa terus-menerus membunuh/merampok mereka setiap cooldown 60 menit. Tidak ada mekanisme proteksi selain menyimpan di bank. Player pasif bisa di-bully terus-menerus.</p>
-        </div>
-        <div class="warn-box" style="margin-top:0.8rem">
-          <h4>⚠️ Tidak Ada Notifikasi ke Target</h4>
-          <p>Saat dirampok atau dibunuh, target <strong>tidak mendapat notifikasi</strong>. Mereka hanya tahu uang/health mereka berkurang saat cek profil/bank. Pengalaman yang sangat buruk untuk player yang menjadi korban berulang.</p>
-        </div>
-        <div class="warn-box" style="margin-top:0.8rem">
-          <h4>⚠️ Tidak Ada Perlindungan "Baru Join"</h4>
-          <p>Player baru yang baru punya money dari daily langsung bisa menjadi target merampok/membunuh selama mereka punya money &gt;10.000 atau health &gt;10.</p>
-        </div>
+      <!-- Iron chain -->
+      <div style="min-width:160px;">
+        <div class="col-header ch-green" style="margin-bottom:8px;">⛓️ IRON CHAIN</div>
+        <div class="node node-green" style="margin:4px 0;"><div class="n-cmd">nambang/adventure</div><div class="n-desc">5-30 iron/run</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-yellow" style="margin:4px 0;"><div class="n-cmd">craft/repair</div><div class="n-desc">Tier 1-3 tools</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-blue" style="margin:4px 0;"><div class="n-cmd">shop sell iron</div><div class="n-desc">Rp 250/unit</div></div>
+      </div>
+      <!-- Diamond chain -->
+      <div style="min-width:160px;">
+        <div class="col-header ch-blue" style="margin-bottom:8px;">💎 DIAMOND CHAIN</div>
+        <div class="node node-green" style="margin:4px 0;"><div class="n-cmd">nambang/adventure</div><div class="n-desc">20% chance/run</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-yellow" style="margin:4px 0;"><div class="n-cmd">craft tier 3-5</div><div class="n-desc">3-20 diamond/upgrade</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-blue" style="margin:4px 0;"><div class="n-cmd">shop sell diamond</div><div class="n-desc">Rp 2.200/unit</div></div>
+      </div>
+      <!-- Sampah chain -->
+      <div style="min-width:160px;">
+        <div class="col-header ch-muted" style="margin-bottom:8px;">🗑️ SAMPAH CHAIN</div>
+        <div class="node node-muted" style="margin:4px 0;"><div class="n-cmd">mulung/maling</div><div class="n-desc">Botol/Kaleng/Kardus</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-purple" style="margin:4px 0;"><div class="n-cmd">feedkaleng</div><div class="n-desc">Kaleng → Pet Stamina</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-yellow" style="margin:4px 0;"><div class="n-cmd">craft string</div><div class="n-desc">100 Trash → 10 String</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-blue" style="margin:4px 0;"><div class="n-cmd">shop sell</div><div class="n-desc">Botol/Kaleng Rp22</div></div>
+      </div>
+      <!-- Animal chain -->
+      <div style="min-width:160px;">
+        <div class="col-header ch-orange" style="margin-bottom:8px;">🐾 HEWAN CHAIN</div>
+        <div class="node node-green" style="margin:4px 0;"><div class="n-cmd">berburu</div><div class="n-desc">12 jenis hewan</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-yellow" style="margin:4px 0;"><div class="n-cmd">cook</div><div class="n-desc">+ bumbu + coal</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-green" style="margin:4px 0;"><div class="n-cmd">eat</div><div class="n-desc">+30-90 stamina</div></div>
+        <div class="arrow">OR ↓</div>
+        <div class="node node-blue" style="margin:4px 0;"><div class="n-cmd">pasar jual</div><td></td><div class="n-desc">9k-13k/ekor weekend</div></div>
+      </div>
+      <!-- Ikan chain -->
+      <div style="min-width:160px;">
+        <div class="col-header ch-blue" style="margin-bottom:8px;">🐟 IKAN CHAIN</div>
+        <div class="node node-green" style="margin:4px 0;"><div class="n-cmd">mancing</div><div class="n-desc">7 jenis ikan</div></div>
+        <div class="arrow">↓</div>
+        <div class="node node-red" style="margin:4px 0;"><div class="n-cmd">pasar jual paus</div><div class="n-desc">7k-10.5k/ekor ⚠️</div></div>
+        <div class="arrow">OR ↓</div>
+        <div class="node node-yellow" style="margin:4px 0;"><div class="n-cmd">cook pausbakar</div><div class="n-desc">Tier 3 (+70-90 stamina)</div></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- =============================== SECTION 8: GAMBLING =============================== -->
-<div class="section" id="gambling">
-  <div class="section-header">
-    <span class="icon">🎲</span>
-    <h2>ANALISIS: GAMBLING SYSTEM</h2>
+<!-- ══════════════════ FEATURES ══════════════════ -->
+<div id="tab-features" class="panel-section">
+  <div class="section-title">📋 ANALISIS FITUR LENGKAP</div>
+
+  <table style="margin-bottom:24px;">
+    <thead>
+      <tr>
+        <th>Fitur</th>
+        <th>Cooldown</th>
+        <th>Syarat</th>
+        <th>Output Utama</th>
+        <th>Dependensi</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="mono">.daily</td><td>24 jam</td><td>—</td><td>money, limit, item bonus</td><td>time-system</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.hourly</td><td>1 jam</td><td>limit</td><td>EXP, money</td><td>time-system</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.weekly</td><td>7 hari</td><td>limit</td><td>EXP, money, limit, crate</td><td>time-system</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.monthly</td><td>30 hari</td><td>limit</td><td>besar, monthly mult</td><td>getMonthlyBonus</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.yearly</td><td>1 tahun</td><td>limit</td><td>terbesar, yearly mult</td><td>getYearlyBonus</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.mulung</td><td>30 mnt</td><td>stamina≥20</td><td>botol/kaleng/kardus, money</td><td>time-system</td><td class="status-warn">RENDAH REWARD</td></tr>
+      <tr><td class="mono">.nambang</td><td>30 mnt</td><td>pickaxe + stamina≥40</td><td>rock/coal/iron/gold/diamond</td><td>pickaxe, durability-helper</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.nebang</td><td>60 mnt</td><td>stamina≥10</td><td>wood/string</td><td>axe (opsional), durability-helper</td><td class="status-warn">Gagal: Axe tidak drain</td></tr>
+      <tr><td class="mono">.mancing</td><td>30 mnt</td><td>fishingrod + stamina≥20</td><td>7 ikan (cap 80)</td><td>fishingrod, durability-helper</td><td class="status-bad">OP: Paus tier 5</td></tr>
+      <tr><td class="mono">.berburu</td><td>60 mnt</td><td>sword+armor+stamina≥25+health≥30</td><td>12 hewan (cap 60)</td><td>sword/armor, durability-helper</td><td class="status-ok">BAIK (double print bug)</td></tr>
+      <tr><td class="mono">.berkebon</td><td>30 mnt</td><td>pickaxe+bibit≥100+stamina≥30</td><td>buah, money, EXP</td><td>pickaxe, bibit (shop)</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.hunter</td><td>30 mnt</td><td>sword+armor+stamina≥30</td><td>money, EXP</td><td>sword/armor, durability-helper</td><td class="status-bad">OP: Cap bug, 742k/run</td></tr>
+      <tr><td class="mono">.adventure</td><td>60 mnt</td><td>armor+health≥80+stamina≥35</td><td>banyak item + money + EXP</td><td>armor, durability-helper</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.maling</td><td>30 mnt</td><td>stamina, health≥25</td><td>money, botol/kaleng/kardus</td><td>time-system</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.merampok</td><td>60 mnt</td><td>target money≥10k</td><td>% uang target</td><td>target user data</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.membunuh</td><td>60 mnt</td><td>sword+stamina≥40+health≥50</td><td>% uang target + EXP</td><td>sword, target user</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.ngelonte</td><td>12 jam</td><td>stamina, health≥20</td><td>30k-150k money</td><td>time-system</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.ojek</td><td>20 mnt</td><td>stamina, health≥10</td><td>1.5k-6k</td><td>time-system</td><td class="status-bad">TERLALU RENDAH</td></tr>
+      <tr><td class="mono">.berdagang</td><td>30 mnt</td><td>mention target, modal 1000</td><td>5k-30k + 20% ke target</td><td>target user, time-system</td><td class="status-warn">RENDAH</td></tr>
+      <tr><td class="mono">.craft</td><td>—</td><td>material sesuai tier</td><td>tool (5 jenis, 5 tier)</td><td>material items</td><td class="status-ok">BAIK (diamond tier1 issue)</td></tr>
+      <tr><td class="mono">.repair</td><td>—</td><td>money + material</td><td>durability FULL</td><td>money, material, time-system</td><td class="status-ok">BAIK (diskon jam sibuk)</td></tr>
+      <tr><td class="mono">.cook</td><td>—</td><td>hewan/ikan + bumbu + coal</td><td>25 jenis masakan</td><td>bahan mentah, bumbu (shop), coal</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.eat</td><td>—</td><td>stok makanan</td><td>+stamina (max 300)</td><td>makanan inventory</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.heal</td><td>—</td><td>stok potion</td><td>+health (max 200)</td><td>potion inventory</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.shop</td><td>—</td><td>money</td><td>item beli/jual dinamis</td><td>time-system (harga)</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.pasar</td><td>—</td><td>hewan/ikan</td><td>money (harga dinamis)</td><td>time-system, musim</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.transfer</td><td>—</td><td>item + target</td><td>item pindah - pajak</td><td>time-system (pajak)</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.tomoney</td><td>4 jam</td><td>EXP ≥ butuh</td><td>money (pajak + rate)</td><td>time-system (rate)</td><td class="status-ok">BAIK (daily cap 500k)</td></tr>
+      <tr><td class="mono">.judi</td><td>5 detik</td><td>money ≥ taruhan</td><td>×2 taruhan atau loss</td><td>—</td><td class="status-warn">House advantage: bot roll 0-100, player 0-75</td></tr>
+      <tr><td class="mono">.judipvp</td><td>—</td><td>money ≥ bet, target ok</td><td>transfer money - 0 pajak</td><td>target user</td><td class="status-bad">EXPLOIT: bypass pajak transfer</td></tr>
+      <tr><td class="mono">.spaceman</td><td>—</td><td>money ≥ bet (max 500k)</td><td>×1-5 bet atau 0</td><td>—</td><td class="status-ok">BAIK (anti-zombie refund)</td></tr>
+      <tr><td class="mono">.open</td><td>8 detik</td><td>crate ≥ jumlah buka</td><td>item random per tier</td><td>—</td><td class="status-ok">BAIK (zonk mechanic)</td></tr>
+      <tr><td class="mono">.feed</td><td>—</td><td>pet + makanan pet</td><td>stamina pet penuh</td><td>makanan pet (shop)</td><td class="status-ok">BAIK</td></tr>
+      <tr><td class="mono">.feedkaleng</td><td>—</td><td>pet + kaleng</td><td>+10 stamina per kaleng</td><td>kaleng (mulung)</td><td class="status-ok">BAIK (dual use kaleng)</td></tr>
+      <tr><td class="mono">.adventurepet</td><td>60 mnt</td><td>pet + total stamina≥80</td><td>money/potion/diamond/EXP</td><td>pet, time-system</td><td class="status-ok">BAIK (cap ×2.0)</td></tr>
+      <tr><td class="mono">.leveluppet</td><td>—</td><td>—</td><td>info + trigger levelup</td><td>adventure-pet exp</td><td class="status-ok">BAIK (exponential XP)</td></tr>
+      <tr><td class="mono">.giveaway</td><td>—</td><td>money ≥ hadiah</td><td>redistribusi money</td><td>—</td><td class="status-warn">Bug: Host bisa join sendiri</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══════════════════ BUGS ══════════════════ -->
+<div id="tab-bugs" class="panel-section">
+  <div class="section-title">🐛 BUG, EXPLOIT & INKONSISTENSI</div>
+
+  <div class="alert alert-red">
+    <div class="alert-title">🔴 KRITIS #1 — Hunter Money Cap Tidak Efektif</div>
+    <strong>File:</strong> rpg-hunter.js<br>
+    <strong>Masalah:</strong> <code>Math.min(baseCoins, 200000)</code> di-apply sebelum multiplier. Final money = cap × gearBonus × timeMult × dayMult.<br>
+    <strong>Worst case:</strong> 200.000 × 2.75 × 1.35 × 1.45 = ~1.077.300/30 mnt<br>
+    <strong>Fix:</strong> Pindah <code>Math.min()</code> ke setelah semua multiplier, atau cap ke 50.000 sebelum multiplier.
   </div>
-  <div class="section-body">
-    <div class="two-col">
-      <div>
-        <div class="exploit-box">
-          <h4>🚨 JUDI: House Edge Tersembunyi yang Masif</h4>
-          <p>Bot roll <code>Math.random() * 101</code> (0–100). Player roll <code>Math.random() * 75</code> (0–75). Bot menang jika rollBot &gt; rollPlayer. Probabilitas: P(bot menang) ≈ 55–60%, P(player menang) ≈ 40–45%. Ini <strong>bukan 50/50</strong>. Player yang all-in pasti akan kehilangan uang dalam jangka panjang.</p>
+
+  <div class="alert alert-red">
+    <div class="alert-title">🔴 KRITIS #2 — Mancing Paus OP</div>
+    <strong>File:</strong> rpg-mancing.js<br>
+    <strong>Masalah:</strong> Rod tier 5 (cap per jenis = 40), paus bisa 40/run. Harga paus weekend: ~7.000-10.500. 40×10.500 = 420.000/30 mnt.<br>
+    <strong>Fix:</strong> Batasi paus maksimum 3-5/run terlepas dari tier rod. Atau turunkan total fish cap ke 30 dari 80.
+  </div>
+
+  <div class="alert alert-red">
+    <div class="alert-title">🔴 KRITIS #3 — JudiPvP Bypass Pajak Transfer</div>
+    <strong>File:</strong> rpg-judipvp.js, rpg-judipvp_ans.js<br>
+    <strong>Masalah:</strong> Money berpindah antar player tanpa pajak apapun. 2 akun bisa saling judipvp untuk transfer uang bebas pajak. Tidak ada limit bet harian.<br>
+    <strong>Fix:</strong> Tambahkan "pajak kemenangan" 10% dari selisih yang berpindah. Batasi bet PvP maksimum 100.000/hari per pasangan.
+  </div>
+
+  <div class="alert alert-yellow">
+    <div class="alert-title">🟡 MAJOR #4 — Tidak Ada Level Gating</div>
+    <strong>Masalah:</strong> Player bisa langsung akses semua aktivitas combat dari level 1. Jika dapat material dari teman, bisa langsung tier 5 tanpa grind.<br>
+    <strong>Fix:</strong> Tambahkan minimum level: hunter (lv 10), berburu (lv 5), membunuh (lv 15), adventure (lv 8).
+  </div>
+
+  <div class="alert alert-yellow">
+    <div class="alert-title">🟡 MAJOR #5 — Ojek Terlalu Tidak Rewarding</div>
+    <strong>Masalah:</strong> 1.500-6.000 per 20 menit + health drain vs hunter 742k+/30 mnt. Ojek akan mati tidak ada yang pakai.<br>
+    <strong>Fix:</strong> Naikkan base money 3-4x (4.500-24.000), hapus health drain untuk ojek.
+  </div>
+
+  <div class="alert alert-yellow">
+    <div class="alert-title">🟡 MAJOR #6 — Inkonsistensi Nebang: Axe Tidak Aus Saat Gagal</div>
+    <strong>File:</strong> rpg-nebang.js vs rpg-berburu.js, rpg-berkebon.js<br>
+    <strong>Masalah:</strong> Berburu dan berkebon drain tool durability saat gagal. Nebang TIDAK drain axe saat gagal.<br>
+    <strong>Fix:</strong> Tambahkan axe drain 5-15 durability saat nebang gagal.
+  </div>
+
+  <div class="alert alert-yellow">
+    <div class="alert-title">🟡 MAJOR #7 — Armor Tier 1 Butuh Diamond</div>
+    <strong>File:</strong> rpg-craft.js<br>
+    <strong>Masalah:</strong> Armor tier 1: 30 iron + 2 diamond. Diamond sangat sulit untuk pemula (20% chance dari nambang, butuh pickaxe dulu).<br>
+    <strong>Fix:</strong> Tier 1 armor: 40 iron + 10 rock (tanpa diamond). Diamond masuk dari tier 2 ke atas.
+  </div>
+
+  <div class="alert alert-blue">
+    <div class="alert-title">🔵 MINOR #8 — Giveaway Host Bisa Join Sendiri</div>
+    <strong>File:</strong> rpg-giveawaymoney.js<br>
+    <strong>Fix:</strong> Tambahkan validasi <code>if (m.sender === gw.host) return m.reply("Host tidak bisa join giveaway sendiri")</code>
+  </div>
+
+  <div class="alert alert-blue">
+    <div class="alert-title">🔵 MINOR #9 — Double Print Durability di Mancing & Berburu</div>
+    <strong>File:</strong> rpg-mancing.js (baris 183-184), rpg-berburu.js (baris 170-171)<br>
+    <strong>Fix:</strong> Hapus satu dari dua baris duplikat yang menampilkan <code>Durability Armor/Rod : -${loss}</code>
+  </div>
+
+  <div class="alert alert-blue">
+    <div class="alert-title">🔵 MINOR #10 — Daily Handler Tidak Ada handler.limit</div>
+    <strong>File:</strong> rpg-absen-daily.js<br>
+    <strong>Masalah:</strong> weekly/monthly/yearly punya <code>handler.limit = true</code>, daily tidak.<br>
+    <strong>Fix:</strong> Tambahkan <code>handler.limit = true</code>
+  </div>
+
+  <div class="alert alert-blue">
+    <div class="alert-title">🔵 MINOR #11 — Stamina Minimum Nebang Terlalu Rendah (10)</div>
+    <strong>File:</strong> rpg-nebang.js<br>
+    <strong>Fix:</strong> Naikkan ke 15-20 untuk konsistensi.
+  </div>
+</div>
+
+<!-- ══════════════════ RECOMMENDATIONS ══════════════════ -->
+<div id="tab-recommendations" class="panel-section">
+  <div class="section-title">💡 REKOMENDASI SINK & INCOME BARU</div>
+
+  <div class="sub-title">A. SINK BARU</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title" style="color:var(--red);">A1. 🏠 Pajak Properti Harian</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Jika money > 1.000.000, kena 0.5%/hari dari money (bukan bank). Bank aman.<br><br>
+        <strong>Tujuan:</strong> Drain money idle dari player kaya.<br>
+        <strong>Dampak:</strong> Mendorong player nabung ke bank atau belanja aktif.<br>
+        <strong>Terhubung ke:</strong> nabung/tarik, bank.<br>
+        <strong>Risiko:</strong> Player selalu nabung semua → bank perlu sink-nya sendiri.<br>
+        <strong>Tidak merusak balance existing.</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent4);">A2. 🔩 Biaya Pemeliharaan Tool Tier Tinggi</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Tool tier 4-5 butuh 1-3 iron/diamond per 24 jam. Tidak dipenuhi = reward aktivitas -10%.<br><br>
+        <strong>Tujuan:</strong> Jaga demand material constant di end-game.<br>
+        <strong>Dampak:</strong> Iron dan diamond selalu dibutuhkan, tidak menumpuk.<br>
+        <strong>Terhubung ke:</strong> nambang, craft, semua aktivitas gear.<br>
+        <strong>Risiko:</strong> Player downgrade tool sementara → perlu grace period.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent2);">A3. 🌾 Biaya Sewa Lahan Berkebon</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Setiap run berkebon potong 1.000-5.000 money sebagai "sewa lahan".<br><br>
+        <strong>Tujuan:</strong> Berkebon jadi punya cost, bukan hanya bibit.<br>
+        <strong>Dampak:</strong> Profitability berkebon sedikit turun. Money sink kecil tapi konsisten.<br>
+        <strong>Risiko exploit:</strong> Tidak ada — terlalu kecil.<br>
+        <strong>Tidak merusak balance.</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--purple);">A4. 💳 Biaya Crafting Tier Tinggi</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Upgrade tier 4 = +50.000 money, tier 5 = +150.000 money (one-time).<br><br>
+        <strong>Tujuan:</strong> End-game gear jadi milestone yang butuh investasi.<br>
+        <strong>Dampak:</strong> Tier 5 menjadi achievement yang lebih berarti.<br>
+        <strong>Terhubung ke:</strong> craft, semua money sources.<br>
+        <strong>Tidak membuat fitur lain tidak relevan.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-title">B. INCOME BARU</div>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title" style="color:var(--accent3);">B1. 📜 Daily Quest System</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> 3 quest harian random (mudah/sedang/susah). Contoh: "Mulung 3x", "Jual 100 ikan", "Repair 1 tool". Reward 10k-50k + 5k-20k EXP.<br><br>
+        <strong>Tujuan:</strong> Dorong variety aktivitas, kurangi single-loop farming.<br>
+        <strong>Dampak ekonomi:</strong> Income kecil, tidak inflationary.<br>
+        <strong>Risiko:</strong> Jika quest terlalu mudah → income gratis. Perlu quest yang sedikit challenging.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent);">B2. 🔥 Activity Diversity Bonus</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Jika 5 jenis aktivitas berbeda dilakukan dalam 24 jam → bonus +20% income untuk 2 jam.<br><br>
+        <strong>Tujuan:</strong> Reward player yang mengeksplorasi banyak fitur.<br>
+        <strong>Dampak:</strong> Mendorong mulung/ojek/berkebon yang selama ini diabaikan.<br>
+        <strong>Risiko:</strong> Player aktif sudah dapat banyak income, ini hanya bonus kecil.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent3);">B3. 🐄 Passive Livestock Income</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Setiap 6 jam, jika kandang > 50 hewan → dapat +500-2.000 money otomatis.<br><br>
+        <strong>Tujuan:</strong> Kandang jadi berguna, bukan hanya display.<br>
+        <strong>Dampak:</strong> Incentivize koleksi hewan, bukan jual semua segera.<br>
+        <strong>Terhubung ke:</strong> berburu, kandang.<br>
+        <strong>Cap:</strong> Max 5.000/hari dari passive agar tidak inflationary.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--accent4);">B4. 🎪 Event Musiman Mingguan</div>
+      <div class="card-body">
+        <strong>Mekanisme:</strong> Random event di window musim tertentu (±3 jam). Contoh: "Festival Panen" → berkebon ×2.0 selama 3 jam.<br><br>
+        <strong>Tujuan:</strong> FOMO positif untuk mendorong engagement.<br>
+        <strong>Dampak:</strong> Income temporary, tidak merusak jangka panjang.<br>
+        <strong>Risiko:</strong> Jika jadwal diketahui → bisa dipersiapkan. Buat benar-benar random.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ BALANCE ══════════════════ -->
+<div id="tab-balance" class="panel-section">
+  <div class="section-title">⚖️ BALANCE REPORT — SCORING PER FITUR</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+    <div>
+      <div class="sub-title">📈 INCOME RATIO (vs. Standar 30k/jam)</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">hunter (tier 5)</span><span class="status-bad">1.484k/jam (4950%)</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--red);"></div></div>
         </div>
-        <div class="good-box" style="margin-top:0.8rem">
-          <h4>✅ judipvp: Fair</h4>
-          <p>Kedua player spin 1–100. Transfer langsung. Tidak ada house cut. Ini fair dan tidak ada yang curang secara mekanis.</p>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">mancing paus (tier 5)</span><span class="status-bad">840k/jam (2800%)</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--red);"></div></div>
         </div>
-      </div>
-      <div>
-        <div class="warn-box">
-          <h4>⚠️ Spaceman: Tidak Ada Money Sink Efektif</h4>
-          <p>Spaceman memiliki crash probability yang meningkat seiring multiplier naik, tapi dengan bet kecil dan timing cashout yang tepat, pemain bisa profit konsisten. Tidak ada batasan frekuensi dan tidak menggunakan time system. Bisa menjadi sumber income alternatif yang tidak terintegrasi.</p>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">ngelonte</span><span class="status-warn">30-150k/12jam (~10k/jam)</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:33%;background:var(--accent4);"></div></div>
         </div>
-        <div class="warn-box" style="margin-top:0.8rem">
-          <h4>⚠️ Tidak Ada Batasan Daily Judi</h4>
-          <p>Pemain bisa berjudi tanpa batas setiap 5 detik. Jika ada money melimpah (dari hunting/berburu), bisa langsung dihabiskan di judi. Tidak ada cool-down yang cukup atau batasan harian.</p>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">berburu + pasar</span><span class="status-ok">~50k/jam</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:45%;background:var(--accent3);"></div></div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- =============================== SECTION 9: BANK & TRANSFER =============================== -->
-<div class="section" id="bank">
-  <div class="section-header">
-    <span class="icon">🏦</span>
-    <h2>ANALISIS: BANK, TRANSFER & PAJAK</h2>
-  </div>
-  <div class="section-body">
-    <div class="two-col">
-      <div>
-        <h3 class="sub">Sistem Pajak Transfer</h3>
-        <table>
-          <tr><th>Tier</th><th>Item</th><th>Rate Base</th><th>Max (Weekend+Musim)</th></tr>
-          <tr><td>💎 Mewah</td><td>diamond, gold</td><td>15–40%</td><td>≈50%</td></tr>
-          <tr><td>🔥 Mahal</td><td>hewan, ikan</td><td>10–35%</td><td>≈50%</td></tr>
-          <tr><td>🟣 Medium</td><td>mythic, legendary, iron, makanan</td><td>7–22%</td><td>≈33%</td></tr>
-          <tr><td>🟢 Murah</td><td>common, wood, buah, bibit</td><td>6–15%</td><td>≈22%</td></tr>
-          <tr><td>♻️ Receh</td><td>botol, kardus, trash, potion</td><td>2–10%</td><td>≈15%</td></tr>
-        </table>
-      </div>
-      <div>
-        <div class="warn-box">
-          <h4>⚠️ Pajak Hilang — Tidak Masuk Ke Mana Pun</h4>
-          <p>Ketika pajak transfer dikenakan, money/item yang dipotong langsung hilang dari sistem. Tidak ada "kas negara", tidak ada redistribusi. Ini seharusnya berfungsi sebagai deflasi namun mekanismenya tidak transparan ke pemain.</p>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">adventure</span><span class="status-ok">~40k/jam</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:40%;background:var(--accent3);"></div></div>
         </div>
-        <div class="good-box" style="margin-top:0.8rem">
-          <h4>✅ Anti Tax-Dodge System Baik</h4>
-          <p>Sistem deteksi dodge: 3x transfer bebas pajak dalam 1 jam → lock. Dipisahkan antara counter transaksi bebas pajak vs kena pajak. Ini mencegah pemain memecah transfer besar menjadi kecil-kecil untuk menghindari pajak.</p>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">nambang</span><span class="status-ok">~20k/jam (+ material)</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:30%;background:var(--accent3);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">berdagang</span><span class="status-warn">~20k/jam</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:28%;background:var(--accent4);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">mulung</span><span class="status-warn">~6k/jam</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:15%;background:var(--accent4);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span class="mono">ojek</span><span class="status-bad">~10k/jam (rendah)</span></div>
+          <div class="prog-bar"><div class="prog-fill" style="width:12%;background:var(--red);"></div></div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+    <div>
+      <div class="sub-title">🎯 SYSTEM SCORE CARD</div>
+      <table>
+        <thead><tr><th>Aspek</th><th>Score</th><th>Keterangan</th></tr></thead>
+        <tbody>
+          <tr><td>Time System Integration</td><td class="status-ok">9/10</td><td>Sangat baik, semua aktivitas terintegrasi</td></tr>
+          <tr><td>Durability System</td><td class="status-ok">8/10</td><td>Tier-drop mechanic menarik</td></tr>
+          <tr><td>Economy Balance</td><td class="status-bad">4/10</td><td>Hunter/mancing OP, ojek mati</td></tr>
+          <tr><td>Anti-Exploit</td><td class="status-warn">6/10</td><td>Transfer pajak bagus, tapi judipvp bypass</td></tr>
+          <tr><td>Progression System</td><td class="status-warn">5/10</td><td>Tidak ada level gating</td></tr>
+          <tr><td>Feature Variety</td><td class="status-ok">9/10</td><td>54 fitur, sangat variatif</td></tr>
+          <tr><td>Money Sinks</td><td class="status-warn">5/10</td><td>Kurang sink, income >> sink</td></tr>
+          <tr><td>Pet System</td><td class="status-ok">7/10</td><td>Bagus, exp exponential sudah konsisten</td></tr>
+          <tr><td>Dynamic Pricing</td><td class="status-ok">8/10</td><td>Seeded random per jam sangat baik</td></tr>
+          <tr><td>Code Consistency</td><td class="status-warn">6/10</td><td>Beberapa inkonsistensi minor</td></tr>
+          <tr><td><strong>TOTAL SCORE</strong></td><td class="status-warn"><strong>67/100</strong></td><td>Potensial tinggi, perlu 5-7 fix</td></tr>
+        </tbody>
+      </table>
 
-<!-- =============================== SECTION 10: FLOWCHART UTAMA =============================== -->
-<div class="section" id="flowchart">
-  <div class="section-header">
-    <span class="icon">📊</span>
-    <h2>FLOWCHART: ALUR EKONOMI UTAMA</h2>
-  </div>
-  <div class="section-body">
-    <div class="flow-wrap">
-      <svg class="flow-svg" viewBox="0 0 1100 600" xmlns="http://www.w3.org/2000/svg" style="min-width:1100px">
-        <defs>
-          <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f0a500"/></marker>
-          <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2ed573"/></marker>
-          <marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ff4757"/></marker>
-          <marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#7a8394"/></marker>
-
-          <linearGradient id="moneyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#1a1f2a"/>
-            <stop offset="100%" style="stop-color:#1e2d1e"/>
-          </linearGradient>
-        </defs>
-
-        <!-- TITLE BLOCKS -->
-        <text x="10" y="20" font-family="Space Mono" font-size="9" fill="#3a4255">INCOME SOURCES →→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→ MONEY POOL →→→ SINKS</text>
-
-        <!-- === INCOME SIDE === -->
-        <!-- Absen Group -->
-        <rect x="10" y="35" width="155" height="80" rx="4" fill="#0f1218" stroke="#2ed573" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="87" y="52" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#2ed573">📅 ABSEN</text>
-        <text x="87" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">hourly: 800–14k/jam</text>
-        <text x="87" y="78" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">daily: 3k–35k/hari</text>
-        <text x="87" y="90" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">weekly: 15k–180k/mg</text>
-        <text x="87" y="104" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">monthly/yearly: variable</text>
-
-        <!-- Gathering group -->
-        <rect x="10" y="130" width="155" height="96" rx="4" fill="#0f1218" stroke="#2ed573" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="87" y="148" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#2ed573">⛏️ GATHERING</text>
-        <text x="87" y="162" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">nebang/nambang</text>
-        <text x="87" y="174" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">mancing/berburu</text>
-        <text x="87" y="186" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">berkebon/mulung</text>
-        <text x="87" y="198" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">→ jual ke shop/pasar</text>
-        <text x="87" y="215" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">⚠️ Berburu+Mancing OP!</text>
-
-        <!-- Combat -->
-        <rect x="10" y="242" width="155" height="64" rx="4" fill="#0f1218" stroke="#9c59e8" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="87" y="260" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#9c59e8">⚔️ COMBAT/CRIME</text>
-        <text x="87" y="274" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">hunter: 5k–400k/jam</text>
-        <text x="87" y="286" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">maling/merampok/bunuh</text>
-        <text x="87" y="298" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">PvP: drain target!</text>
-
-        <!-- Jobs -->
-        <rect x="10" y="322" width="155" height="64" rx="4" fill="#0f1218" stroke="#1e90ff" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="87" y="340" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#1e90ff">🛵 JOBS</text>
-        <text x="87" y="354" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">ojekk: 1.5k–12k/20mn</text>
-        <text x="87" y="366" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">ngelonte: 30k–300k/12j</text>
-        <text x="87" y="378" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">berdagang: 5k–60k/30mn</text>
-
-        <!-- Pet -->
-        <rect x="10" y="402" width="155" height="50" rx="4" fill="#0f1218" stroke="#f0a500" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="87" y="420" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#f0a500">🐾 ADVENTURE PET</text>
-        <text x="87" y="434" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">0–400k/jam (5 pet max)</text>
-        <text x="87" y="446" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">diamond, potion bonus</text>
-
-        <!-- Gambling -->
-        <rect x="10" y="468" width="155" height="50" rx="4" fill="#0f1218" stroke="#ff4757" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="87" y="486" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ff4757">🎲 GAMBLING (RISKY)</text>
-        <text x="87" y="500" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">judi: -EV (house edge)</text>
-        <text x="87" y="512" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">judipvp: fair P2P</text>
-
-        <!-- === MONEY POOL === -->
-        <rect x="250" y="200" width="170" height="160" rx="8" fill="url(#moneyGrad)" stroke="#f0a500" stroke-width="2"/>
-        <text x="335" y="240" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#f0a500">💰</text>
-        <text x="335" y="260" text-anchor="middle" font-family="Syne" font-size="13" fill="#f0a500" font-weight="700">MONEY POOL</text>
-        <text x="335" y="278" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">wallet + bank (ATM)</text>
-        <text x="335" y="295" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#2ed573">bank: aman dari PvP</text>
-        <text x="335" y="312" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">wallet: bisa dirampok</text>
-        <text x="335" y="330" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">max tx: 99.999.999</text>
-        <text x="335" y="348" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">⚠️ Inflasi besar!</text>
-
-        <!-- === SINK SIDE === -->
-        <!-- Shop Buy -->
-        <rect x="520" y="35" width="155" height="80" rx="4" fill="#0f1218" stroke="#1e90ff" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="597" y="52" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#1e90ff">🏪 SHOP BUY</text>
-        <text x="597" y="66" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">potion: ~1k/unit</text>
-        <text x="597" y="78" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">pet food: 5k/unit</text>
-        <text x="597" y="90" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">coal, bumbu, bibit</text>
-        <text x="597" y="104" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">⚠️ Total sink kecil!</text>
-
-        <!-- Craft Sink -->
-        <rect x="520" y="130" width="155" height="64" rx="4" fill="#0f1218" stroke="#1e90ff" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="597" y="148" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#1e90ff">🔨 CRAFT (material)</text>
-        <text x="597" y="162" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">bahan hilang permanen</text>
-        <text x="597" y="174" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">diamond/gold: sink tier 5</text>
-        <text x="597" y="186" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#2ed573">Material sink efektif</text>
-
-        <!-- Cook Sink -->
-        <rect x="520" y="210" width="155" height="64" rx="4" fill="#0f1218" stroke="#00d2d3" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="597" y="228" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#00d2d3">🍳 COOK (coal+bumbu)</text>
-        <text x="597" y="242" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">coal 1–3/masak</text>
-        <text x="597" y="254" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">bumbu dibeli dari shop</text>
-        <text x="597" y="266" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#2ed573">Recurring sink ok</text>
-
-        <!-- Gambling Sink -->
-        <rect x="520" y="290" width="155" height="64" rx="4" fill="#0f1218" stroke="#ff4757" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="597" y="308" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ff4757">🎲 GAMBLING LOSS</text>
-        <text x="597" y="322" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">judi house edge ~37.5%</text>
-        <text x="597" y="334" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">spaceman: crash</text>
-        <text x="597" y="346" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#2ed573">Sink besar tapi gambling!</text>
-
-        <!-- Transfer Tax -->
-        <rect x="520" y="370" width="155" height="64" rx="4" fill="#0f1218" stroke="#f0a500" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="597" y="388" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#f0a500">💸 PAJAK TRANSFER</text>
-        <text x="597" y="402" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">0%–50% item value</text>
-        <text x="597" y="414" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">hilang dari sistem</text>
-        <text x="597" y="426" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">⚠️ Sink "tak terlihat"</text>
-
-        <!-- PvP Loss -->
-        <rect x="520" y="450" width="155" height="64" rx="4" fill="#0f1218" stroke="#ff4757" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="597" y="468" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ff4757">⚔️ PvP LOSS</text>
-        <text x="597" y="482" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">merampok/membunuh</text>
-        <text x="597" y="494" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#7a8394">redistribusi ke attacker</text>
-        <text x="597" y="506" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">Not true sink!</text>
-
-        <!-- ARROWS: Income → Money Pool -->
-        <line x1="165" y1="75" x2="248" y2="270" stroke="#2ed573" stroke-width="1.5" marker-end="url(#a2)" opacity="0.7"/>
-        <line x1="165" y1="178" x2="248" y2="300" stroke="#2ed573" stroke-width="1.5" marker-end="url(#a2)" opacity="0.7"/>
-        <line x1="165" y1="274" x2="248" y2="310" stroke="#9c59e8" stroke-width="1.5" marker-end="url(#a4)" opacity="0.7"/>
-        <line x1="165" y1="354" x2="248" y2="310" stroke="#1e90ff" stroke-width="1.5" marker-end="url(#a4)" opacity="0.7"/>
-        <line x1="165" y1="427" x2="248" y2="310" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-        <line x1="165" y1="493" x2="248" y2="330" stroke="#ff4757" stroke-width="1.5" marker-end="url(#a3)" opacity="0.6"/>
-
-        <!-- ARROWS: Money Pool → Sinks -->
-        <line x1="420" y1="260" x2="518" y2="70" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-        <line x1="420" y1="270" x2="518" y2="155" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-        <line x1="420" y1="280" x2="518" y2="238" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-        <line x1="420" y1="300" x2="518" y2="318" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-        <line x1="420" y1="320" x2="518" y2="395" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-        <line x1="420" y1="340" x2="518" y2="475" stroke="#f0a500" stroke-width="1.5" marker-end="url(#a1)" opacity="0.7"/>
-
-        <!-- Legend -->
-        <rect x="700" y="35" width="380" height="130" rx="4" fill="#0f1218" stroke="#1e2432"/>
-        <text x="890" y="55" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#7a8394">LEGENDA ALUR</text>
-        <line x1="720" y1="70" x2="760" y2="70" stroke="#2ed573" stroke-width="2" marker-end="url(#a2)"/>
-        <text x="770" y="73" font-family="Space Mono" font-size="8" fill="#2ed573">Gathering → Money</text>
-        <line x1="720" y1="88" x2="760" y2="88" stroke="#9c59e8" stroke-width="2" marker-end="url(#a4)"/>
-        <text x="770" y="91" font-family="Space Mono" font-size="8" fill="#9c59e8">Combat/Pet → Money</text>
-        <line x1="720" y1="106" x2="760" y2="106" stroke="#f0a500" stroke-width="2" marker-end="url(#a1)"/>
-        <text x="770" y="109" font-family="Space Mono" font-size="8" fill="#f0a500">Money → Sink</text>
-        <line x1="720" y1="124" x2="760" y2="124" stroke="#ff4757" stroke-width="2" marker-end="url(#a3)"/>
-        <text x="770" y="127" font-family="Space Mono" font-size="8" fill="#ff4757">Gambling → Sink/Gain</text>
-        <line x1="720" y1="142" x2="760" y2="142" stroke="#1e90ff" stroke-width="2" marker-end="url(#a4)"/>
-        <text x="770" y="145" font-family="Space Mono" font-size="8" fill="#1e90ff">Jobs → Money</text>
-
-        <!-- Balance Rating -->
-        <rect x="700" y="180" width="380" height="80" rx="4" fill="#0f1218" stroke="#1e2432"/>
-        <text x="890" y="200" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#7a8394">RASIO BALANCE (perkiraan player aktif)</text>
-        <text x="890" y="218" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#ff4757">Income Potensial: 1M–5M/hari</text>
-        <text x="890" y="234" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#2ed573">Sink Efektif: 50k–200k/hari</text>
-        <text x="890" y="250" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ff4757">⚠️ Rasio 10:1 → Potensi Inflasi Besar</text>
-
-        <!-- Inflation Warning -->
-        <rect x="700" y="275" width="380" height="50" rx="4" fill="rgba(255,71,87,0.1)" stroke="#ff4757" stroke-width="1"/>
-        <text x="890" y="298" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ff4757">PERINGATAN: EKONOMI TIDAK SEIMBANG</text>
-        <text x="890" y="314" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#ff4757">Sink perlu diperkuat atau income perlu dikurangi</text>
-      </svg>
-    </div>
-  </div>
-</div>
-
-<!-- =============================== SECTION 11: IMBALANCE =============================== -->
-<div class="section" id="imbalance">
-  <div class="section-header">
-    <span class="icon">⚖️</span>
-    <h2>ANALISIS IMBALANCE & PROGRESSION</h2>
-  </div>
-  <div class="section-body">
-    <h3 class="sub">Aktivitas Terlalu Overpowered (OP)</h3>
-    <div class="feature-grid">
-      <div class="feature-card critical">
-        <h3>🏹 berburu + mancing (Tier 5 Gear) <span class="badge op">OP</span></h3>
-        <p>Dengan sword tier 5 (×4) + armor tier 5 (×4), gearBonus berburu bisa mencapai 5.0 (di-cap). Mancing tier 5 rod: ×4 dari base item. Satu sesi berburu bisa menghasilkan 60 ekor hewan × 9.000/ekor = 540.000 money PLUS reward money langsung. Jika dikombinasikan ×2.0 time cap, ini sangat inflasioner.</p>
-        <div class="tags"><span class="tag red">High Volume</span><span class="tag red">Late Game OP</span></div>
-      </div>
-      <div class="feature-card critical">
-        <h3>⚔️ hunter (Area 13 + Max Gear) <span class="badge op">OP</span></h3>
-        <p>BaseCoins di-cap 200.000 tetapi gearBonus 1 + (5×0.2) + (5×0.15) = 2.75. Jadi base sebenarnya adalah Math.min(150k × 2.75 × areaMultiplier, 200k). Dengan area 13, areaMultiplier = 1.0. Ini bisa mencapai CAP 200k per run, × timeMult ×2.0 = 400k/30mnt = 800k/jam.</p>
-        <div class="tags"><span class="tag red">800k/jam potential</span></div>
-      </div>
-      <div class="feature-card warning">
-        <h3>🗺️ adventure (Armor Max) <span class="badge fix">Perlu Nerf</span></h3>
-        <p>Adventure menghasilkan hampir semua jenis item sekaligus. Dengan armor tier 5 (×4), bisa dapat diamond, gold, crate, wood, rock, money dalam satu run. Selain income money, dia juga mengurangi kebutuhan untuk grinding resource lain — membuat aktivitas lain kurang relevan.</p>
-        <div class="tags"><span class="tag orange">Multi-Reward</span></div>
+      <div style="margin-top:16px;padding:14px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);border-radius:3px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--accent);margin-bottom:8px;">💡 PRIORITAS FIX</div>
+        <div style="font-size:12px;line-height:1.8;color:var(--text-muted);">
+          1. 🔴 Fix hunter cap bug (1 jam coding)<br>
+          2. 🔴 Fix mancing paus (1 jam coding)<br>
+          3. 🔴 Fix judipvp pajak (2 jam coding)<br>
+          4. 🟡 Level gating untuk combat (3 jam)<br>
+          5. 🟡 Buff ojek reward (30 menit)<br>
+          6. 🟡 Fix nebang axe durability (30 menit)<br>
+          7. 🔵 Fix armor tier 1 recipe (15 menit)
+        </div>
       </div>
     </div>
-
-    <h3 class="sub" style="margin-top:1.5rem">Aktivitas Kurang Rewarding</h3>
-    <div class="feature-grid">
-      <div class="feature-card">
-        <h3>🛵 ojekk (Reward Terlalu Kecil)</h3>
-        <p>Base reward hanya 1.500–6.000 dengan cooldown 20 menit. Meski drain health+stamina. Dibandingkan mancing (30 menit, jauh lebih besar), ojekk terasa tidak sepadan kecuali untuk player awal.</p>
-        <div class="tags"><span class="tag orange">Under Reward</span></div>
-      </div>
-      <div class="feature-card">
-        <h3>🌱 berkebon (ROI Kecil vs Biaya)</h3>
-        <p>Modal: 100 bibit per jenis × 5 = 500 bibit. Jika beli: 500 × 5 money = 2.500 money modal. Hasil: 50–420 buah × 100 money/buah (jual) = 5k–42k. Tapi bibit SELALU dikonsumsi meski gagal. Dan cooldown hanya 30 menit — jika sering gagal, sangat rugi.</p>
-        <div class="tags"><span class="tag orange">High Fail Risk</span></div>
-      </div>
-      <div class="feature-card">
-        <h3>🎲 judi (Expected Value Negatif)</h3>
-        <p>Player roll 0–75 vs bot 0–100 = probabilitas menang hanya ~40–45%. Expected value negatif. Tidak ada alasan rasional untuk berjudi kecuali untuk "fun" atau buang uang berlebih.</p>
-        <div class="tags"><span class="tag red">-EV</span></div>
-      </div>
-    </div>
-
-    <h3 class="sub" style="margin-top:1.5rem">Masalah Progression</h3>
-    <table>
-      <tr><th>Fase</th><th>Aktivitas Tersedia</th><th>Bottleneck</th><th>Status</th></tr>
-      <tr><td>Awal (level 0–10)</td><td>mulung, ojekk, daily/hourly, berdagang</td><td>Stamina/health habis cepat, tidak ada gear</td><td><span class="tag green">OK</span></td></tr>
-      <tr><td>Early (level 10–30)</td><td>+nebang, +berkebon, +nambang (pickaxe tier 1)</td><td>Biaya craft pickaxe cukup tinggi</td><td><span class="tag green">OK</span></td></tr>
-      <tr><td>Mid (level 30–60)</td><td>+mancing (rod 1-2), +berburu (sword/armor 1-2)</td><td>Durability gear aus cepat, item premium mahal</td><td><span class="tag orange">Agak Berat</span></td></tr>
-      <tr><td>Late (level 60+)</td><td>Semua aktivitas + adventure + hunter</td><td>Tidak ada — income sangat besar tanpa sink cukup</td><td><span class="tag red">Inflasi</span></td></tr>
-    </table>
   </div>
 </div>
 
-<!-- =============================== SECTION 12: EXPLOIT =============================== -->
-<div class="section" id="exploit">
-  <div class="section-header">
-    <span class="icon">🚨</span>
-    <h2>DAFTAR EXPLOIT & BUG KRITIS</h2>
-  </div>
-  <div class="section-body">
+</div><!-- end .content -->
 
-    <div class="exploit-box">
-      <h4>🚨 EXPLOIT #1: PvP Harassment Loop (merampok/membunuh)</h4>
-      <p>Player A bisa terus-menerus membunuh/merampok Player B setiap 60 menit tanpa batas. Player B tidak mendapat notifikasi. Tidak ada cooldown dari sisi target (kapan target bisa diserang lagi). Jika Player B tidak aktif/tidak nabung ke bank, money mereka terus terkuras. <strong>Fix:</strong> tambahkan cooldown perlindungan pada target (misal: tidak bisa diserang 2 kali dalam 2 jam oleh orang yang sama), atau kirim notifikasi ke target.</p>
-    </div>
+<script>
+function showTab(name) {
+  document.querySelectorAll('.panel-section').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
 
-    <div class="exploit-box">
-      <h4>🚨 EXPLOIT #2: Judi Rigged — Bot Roll 0–100 vs Player 0–75</h4>
-      <p>Ini bukan "adil" tapi sengaja dibuat demikian. Namun jika player tidak mengetahuinya, mereka bisa kehilangan banyak uang mengira ini 50/50. <strong>Fix:</strong> ubah ke 0–100 untuk kedua pihak, atau secara eksplisit informasikan house edge di menu judi.</p>
-    </div>
+const detailData = {
+  daily: {title:'🎁 .daily', body:'<strong>Cooldown:</strong> 24 jam<br><strong>Output:</strong> Money 3k-35k (premium 8k-35k), Limit 30-80, bonus item random<br><strong>Streak:</strong> Setiap 7 hari dapat Uncommon Crate<br><strong>Musim:</strong> Hujan = bonus wood, Semi = bonus bibit, Kemarau = limit penalty<br><strong>Bug:</strong> Tidak ada handler.limit = true'},
+  hourly: {title:'⚡ .hourly', body:'<strong>Cooldown:</strong> 1 jam<br><strong>Output:</strong> EXP + money<br><strong>Time Mult:</strong> Pagi/Malam ×1.35, Subuh ×0.70<br><strong>Catatan:</strong> Jam sibuk = reward besar. Klaim saat pagi untuk optimal.'},
+  mulung: {title:'🗑️ .mulung', body:'<strong>Cooldown:</strong> 30 mnt | <strong>Syarat:</strong> Stamina ≥ 20<br><strong>Output:</strong> Botol 50-800, Kaleng 30-600, Kardus 40-700<br><strong>Rare:</strong> Diamond (0.5%) atau Gold (1.5%) tersembunyi<br><strong>Kaleng kegunaan:</strong> feedkaleng → pet stamina (10/kaleng)<br><strong>Status:</strong> Reward kecil tapi cocok untuk pemula'},
+  nambang: {title:'⛏️ .nambang', body:'<strong>Cooldown:</strong> 30 mnt | <strong>Syarat:</strong> Pickaxe + Stamina ≥ 40<br><strong>Output:</strong> Rock 10-200, Coal 1-20, Iron 5-30, Gold 35% chance, Diamond 20% chance<br><strong>Durability:</strong> Pickaxe aus tiap run, tier drop jika habis<br><strong>Status:</strong> Sumber utama material crafting'},
+  mancing: {title:'🎣 .mancing ⚠️', body:'<strong>Cooldown:</strong> 30 mnt | <strong>Syarat:</strong> Fishing Rod + Stamina ≥ 20<br><strong>Output:</strong> 7 jenis ikan. Rod Tier 5: cap 40/jenis, total 80 ekor<br><strong>⚠️ OP EXPLOIT:</strong> 40 paus × 10.500 (weekend) = 420.000 per 30 mnt<br><strong>Bug:</strong> Double print durability di pesan sukses<br><strong>Fix Disarankan:</strong> Batasi paus maks 5/run atau total cap 30'},
+  hunter: {title:'⚔️ .hunter ⚠️', body:'<strong>Cooldown:</strong> 30 mnt | <strong>Syarat:</strong> Sword+Armor + Stamina ≥ 30<br><strong>Output:</strong> Money + EXP dari 39 monster, 13 area<br><strong>⚠️ CAP BUG KRITIS:</strong> Cap 200k di-apply di baseCoins sebelum multiplier.<br>200k × 2.75 (gear) × 1.35 (jam) × 1.45 (weekend) = 1.077k/run<br><strong>Fix:</strong> Terapkan Math.min SETELAH semua multiplier, atau cap ke 50k'},
+  craft: {title:'🔨 .craft', body:'<strong>5 Tools:</strong> sword/pickaxe/fishingrod/armor/axe<br><strong>5 Tier:</strong> Wooden→Stone→Iron→Diamond→Netherite<br><strong>Durability:</strong> Tier 1=100, Tier 2=200, Tier 3=400, Tier 4-5=700<br><strong>Issue:</strong> Armor tier 1 butuh 2 Diamond → berat untuk pemula<br><strong>Recycle:</strong> 100 trash = 10 string'},
+  repair: {title:'🔧 .repair', body:'<strong>Cost:</strong> Money + Material (proporsional dengan kerusakan)<br><strong>Formula:</strong> moneyPerDur × durability_lost<br><strong>Diskon:</strong> -15% jam sibuk, -10% weekend<br><strong>Repair all:</strong> Bisa repair semua tool sekaligus<br><strong>Status:</strong> Money sink yang bagus dan intuitif'},
+  shop: {title:'🏪 .shop', body:'<strong>Harga:</strong> Dinamis per jam (seeded random)<br><strong>Weekend:</strong> Harga beli naik, jual juga naik (profit lebih besar)<br><strong>Spread:</strong> Beli-jual sangat lebar (diamond: beli 55k, jual 2.2k)<br><strong>Coal:</strong> Hanya bisa dibeli, tidak bisa dijual → permanent sink<br><strong>Bumbu masak:</strong> Hanya beli, tidak bisa dijual → sink cooking'},
+  transfer: {title:'💸 .transfer / .tf', body:'<strong>Pajak:</strong> Diamond/Gold 15-40%, Hewan/Ikan 10-35%, Crate Medium 7-22%, Wood/Buah 6-15%, Sampah 2-10%<br><strong>Anti-dodge:</strong> 3 transfer jenis sama dalam 1 jam → locked<br><strong>Jam:</strong> Jam sibuk ×1.3 pajak, Weekend +25%<br><strong>Premium:</strong> Gold, mythic, legendary hanya premium<br><strong>Simulasi:</strong> .tf cek &lt;item&gt; &lt;jumlah&gt;'},
+  judipvp: {title:'🎲 .judipvp ⚠️ EXPLOIT', body:'<strong>Mekanisme:</strong> PvP spin 1-100. Winner dapat money dari loser.<br><strong>⚠️ EXPLOIT:</strong> Transfer money TANPA pajak apapun.<br>2 akun bisa saling judipvp untuk bypass sistem pajak transfer.<br><strong>Fix:</strong> Pajak 10% dari nilai yang berpindah, atau limit bet harian per pasangan.'},
+  adventurepet: {title:'🐾 .adventurepet', body:'<strong>Cooldown:</strong> 1 jam | <strong>Syarat:</strong> Total pet stamina ≥ 80, per pet ≥ 20<br><strong>Output:</strong> Money (cap 10k+lv×3k per pet), potion, diamond, EXP<br><strong>Cap:</strong> Total multiplier capped ×2.0 anti-inflasi<br><strong>Stamina drain:</strong> Jam sepi ×1.4, pagi ×0.85, kemarau ×1.2<br><strong>Exp:</strong> 1000 × level^1.8 (exponential)'},
+  open: {title:'📦 .open', body:'<strong>Tier crate:</strong> Common (20% zonk), Uncommon (12%), Mythic (6%), Legendary (3%), Pet (0% zonk)<br><strong>Pet crate:</strong> 2% dapat pet baru<br><strong>Cooldown:</strong> 8 detik per batch buka<br><strong>Premium:</strong> Bisa buka 20x sekaligus vs 5x free'},
+};
 
-    <div class="exploit-box">
-      <h4>🚨 EXPLOIT #3: berdagang Anti-Loop Mudah Di-Bypass</h4>
-      <p>Anti-loop menggunakan key <code>lastdagang_with_{senderId}</code> yang tersimpan di user object target. Namun jika player memiliki banyak akun atau menggunakan user berbeda-beda, mereka bisa terus berdagang dengan target berbeda setiap 30 menit dan mendapatkan money tanpa henti. <strong>Fix:</strong> tambahkan cooldown global per sender, bukan hanya per pasangan.</p>
-    </div>
+function showDetail(key) {
+  const d = detailData[key];
+  if (!d) return;
+  document.getElementById('detail-content').innerHTML = `<div style="font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--accent);margin-bottom:12px;">${d.title}</div><div style="font-size:13px;line-height:1.8;color:var(--text-muted);">${d.body}</div>`;
+  document.getElementById('detail-panel').style.display = 'block';
+  document.getElementById('detail-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+</script>
 
-    <div class="warn-box">
-      <h4>⚠️ BUG #4: Inkonsistensi Durability Sistem</h4>
-      <p><code>rpg-durability.js</code> (before handler) turunkan tier jika durability &lt; 1. Tapi <code>nambang.js</code>, <code>mancing.js</code>, dll set <code>user.pickaxe = 0</code> langsung jika <code>pickaxedurability &lt;= 0</code>. Jika nambang mengurangi durability ke 0 dan set pickaxe=0, kemudian durability handler jalan lagi, akan coba turunkan tier dari 0 → tier -1. Meski ada cek <code>if (user.pickaxe > 0)</code>, ini masih membingungkan.</p>
-    </div>
-
-    <div class="warn-box">
-      <h4>⚠️ BUG #5: kandang.js Mengakses Property Tanpa Inisialisasi</h4>
-      <p><code>rpg-kandang.js</code> langsung mengakses <code>user.banteng.toLocaleString()</code> tanpa cek null/undefined terlebih dahulu. Jika user baru yang belum pernah berburu mengakses kandang, akan terjadi error <code>TypeError: Cannot read property 'toLocaleString' of undefined</code>. Sama dengan <code>rpg-kolam.js</code>.</p>
-    </div>
-
-    <div class="warn-box">
-      <h4>⚠️ BUG #6: Spaceman Menggunakan global.spacemanGames — Race Condition</h4>
-      <p><code>global.spacemanGames</code> adalah state game yang disimpan di memori global. Jika server restart atau bot crash di tengah game, state hilang tapi bet sudah dikurangi. Player kehilangan bet tanpa hasil apapun. <strong>Fix:</strong> persist state ke database atau set timeout sebagai fallback refund.</p>
-    </div>
-
-    <div class="warn-box">
-      <h4>⚠️ BUG #7: buah.js Menampilkan Status Salah — "min 500" tapi berkebon butuh 100</h4>
-      <p><code>rpg-buah.js</code> menampilkan threshold bibit: <code>if (n &lt; 500) return '⚠️ Kurang (min 500)'</code>. Tapi <code>rpg-berkebon.js</code> menetapkan <code>BIBIT_MIN = 100</code>. Informasi yang ditampilkan ke user tidak konsisten dengan logika game.</p>
-    </div>
-
-    <div class="warn-box">
-      <h4>⚠️ INKONSISTENSI: Hewan vs Ikan di kandang.js</h4>
-      <p><code>rpg-kandang.js</code> menampilkan <code>paus</code> dan <code>kepiting</code> dalam daftar hewan — padahal keduanya adalah ikan/seafood yang seharusnya ada di kolam. Tidak ada fish yang tercantum di kolam secara terpisah. Ini inkonsistensi tampilan data.</p>
-    </div>
-
-  </div>
-</div>
-
-<!-- =============================== SECTION 13: REKOMENDASI =============================== -->
-<div class="section" id="rekomendasi">
-  <div class="section-header">
-    <span class="icon">✅</span>
-    <h2>REKOMENDASI PERBAIKAN (Prioritas Tinggi ke Rendah)</h2>
-  </div>
-  <div class="section-body">
-    <h3 class="sub"><span class="pill-num">1</span>PRIORITAS KRITIS — Ekonomi & Exploit</h3>
-    <ul class="list">
-      <li><strong>Tambah money sink besar:</strong> Implementasikan sistem perumahan, upgrade karakter berbayar, atau event berbayar untuk menyerap uang berlebih. Pertimbangkan "repair fee" untuk tool (bayar money untuk repair durability).</li>
-      <li><strong>Batasi income hunter/berburu:</strong> Kurangi CAP hunter dari 200k ke 50k per run, atau tambahkan "daily cap" total income dari aktivitas tertentu.</li>
-      <li><strong>Perbaiki PvP harassment:</strong> Tambahkan notifikasi ke target ketika diserang, dan tambahkan perlindungan "tidak bisa diserang oleh orang yang sama lebih dari 1x per 2 jam".</li>
-      <li><strong>Fix judi:</strong> Transparansi house edge DI UI judi — atau ubah ke fair 50/50 dengan tampilan "bot menang karena kamu kalah spin".</li>
-    </ul>
-
-    <h3 class="sub" style="margin-top:1rem"><span class="pill-num">2</span>PRIORITAS TINGGI — Bug & Inkonsistensi</h3>
-    <ul class="list">
-      <li><strong>Fix kandang.js & kolam.js:</strong> Tambahkan inisialisasi default untuk semua property hewan/ikan sebelum ditampilkan. Pindahkan paus/kepiting ke kolam saja.</li>
-      <li><strong>Fix buah.js threshold:</strong> Ubah threshold tampilan dari 500 ke 100 agar konsisten dengan <code>BIBIT_MIN</code>.</li>
-      <li><strong>Unifikasi time system:</strong> Buat shop, pasar, dan transfer mengimport dari <code>rpg-time-system.js</code> alih-alih implementasi sendiri. Ini mengurangi divergensi logika.</li>
-      <li><strong>Tambah monthly/yearly ke time system:</strong> Konsistenkan dengan daily/hourly/weekly yang sudah pakai multiplier.</li>
-      <li><strong>Unifikasi durability sistem:</strong> Putuskan satu mekanisme: apakah tier turun 1 atau langsung hilang (0). Hapus handler before atau ubah semua modul ke logika yang sama.</li>
-    </ul>
-
-    <h3 class="sub" style="margin-top:1rem"><span class="pill-num">3</span>PRIORITAS MEDIUM — Balance</h3>
-    <ul class="list">
-      <li><strong>Buff ojekk:</strong> Naikkan base reward ke 5k–20k atau tambahkan bonus route tambahan, reward item, atau streak bonus.</li>
-      <li><strong>Armor tier 4 vs 5:</strong> Berikan Netherite Armor tier 5 durability 1.000 (bukan 700 sama dengan tier 4) agar ada incentive upgrade.</li>
-      <li><strong>Adventure jangan multi-reward semua jenis:</strong> Pilih beberapa item saja, atau batasi volume item per run agar tidak menggantikan semua aktivitas gathering lain.</li>
-      <li><strong>Pajak transfer masuk ke "pool":</strong> Arahkan pajak ke fund giveaway otomatis atau event hadiah agar uang tidak hilang begitu saja tapi ada tujuannya.</li>
-    </ul>
-
-    <h3 class="sub" style="margin-top:1rem"><span class="pill-num">4</span>PRIORITAS RENDAH — QoL</h3>
-    <ul class="list">
-      <li><strong>Notifikasi PvP:</strong> Kirim pesan DM/mention ke target ketika dirampok/dibunuh.</li>
-      <li><strong>Spaceman persistence:</strong> Simpan state spaceman ke database agar tidak hilang jika bot restart.</li>
-      <li><strong>Tampilkan riwayat transaksi sederhana:</strong> Minimal 5 transaksi terakhir di <code>.bank</code> atau <code>.profile</code>.</li>
-      <li><strong>Fix transfer dagang cooldown key format:</strong> Key berisi titik dua dan underscore — pastikan tidak ada karakter yang bisa menyebabkan collision di key database.</li>
-    </ul>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<div style="text-align:center; padding:2rem; color:var(--dim); font-size:0.75rem; border-top: 1px solid var(--border); margin-top:2rem">
-  <p>⚔️ RPG System Analysis — Generated from 57 source files + lib/rpg-time-system.js</p>
-  <p style="margin-top:0.3rem">Mencakup: absen (5) • gathering (6) • craft • cook/eat • shop/pasar • bank • transfer • pet (3) • crime (3) • gambling (3) • adventure (2) • hunter • giveaway • durability • profile • leaderboard • role • inventory</p>
-</div>
-
-</div>
 </body>
 </html>
